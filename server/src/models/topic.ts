@@ -6,13 +6,14 @@ import { prop, Ref, getModelForClass, DocumentType } from "@typegoose/typegoose"
 import mongoose from 'mongoose';
 import { identity } from './middleware/identity';
 import { Share } from './share';
+import { Image } from './image';
 
 @ObjectType()
 export class Topic implements ITopic {
 
     @Field(() => String)
     public get id(): string {
-        return (this as any)._id ? (this as any)._id.toString() : '';
+        return this._id ? this._id.toString() : '';
     };
 
     // @prop()
@@ -26,9 +27,9 @@ export class Topic implements ITopic {
     @prop()
     description?: string;
 
-    @Field(() => String)
-    @prop()
-    image: string;
+    @Field(type => [Image], {nullable: true})
+    @prop({type: () => [Image]})
+    image?: Image[];
 
     @Field(() => String)
     @prop()
@@ -65,6 +66,16 @@ export class Topic implements ITopic {
                 return;
             }
         }
+    }
+
+    public toObjectWithMyShare() {
+        const instance: any = this;
+        if (!instance.toObject) {
+            throw new Error('Missing toObject()');
+        }
+        const obj = instance.toObject();
+        obj.myShare = instance.myShare;
+        return obj;
     }
 }
 

@@ -1,0 +1,43 @@
+config:
+  target: 'http://localhost:3000'
+  http:
+    timeout: 300 # max 10 seconds before considering a request as timed out
+  plugins:
+    expect: {outputFormat: 'pretty'}
+  phases:
+    - duration: 1
+      arrivalCount: 1
+  defaults:
+    headers:
+      Content-Type: "application/json"
+  processor: "../processor.js"
+scenarios:
+  - name: "Test Images API endpoints"
+    flow:
+    - post:
+        name: "Upload image.jpg"
+        url: "/image"
+        beforeRequest: "uploadImage"
+        formData:
+          file: "binary data"
+        capture:
+          - json: "$"
+            as: "response"
+          - json: "$.id"
+            as: "jpgImageId"
+        expect:
+        - statusCode: 201
+        - hasProperty: "id"
+    - function: "logResponse"
+    - get:
+        name: "Get image.jpg"
+        url: "/image/{{ jpgImageId }}"
+        beforeRequest: "uploadImage"
+        headers:
+          "Authorization": "Bearer {{ token }}"
+        capture:
+          - json: "$"
+            as: "response"
+        expect:
+        - statusCode: 200
+    - function: "logResponse"

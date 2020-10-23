@@ -8,12 +8,7 @@ import cookieParser from 'cookie-parser';
 import socket from 'socket.io';
 import mongoose from 'mongoose';
 import { ApolloServer } from 'apollo-server-express';
-import { buildSchema } from 'type-graphql';
-import { HelloResolver } from './resolvers/hello';
-import { UserResolver } from './resolvers/user';
-import { TopicResolver } from './resolvers/topic';
-import { RegistrationResolver } from './resolvers/registration';
-import { AuthResolver, customAuthChecker } from './resolvers/auth';
+import { buildSchema, NonEmptyArray } from 'type-graphql';
 import contextService from 'request-context';
 import jwt from 'express-jwt';
 
@@ -27,11 +22,20 @@ import passport from 'passport';
 // Controllers
 import { AdminController } from './controllers/admin';
 import { AuthController } from './controllers/auth';
+import { ImageController } from './controllers/image';
 
-const controllers = [AdminController, AuthController];
+const controllers = [AdminController, AuthController, ImageController];
 
-import { User } from './models/user';
 import { registerControllers } from './core/framework';
+
+// Resolvers
+import { HelloResolver } from './resolvers/hello';
+import { UserResolver } from './resolvers/user';
+import { TopicResolver } from './resolvers/topic';
+import { RegistrationResolver } from './resolvers/registration';
+import { AuthResolver, customAuthChecker } from './resolvers/auth';
+const resolvers: NonEmptyArray<Function> | NonEmptyArray<string> = [UserResolver, TopicResolver, RegistrationResolver, AuthResolver];
+
 
 dotenv.config();
 
@@ -107,13 +111,7 @@ mongoose.connect(
 
     // Register GraphQL Api
     const schema = await buildSchema({
-        resolvers: [
-            HelloResolver,
-            UserResolver,
-            TopicResolver,
-            RegistrationResolver,
-            AuthResolver
-        ],
+        resolvers: resolvers,
         authChecker: customAuthChecker
     });
     const apolloServer = new ApolloServer(

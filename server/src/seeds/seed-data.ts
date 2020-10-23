@@ -47,7 +47,9 @@ mongoose.connect(
                 newTopic.updatedBy = user._id;
                 newTopic.name = topic.name;
                 newTopic.description = topic.description;
-                newTopic.image = topic.image;
+                newTopic.image = [];
+                newTopic.image.push({fileId: 'original', width: 1200, height: 800});
+                newTopic.image.push({fileId: 'thumb', width: 400, height: 300});
                 newTopic.color = topic.color;
 
                 const contentKey = Encrypt.generateKey();
