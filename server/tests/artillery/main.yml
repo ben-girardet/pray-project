@@ -207,53 +207,6 @@ scenarios:
             - equals:
                 - "{{ data.topics.0.image.1.height }}"
                 - 300
-    # - post:
-    #     name: "Get Ben first topic"
-    #     url: "/graphql"
-    #     json:
-    #         operationName: null
-    #         query: 'query {topic(id: "{{ firstTopicId }}") {name, description, color, image {fileId, width, height}, shares {userId, encryptedBy, encryptedContentKey}, myShare {userId, encryptedBy, encryptedContentKey}}}'
-    #         variables: '{}'
-    #     headers:
-    #         Authorization: "Bearer {{ benToken }}"
-    #     capture:
-    #         - json: "$.data"
-    #           as: "data"
-    #     expect:
-    #         - statusCode: 200
-    #         - hasProperty: "data.topic"
-    #         - hasProperty: "data.topic.shares.0.encryptedBy"
-    #         - hasProperty: "data.topic.myShare"
-    #         - equals:
-    #             - "{{ data.topic.name }}"
-    #             - "New topic"
-    #         - equals:
-    #             - "{{ data.topic.description }}"
-    #             - ""
-    #         - equals:
-    #             - "{{ data.topic.shares.0.encryptedContentKey }}"
-    #             - "key"
-    #         - equals:
-    #             - "{{ data.topic.shares.0.encryptedBy }}"
-    #             - "{{ benId }}"
-    #         - equals:
-    #             - "{{ data.topic.shares.0.userId }}"
-    #             - "{{ benId }}"
-    #         - equals:
-    #             - "{{ data.topic.myShare.userId }}"
-    #             - "{{ benId }}"
-    #         - equals:
-    #             - "{{ data.topic.image.length }}"
-    #             - 1
-    #         - equals:
-    #             - "{{ data.topic.image.0.fileId }}"
-    #             - "imageFileId"
-    #         - equals:
-    #             - "{{ data.topic.image.0.width }}"
-    #             - 1200
-    #         - equals:
-    #             - "{{ data.topic.image.0.height }}"
-    #             - 800
     - post:
         name: "Create a topic with Ben"
         url: "/graphql"
@@ -407,3 +360,118 @@ scenarios:
             - equals:
                 - "{{ data.editTopic.image.0.height }}"
                 - 600
+    - post:
+        name: "Add share to recently created topic"
+        url: "/graphql"
+        json:
+            operationName: null
+            query: 'mutation {addShareToTopic(id: "{{ createdTopicId }}", data: {userId: "{{ chantalId }}", encryptedContentKey: "key for Chantal"}) {shares {userId, encryptedBy, encryptedContentKey}}}'
+            variables: '{}'
+        headers:
+            Authorization: "Bearer {{ benToken }}"
+        capture:
+            - json: "$.data"
+              as: "data"
+        expect:
+            - statusCode: 200
+            - hasProperty: "data.addShareToTopic"
+            - hasProperty: "data.addShareToTopic.shares.0.encryptedBy"
+            - equals:
+                - "{{ data.addShareToTopic.shares.length }}"
+                - 2
+            - equals:
+                - "{{ data.addShareToTopic.shares.0.encryptedContentKey }}"
+                - "key"
+            - equals:
+                - "{{ data.addShareToTopic.shares.0.encryptedBy }}"
+                - "{{ benId }}"
+            - equals:
+                - "{{ data.addShareToTopic.shares.0.userId }}"
+                - "{{ benId }}"
+            - equals:
+                - "{{ data.addShareToTopic.shares.1.encryptedContentKey }}"
+                - "key for Chantal"
+            - equals:
+                - "{{ data.addShareToTopic.shares.1.encryptedBy }}"
+                - "{{ benId }}"
+            - equals:
+                - "{{ data.addShareToTopic.shares.1.userId }}"
+                - "{{ chantalId }}"
+    - post:
+        name: "Get recently created topic with Chantal token"
+        url: "/graphql"
+        json:
+            operationName: null
+            query: 'query {topic(id: "{{ createdTopicId }}") {name, myShare {userId, encryptedBy, encryptedContentKey, role}}}'
+            variables: '{}'
+        headers:
+            Authorization: "Bearer {{ chantalToken }}"
+        capture:
+            - json: "$.data"
+              as: "data"
+        expect:
+            - statusCode: 200
+            - hasProperty: "data.topic"
+            - hasProperty: "data.topic.name"
+            - hasProperty: "data.topic.myShare"
+            - equals:
+                - "{{ data.topic.name }}"
+                - "Edited Topic"
+            - equals:
+                - "{{ data.topic.myShare.userId }}"
+                - "{{ chantalId }}"
+            - equals:
+                - "{{ data.topic.myShare.encryptedContentKey }}"
+                - "key for Chantal"
+            - equals:
+                - "{{ data.topic.myShare.role }}"
+                - "member"
+    - post:
+        name: "Try to edit recently created topic with Chantal token (must fail, share is not owner)"
+        url: "/graphql"
+        json:
+            operationName: null
+            query: 'mutation {editTopic(id: "{{ createdTopicId }}", data: {name: "Edited Topic 2"}) {name}}'
+            variables: '{}'
+        headers:
+            Authorization: "Bearer {{ chantalToken }}"
+        capture:
+            - json: "$.errors"
+              as: "errors"
+        expect:
+            - statusCode: 200
+            - hasProperty: "errors.0.message"
+            - equals:
+                - "{{ errors.0.message }}"
+                - "Access denied"
+    - post:
+        name: "Remove share to recently created topic"
+        url: "/graphql"
+        json:
+            operationName: null
+            query: 'mutation {removeShareToTopic(id: "{{ createdTopicId }}", userId: "{{ chantalId }}") {shares {userId, encryptedBy, encryptedContentKey, role}}}'
+            variables: '{}'
+        headers:
+            Authorization: "Bearer {{ benToken }}"
+        capture:
+            - json: "$.data"
+              as: "data"
+        expect:
+            - statusCode: 200
+            - hasProperty: "data.removeShareToTopic"
+            - hasProperty: "data.removeShareToTopic.shares.0.encryptedBy"
+            - equals:
+                - "{{ data.removeShareToTopic.shares.length }}"
+                - 1
+            - equals:
+                - "{{ data.removeShareToTopic.shares.0.encryptedContentKey }}"
+                - "key"
+            - equals:
+                - "{{ data.removeShareToTopic.shares.0.encryptedBy }}"
+                - "{{ benId }}"
+            - equals:
+                - "{{ data.removeShareToTopic.shares.0.userId }}"
+                - "{{ benId }}"
+            - equals:
+                - "{{ data.removeShareToTopic.shares.0.role }}"
+                - "owner"

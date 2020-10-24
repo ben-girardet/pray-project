@@ -2,8 +2,8 @@ import { Length, IsNotEmpty, validateOrReject, MaxLength } from "class-validator
 import { Topic as ITopic } from "shared/types/topic";
 import { User } from "./user";
 import { ObjectType, Field, ID } from "type-graphql";
-import { prop, Ref, getModelForClass, DocumentType } from "@typegoose/typegoose";
-import mongoose, { FilterQuery } from 'mongoose';
+import { prop, Ref, getModelForClass } from "@typegoose/typegoose";
+import mongoose from 'mongoose';
 import { identity } from './middleware/identity';
 import { Share } from './share';
 import { Image } from './image';
@@ -78,18 +78,42 @@ export class Topic implements ITopic {
         return obj;
     }
 
-    public static async findOneAndCheckRole(topicId: mongoose.Types.ObjectId, userId: mongoose.Types.ObjectId, roles: string[]) {
-        TopicModel.findOne()
+    public static async findOneAndCheckRole(topicId: mongoose.Types.ObjectId, userId: mongoose.Types.ObjectId, requireOwner = false) {
         const topic = await TopicModel.findOne({_id: topicId, shares: {$elemMatch: {userId}}});
         if (!topic) {
             throw new Error('Topic not found');
         }
         topic.setMyShare(userId);
-        console.log('topic.myShare', topic.myShare);
-        if (!topic.myShare || !topic.myShare.role.some(r => roles.includes(r))) {
+        if (!topic.myShare || (requireOwner && topic.myShare.role !== 'owner')) {
             throw new Error('Access denied');
         }
         return topic;
+    }
+
+    public addShare(userId: mongoose.Types.ObjectId, encryptedBy: mongoose.Types.ObjectId, encryptedContentKey: string, owner = false) {
+        const existingShare = this.shares.find(share => share.userId.equals(userId));
+        if (existingShare) {
+            existingShare.encryptedContentKey = encryptedContentKey;
+            existingShare.role = owner ? 'owner' : 'member';
+        } else {
+            this.shares.push({
+                userId,
+                encryptedBy,
+                encryptedContentKey,
+                role: owner ? 'owner' : 'member'
+            });
+        }
+    }
+
+    public removeShare(userId: mongoose.Types.ObjectId) {
+        for (let index = 0; index < this.shares.length; index++) {
+            const share = this.shares[index];
+            if (share.userId.equals(userId)) {
+                this.shares.splice(index, 1);
+                return;
+            }
+        }
+        return;
     }
 }
 

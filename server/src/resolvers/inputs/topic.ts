@@ -24,14 +24,28 @@ export class CreateTopicInput {
 export class EditTopicInput {
 
     @Field({nullable: true})
-    name: string;
+    name?: string;
 
     @Field({nullable: true})
-    description: string;
+    description?: string;
 
     @Field({nullable: true})
-    color: string;
+    color?: string;
 
     @Field(type => [ImageInput], {nullable: true})
     image?: ImageInput[];
+}
+
+@InputType()
+export class AddShareToTopicInput {
+
+    @Field()
+    userId: string;
+
+    @Field()
+    encryptedContentKey: string;
+
+    @Field(type => [Boolean], {defaultValue: false})
+    owner: boolean = false;
+
 }

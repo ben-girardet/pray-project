@@ -1,4 +1,4 @@
-import { CreateTopicInput, EditTopicInput } from './inputs/topic';
+import { CreateTopicInput, EditTopicInput, AddShareToTopicInput } from './inputs/topic';
 import { Topic, TopicModel } from "../models/topic";
 import { Share } from "../models/share";
 import { Resolver, Query, Arg, Authorized, Ctx, Mutation } from "type-graphql";
@@ -58,7 +58,7 @@ export class TopicResolver {
     share.userId = userId;
     share.encryptedBy = userId;
     share.encryptedContentKey = data.encryptedContentKey;
-    share.role = ['owner'];
+    share.role = 'owner';
     newTopic.shares.push(share);
     const createdTopic = await newTopic.save();
     const createdTopicInstance = new TopicModel(createdTopic);
@@ -72,15 +72,7 @@ export class TopicResolver {
     const user = context.user;
     const userId = new mongoose.Types.ObjectId(user.userId);
     const topicId = new mongoose.Types.ObjectId(id);
-    // const originalTopic = await TopicModel.findOne({_id: topicId, shares: {$elemMatch: {userId}}});
-    // if (!originalTopic) {
-    //     throw new Error('Topic not found');
-    // }
-    // originalTopic.setMyShare(userId);
-    // if (!originalTopic.myShare || !originalTopic.myShare.role.some(r => context.user.roles.includes(r))) {
-    //     throw new Error('Access denied');
-    // }
-    const originalTopic = await TopicModel.findOneAndCheckRole(topicId, userId, ['owner', 'write']);
+    const originalTopic = await TopicModel.findOneAndCheckRole(topicId, userId, true);
 
     originalTopic.updatedBy = userId;
     originalTopic.name = data.name !== undefined ? data.name : originalTopic.name;
@@ -92,6 +84,50 @@ export class TopicResolver {
     const updatedTopicInstance = new TopicModel(updatedTopic);
     updatedTopicInstance.setMyShare(userId);
     return updatedTopicInstance.toObjectWithMyShare();
+  }
+
+  @Authorized(['user'])
+  @Mutation(() => Topic)
+  public async addShareToTopic(@Ctx() context: Context, @Arg('id') id: string, @Arg('data') data: AddShareToTopicInput) {
+    const user = context.user;
+    const loggedInUserId = new mongoose.Types.ObjectId(user.userId);
+    const newShareUserId = new mongoose.Types.ObjectId(data.userId);
+    const topicId = new mongoose.Types.ObjectId(id);
+    const originalTopic = await TopicModel.findOneAndCheckRole(topicId, loggedInUserId, true);
+    originalTopic.addShare(newShareUserId, loggedInUserId, data.encryptedContentKey, data.owner);
+    originalTopic.updatedBy = loggedInUserId;
+    const updatedTopic = await originalTopic.save();
+    const updatedTopicInstance = new TopicModel(updatedTopic);
+    updatedTopicInstance.setMyShare(loggedInUserId);
+    return updatedTopicInstance.toObjectWithMyShare();
+  }
+
+  @Authorized(['user'])
+  @Mutation(() => Topic)
+  public async removeShareToTopic(@Ctx() context: Context, @Arg('id') id: string, @Arg('userId') userId: string) {
+    const user = context.user;
+    const loggedInUserId = new mongoose.Types.ObjectId(user.userId);
+    const removeShareUserId = new mongoose.Types.ObjectId(userId);
+    const topicId = new mongoose.Types.ObjectId(id);
+    const originalTopic = await TopicModel.findOneAndCheckRole(topicId, loggedInUserId, true);
+    originalTopic.removeShare(removeShareUserId);
+    originalTopic.updatedBy = loggedInUserId;
+    const updatedTopic = await originalTopic.save();
+    const updatedTopicInstance = new TopicModel(updatedTopic);
+    updatedTopicInstance.setMyShare(loggedInUserId);
+    return updatedTopicInstance.toObjectWithMyShare();
+  }
+
+  @Authorized(['user'])
+  @Mutation(() => Boolean)
+  public async removeTopic(@Ctx() context: Context, @Arg('id') id: string) {
+    const user = context.user;
+    const userId = new mongoose.Types.ObjectId(user.userId);
+    const topicId = new mongoose.Types.ObjectId(id);
+    const originalTopic = await TopicModel.findOneAndCheckRole(topicId, userId, true);
+    // TODO: ensure the removing of all related messages
+    await originalTopic.remove();
+    return true;
   }
 
 }

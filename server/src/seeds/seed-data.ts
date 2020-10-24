@@ -59,7 +59,7 @@ mongoose.connect(
                 share.userId = user._id;
                 share.encryptedBy = user._id;
                 share.encryptedContentKey = await Encrypt.encryptWithPair(contentKey, {epub: user.publicKey, epriv: user.privateKey, pub: '', priv: ''}, user.publicKey);
-                share.role = ['owner'];
+                share.role = 'owner';
                 newTopic.shares.push(share);
                 const createdTopic = await newTopic.save();
             }

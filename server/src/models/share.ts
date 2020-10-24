@@ -17,8 +17,8 @@ export class Share {
   @prop()
   encryptedBy: mongoose.Types.ObjectId;
 
-  @Field(() => [String])
-  @prop({type: () => [String]})
-  role: string[];
+  @Field(() => String)
+  @prop({type: () => String})
+  role: 'owner' | 'member';
 
 }
