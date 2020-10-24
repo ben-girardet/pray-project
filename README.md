@@ -1,11 +1,47 @@
-# aurelia-saas-starter
-An all-inclusive starter for building Aurelia applications. Node.js + Express + Postgres and Aurelia 2's eleven herbs and spices.
+# Pray Project
+
+An open-source mobile application to help people engage in prayer worldwide. This projects contains the server API and the web client.
+
+# Why this ?
+
+Well, we (too) often engage with mobile applications. Many times for seemingly unimportant things. Why not taking the habit of using technology to draw us closer to God. Some projects have already brought so much like the YouVersion Bible App. Now is the time to bring the best possible experience for anyone who wants to pray, keep track of their topics, take notes on them and more importantly share them with friends.
+
+# Are we production ready ?
+
+The project is in the early stage. Cleary now is the time for early adopters to engage and provide feedbacks. We already received amazing reports and we are more motivated than ever to bring this project to mass market.
+
+# Screenshots
+
+Placeholder
+
+# Technology / Frameworks
+
+* Both server and client are written in Typescript
+
+## Server
+
+* NodeJS
+* MongoDB with Mongoose and Typegood
+* GraphQL api TypeGraphQL, express and Apollo
+* REST api for images with express
+* ArtilleryJS for functional and load testing
+
+## Client
+
+* Aurelia2 as main framework
+* Fast.design
+
+
+## Tooling
+
+Placeholder
+
+# How to contribute
 
 ## Installation
 
-- In the root of the project enter `npm install` which will take care of installing Node dependencies for both `client` and `server`
-- Configure your application by renaming `.env.sample` to `.env` and replace your config values
+Placeholder
 
-> If you don't have PostgreSQL installed make use of the provided `docker-compose.yml` file by running `docker-compose up` inside of the `server` folder. All configuration will be read from your `.env` file. Your DB will be up and ready on localhost port `5432` and a minimalistic db-browser (adminer) at `8080`.
+## Contribution guidelines
 
-- Setup the database by running `npm run-script setup:db` inside of the `server` directory
+Placeholder
