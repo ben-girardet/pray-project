@@ -259,7 +259,7 @@ scenarios:
         url: "/graphql"
         json:
             operationName: null
-            query: 'mutation {createTopic(data: {name: "New topic", description: "", color: "#ff0000", encryptedContentKey: "key", image: [{fileId: "imageFileId", width: 1200, height: 800}]}) {id, name, description, color, image {fileId, width, height}, shares {userId, encryptedBy, encryptedContentKey}, myShare {userId, encryptedBy, encryptedContentKey}}}'
+            query: 'mutation {createTopic(data: {name: "New topic", description: "New description", color: "#ff0000", encryptedContentKey: "key", image: [{fileId: "imageFileId", width: 1200, height: 800}]}) {id, name, description, color, image {fileId, width, height}, shares {userId, encryptedBy, encryptedContentKey}, myShare {userId, encryptedBy, encryptedContentKey}}}'
             variables: '{}'
         headers:
             Authorization: "Bearer {{ benToken }}"
@@ -279,7 +279,10 @@ scenarios:
                 - "New topic"
             - equals:
                 - "{{ data.createTopic.description }}"
-                - ""
+                - "New description"
+            - equals:
+                - "{{ data.createTopic.color }}"
+                - "#ff0000"
             - equals:
                 - "{{ data.createTopic.shares.0.encryptedContentKey }}"
                 - "key"
@@ -326,7 +329,10 @@ scenarios:
                 - "New topic"
             - equals:
                 - "{{ data.topic.description }}"
-                - ""
+                - "New description"
+            - equals:
+                - "{{ data.topic.color }}"
+                - "#ff0000"
             - equals:
                 - "{{ data.topic.shares.0.encryptedContentKey }}"
                 - "key"
@@ -351,3 +357,53 @@ scenarios:
             - equals:
                 - "{{ data.topic.image.0.height }}"
                 - 800
+    - post:
+        name: "Edit recently created topic"
+        url: "/graphql"
+        json:
+            operationName: null
+            query: 'mutation {editTopic(id: "{{ createdTopicId }}", data: {name: "Edited Topic", description: "Edited Description", color: "#00ff00", image: [{fileId: "imageFileId2", width: 800, height: 600}]}) {name, description, color, image {fileId, width, height}, shares {userId, encryptedBy, encryptedContentKey}, myShare {userId, encryptedBy, encryptedContentKey}}}'
+            variables: '{}'
+        headers:
+            Authorization: "Bearer {{ benToken }}"
+        capture:
+            - json: "$.data"
+              as: "data"
+        expect:
+            - statusCode: 200
+            - hasProperty: "data.editTopic"
+            - hasProperty: "data.editTopic.shares.0.encryptedBy"
+            - hasProperty: "data.editTopic.myShare"
+            - equals:
+                - "{{ data.editTopic.name }}"
+                - "Edited Topic"
+            - equals:
+                - "{{ data.editTopic.description }}"
+                - "Edited Description"
+            - equals:
+                - "{{ data.editTopic.color }}"
+                - "#00ff00"
+            - equals:
+                - "{{ data.editTopic.shares.0.encryptedContentKey }}"
+                - "key"
+            - equals:
+                - "{{ data.editTopic.shares.0.encryptedBy }}"
+                - "{{ benId }}"
+            - equals:
+                - "{{ data.editTopic.shares.0.userId }}"
+                - "{{ benId }}"
+            - equals:
+                - "{{ data.editTopic.myShare.userId }}"
+                - "{{ benId }}"
+            - equals:
+                - "{{ data.editTopic.image.length }}"
+                - 1
+            - equals:
+                - "{{ data.editTopic.image.0.fileId }}"
+                - "imageFileId2"
+            - equals:
+                - "{{ data.editTopic.image.0.width }}"
+                - 800
+            - equals:
+                - "{{ data.editTopic.image.0.height }}"
+                - 600

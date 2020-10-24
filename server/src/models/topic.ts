@@ -3,7 +3,7 @@ import { Topic as ITopic } from "shared/types/topic";
 import { User } from "./user";
 import { ObjectType, Field, ID } from "type-graphql";
 import { prop, Ref, getModelForClass, DocumentType } from "@typegoose/typegoose";
-import mongoose from 'mongoose';
+import mongoose, { FilterQuery } from 'mongoose';
 import { identity } from './middleware/identity';
 import { Share } from './share';
 import { Image } from './image';
@@ -76,6 +76,20 @@ export class Topic implements ITopic {
         const obj = instance.toObject();
         obj.myShare = instance.myShare;
         return obj;
+    }
+
+    public static async findOneAndCheckRole(topicId: mongoose.Types.ObjectId, userId: mongoose.Types.ObjectId, roles: string[]) {
+        TopicModel.findOne()
+        const topic = await TopicModel.findOne({_id: topicId, shares: {$elemMatch: {userId}}});
+        if (!topic) {
+            throw new Error('Topic not found');
+        }
+        topic.setMyShare(userId);
+        console.log('topic.myShare', topic.myShare);
+        if (!topic.myShare || !topic.myShare.role.some(r => roles.includes(r))) {
+            throw new Error('Access denied');
+        }
+        return topic;
     }
 }
 

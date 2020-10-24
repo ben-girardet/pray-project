@@ -1,6 +1,4 @@
-import { createToken } from './../core/jwt';
-import { CreateTopicInput } from './inputs/topic';
-import { User, UserModel } from "../models/user";
+import { CreateTopicInput, EditTopicInput } from './inputs/topic';
 import { Topic, TopicModel } from "../models/topic";
 import { Share } from "../models/share";
 import { Resolver, Query, Arg, Authorized, Ctx, Mutation } from "type-graphql";
@@ -67,4 +65,33 @@ export class TopicResolver {
     createdTopicInstance.setMyShare(userId);
     return createdTopicInstance.toObjectWithMyShare();
   }
+
+  @Authorized(['user'])
+  @Mutation(() => Topic)
+  public async editTopic(@Ctx() context: Context, @Arg('id') id: string, @Arg('data') data: EditTopicInput) {
+    const user = context.user;
+    const userId = new mongoose.Types.ObjectId(user.userId);
+    const topicId = new mongoose.Types.ObjectId(id);
+    // const originalTopic = await TopicModel.findOne({_id: topicId, shares: {$elemMatch: {userId}}});
+    // if (!originalTopic) {
+    //     throw new Error('Topic not found');
+    // }
+    // originalTopic.setMyShare(userId);
+    // if (!originalTopic.myShare || !originalTopic.myShare.role.some(r => context.user.roles.includes(r))) {
+    //     throw new Error('Access denied');
+    // }
+    const originalTopic = await TopicModel.findOneAndCheckRole(topicId, userId, ['owner', 'write']);
+
+    originalTopic.updatedBy = userId;
+    originalTopic.name = data.name !== undefined ? data.name : originalTopic.name;
+    originalTopic.description = data.description !== undefined ? data.description : originalTopic.description;
+    originalTopic.image = data.image !== undefined ? data.image : originalTopic.image;
+    originalTopic.color = data.color !== undefined ? data.color : originalTopic.color;
+
+    const updatedTopic = await originalTopic.save();
+    const updatedTopicInstance = new TopicModel(updatedTopic);
+    updatedTopicInstance.setMyShare(userId);
+    return updatedTopicInstance.toObjectWithMyShare();
+  }
+
 }

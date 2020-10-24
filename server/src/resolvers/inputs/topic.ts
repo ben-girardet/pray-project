@@ -19,3 +19,19 @@ export class CreateTopicInput {
     @Field()
     encryptedContentKey: string;
 }
+
+@InputType()
+export class EditTopicInput {
+
+    @Field({nullable: true})
+    name: string;
+
+    @Field({nullable: true})
+    description: string;
+
+    @Field({nullable: true})
+    color: string;
+
+    @Field(type => [ImageInput], {nullable: true})
+    image?: ImageInput[];
+}
