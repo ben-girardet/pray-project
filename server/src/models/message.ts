@@ -1,5 +1,6 @@
 import { Length, IsNotEmpty, validateOrReject, MaxLength } from "class-validator";
 import { User } from "./user";
+import { Topic } from './topic';
 import { Message as IMessage } from "shared/types/message";
 import { ObjectType, Field, ID } from "type-graphql";
 import { prop, Ref, getModelForClass, DocumentType } from "@typegoose/typegoose";
@@ -20,6 +21,10 @@ export class Message implements IMessage {
     @Field(() => String)
     @prop()
     public text: string;
+
+    @Field(() => Topic)
+    @prop({ref: () => Topic})
+    public topicId?: Ref<Topic>;
 
     @Field(() => User)
     @prop({ref: () => User})

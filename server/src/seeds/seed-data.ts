@@ -3,9 +3,11 @@ import { RoleType } from './../core/config';
 import mongoose from 'mongoose';
 import users from './users';
 import topics from './topics';
+import messages from './messages';
 import dotenv from 'dotenv';
 import { UserModel } from '../models/user';
 import { TopicModel } from '../models/topic';
+import { MessageModel } from '../models/message';
 import { Share } from '../models/share';
 
 dotenv.config();
@@ -62,6 +64,22 @@ mongoose.connect(
                 share.role = 'owner';
                 newTopic.shares.push(share);
                 const createdTopic = await newTopic.save();
+            }
+            for (const message of messages) {
+                const topic = await TopicModel.findOne({name: message.topicName});
+                if (!topic) {
+                    continue;
+                }
+                const user = await UserModel.findOne({email: message.userEmail});
+                if (!user) {
+                    continue;
+                }
+                const newMessage = new MessageModel();
+                newMessage.topicId = topic._id;
+                newMessage.text = message.text;
+                newMessage.createdBy = user._id;
+                newMessage.updatedBy = user._id;
+                await newMessage.save();
             }
         } catch (error) {
             console.error(error);

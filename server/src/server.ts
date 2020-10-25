@@ -29,12 +29,13 @@ const controllers = [AdminController, AuthController, ImageController];
 import { registerControllers } from './core/framework';
 
 // Resolvers
-import { HelloResolver } from './resolvers/hello';
 import { UserResolver } from './resolvers/user';
 import { TopicResolver } from './resolvers/topic';
+import { TopicMessagesResolver } from './resolvers/topic.messages';
 import { RegistrationResolver } from './resolvers/registration';
 import { AuthResolver, customAuthChecker } from './resolvers/auth';
-const resolvers: NonEmptyArray<Function> | NonEmptyArray<string> = [UserResolver, TopicResolver, RegistrationResolver, AuthResolver];
+const resolvers: NonEmptyArray<Function> | NonEmptyArray<string> =
+    [UserResolver, TopicResolver, TopicMessagesResolver, RegistrationResolver, AuthResolver];
 
 
 dotenv.config();
