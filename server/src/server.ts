@@ -30,12 +30,14 @@ import { registerControllers } from './core/framework';
 
 // Resolvers
 import { UserResolver } from './resolvers/user';
+import { UserMessagesResolver } from './resolvers/user.messages';
 import { TopicResolver } from './resolvers/topic';
 import { TopicMessagesResolver } from './resolvers/topic.messages';
+import { MessageResolver } from './resolvers/message';
 import { RegistrationResolver } from './resolvers/registration';
 import { AuthResolver, customAuthChecker } from './resolvers/auth';
 const resolvers: NonEmptyArray<Function> | NonEmptyArray<string> =
-    [UserResolver, TopicResolver, TopicMessagesResolver, RegistrationResolver, AuthResolver];
+    [UserResolver, UserMessagesResolver, TopicResolver, TopicMessagesResolver, MessageResolver, RegistrationResolver, AuthResolver];
 
 
 dotenv.config();

@@ -15,11 +15,13 @@
     "start": "npx nodemon src/server.ts",
     "seed": "ts-node src/seeds/seed-data.ts",
     "unseed": "ts-node src/seeds/clear-seed.ts",
+    "reseed": "npm-run-all unseed seed",
     "test": "npm run-script test"
   },
   "author": "Dwayne Charrington",
   "license": "UNLICENCED",
   "dependencies": {
+    "@typegoose/auto-increment": "^0.6.0",
     "@typegoose/typegoose": "^7.4.1",
     "@types/express-jwt": "0.0.42",
     "@types/mongoose": "^5.7.36",

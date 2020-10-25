@@ -205,3 +205,6 @@ scenarios:
             - equals:
                 - "{{ data.topics.0.image.1.height }}"
                 - 300
+            - equals:
+                - "{{ data.topics.0.messages.length }}"
+                - 2

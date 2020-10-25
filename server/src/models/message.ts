@@ -15,12 +15,15 @@ export class Message implements IMessage {
         return (this as any)._id ? (this as any)._id.toString() : '';
     };
 
-    @prop()
     public _id: mongoose.Types.ObjectId;
 
     @Field(() => String)
     @prop()
     public text: string;
+
+    @Field(() => String, {nullable: true})
+    @prop({default: false})
+    public deleted: boolean = false;
 
     @Field(() => Topic)
     @prop({ref: () => Topic})

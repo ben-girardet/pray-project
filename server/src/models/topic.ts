@@ -1,7 +1,7 @@
 import { Length, IsNotEmpty, validateOrReject, MaxLength } from "class-validator";
 import { Topic as ITopic } from "shared/types/topic";
 import { User } from "./user";
-import { ObjectType, Field, ID } from "type-graphql";
+import { ObjectType, Field } from "type-graphql";
 import { prop, Ref, getModelForClass } from "@typegoose/typegoose";
 import mongoose from 'mongoose';
 import { identity } from './middleware/identity';

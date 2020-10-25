@@ -5,6 +5,7 @@ import { Resolver, Query, Arg, Authorized, Ctx, Mutation } from "type-graphql";
 import { FilterQuery } from 'mongoose';
 import { Context } from "./context-interface";
 import { mongoose } from "@typegoose/typegoose";
+import { MessageModel } from 'src/models/message';
 
 @Resolver()
 export class TopicResolver {
@@ -125,7 +126,7 @@ export class TopicResolver {
     const userId = new mongoose.Types.ObjectId(user.userId);
     const topicId = new mongoose.Types.ObjectId(id);
     const originalTopic = await TopicModel.findOneAndCheckRole(topicId, userId, true);
-    // TODO: ensure the removing of all related messages
+    await MessageModel.deleteMany({topicId});
     await originalTopic.remove();
     return true;
   }

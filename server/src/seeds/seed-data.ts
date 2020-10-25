@@ -1,12 +1,13 @@
 import { Encrypt } from './encrypt';
 import { RoleType } from './../core/config';
 import mongoose from 'mongoose';
+import { DocumentType } from '@typegoose/typegoose';
 import users from './users';
 import topics from './topics';
 import messages from './messages';
 import dotenv from 'dotenv';
 import { UserModel } from '../models/user';
-import { TopicModel } from '../models/topic';
+import { TopicModel, Topic } from '../models/topic';
 import { MessageModel } from '../models/message';
 import { Share } from '../models/share';
 
@@ -20,6 +21,7 @@ mongoose.connect(
         dbName: process.env.DBNAME
     }).then(async () => {
         try {
+            const topicsByName: {[key: string]: DocumentType<Topic>} = {};
             for (const user of users) {
                 const existingUser = await UserModel.findOne(
                     {email: user.email});
@@ -44,7 +46,7 @@ mongoose.connect(
                 if (!user) {
                     continue;
                 }
-                const newTopic = new TopicModel();
+                const newTopic = new TopicModel({cursor: 1});
                 newTopic.createdBy = user._id;
                 newTopic.updatedBy = user._id;
                 newTopic.name = topic.name;
@@ -64,14 +66,17 @@ mongoose.connect(
                 share.role = 'owner';
                 newTopic.shares.push(share);
                 const createdTopic = await newTopic.save();
+                topicsByName[topic.name] = new TopicModel(createdTopic);
             }
             for (const message of messages) {
-                const topic = await TopicModel.findOne({name: message.topicName});
+                const topic = topicsByName[message.topicName];
                 if (!topic) {
+                    console.log('topic not found');
                     continue;
                 }
                 const user = await UserModel.findOne({email: message.userEmail});
                 if (!user) {
+                    console.log('user not found');
                     continue;
                 }
                 const newMessage = new MessageModel();

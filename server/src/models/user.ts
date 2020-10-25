@@ -3,6 +3,7 @@ import crypto from 'crypto';
 import { User as IUser } from "shared/types/user";
 import { ObjectType, Field, Authorized } from "type-graphql";
 import { prop, Ref, getModelForClass } from "@typegoose/typegoose";
+import mongoose from 'mongoose';
 import { config, RoleType } from '../core/config';
 import moment from 'moment';
 
@@ -22,6 +23,9 @@ export class RefreshToken {
 
 @ObjectType()
 export class User implements IUser {
+
+    // @prop()
+    public _id: mongoose.Types.ObjectId;
 
     @Field(() => String)
     public get id(): string {

@@ -208,6 +208,27 @@ scenarios:
                 - "{{ data.topics.0.image.1.height }}"
                 - 300
     - post:
+        name: "Get First Topic Messages"
+        url: "/graphql"
+        json:
+            operationName: null
+            query: 'query {topic(id: "{{ firstTopicId }}") {id, name, messages {text}}}'
+            variables: '{}'
+        headers:
+            Authorization: "Bearer {{ benToken }}"
+        capture:
+            - json: "$.data"
+              as: "data"
+        expect:
+            - statusCode: 200
+            - hasProperty: "data.topic"
+            - hasProperty: "data.topic.name"
+            - hasProperty: "data.topic.messages"
+            - hasProperty: "data.topic.messages.0.text"
+            - equals:
+                - "{{ data.topic.messages.length }}"
+                - 2
+    - post:
         name: "Create a topic with Ben"
         url: "/graphql"
         json:
@@ -475,3 +496,69 @@ scenarios:
             - equals:
                 - "{{ data.removeShareToTopic.shares.0.role }}"
                 - "owner"
+    - post:
+        name: "Create a message with Ben in the newly created topic"
+        url: "/graphql"
+        json:
+            operationName: null
+            query: 'mutation {createMessageInTopic(data: {topicId: "{{ createdTopicId }}", text: "First message here"}) {id, text}}'
+            variables: '{}'
+        headers:
+            Authorization: "Bearer {{ benToken }}"
+        capture:
+            - json: "$.data"
+              as: "data"
+            - json: "$.data.createMessageInTopic.id"
+              as: "createdMessageId"
+        expect:
+            - statusCode: 200
+            - hasProperty: "data.createMessageInTopic"
+            - hasProperty: "data.createMessageInTopic.id"
+            - hasProperty: "data.createMessageInTopic.text"
+            - equals:
+                - "{{ data.createMessageInTopic.text }}"
+                - "First message here"
+    - post:
+        name: "Edit recently created message"
+        url: "/graphql"
+        json:
+            operationName: null
+            query: 'mutation {editMessage(data: {id: "{{ createdMessageId }}", text: "First message here (edited)"}) {id, text}}'
+            variables: '{}'
+        headers:
+            Authorization: "Bearer {{ benToken }}"
+        capture:
+            - json: "$.data"
+              as: "data"
+        expect:
+            - statusCode: 200
+            - hasProperty: "data.editMessage"
+            - hasProperty: "data.editMessage.id"
+            - hasProperty: "data.editMessage.text"
+            - equals:
+                - "{{ data.editMessage.text }}"
+                - "First message here (edited)"
+    - post:
+        name: "Remove recently created message"
+        url: "/graphql"
+        json:
+            operationName: null
+            query: 'mutation {removeMessage(id: "{{ createdMessageId }}") {id, text, deleted}}'
+            variables: '{}'
+        headers:
+            Authorization: "Bearer {{ benToken }}"
+        capture:
+            - json: "$.data"
+              as: "data"
+        expect:
+            - statusCode: 200
+            - hasProperty: "data.removeMessage"
+            - hasProperty: "data.removeMessage.id"
+            - hasProperty: "data.removeMessage.text"
+            - hasProperty: "data.removeMessage.deleted"
+            - equals:
+                - "{{ data.removeMessage.text }}"
+                - ""
+            - equals:
+                - "{{ data.removeMessage.deleted }}"
+                - true
