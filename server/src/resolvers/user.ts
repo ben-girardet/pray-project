@@ -1,6 +1,8 @@
 import { User, UserModel } from "../models/user";
-import { Resolver, Query, Arg } from "type-graphql";
+import { Resolver, Query, Arg, Ctx } from "type-graphql";
 import { FilterQuery } from 'mongoose';
+import { Context } from './context-interface';
+import mongoose from 'mongoose';
 
 @Resolver()
 export class UserResolver {
@@ -19,6 +21,16 @@ export class UserResolver {
   @Query(() => User)
   public async user(@Arg("id") id: string) {
     const user = await UserModel.findById(id);
+    if (!user) {
+        throw new Error('User not found');
+    }
+    return user.toObject();
+  }
+
+  @Query(() => User)
+  public async me(@Ctx() context: Context) {
+    const userId = new mongoose.Types.ObjectId(context.user.userId);
+    const user = await UserModel.findById(userId);
     if (!user) {
         throw new Error('User not found');
     }

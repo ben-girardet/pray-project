@@ -5,7 +5,7 @@ import { Resolver, Query, Arg, Authorized, Ctx, Mutation } from "type-graphql";
 import { FilterQuery } from 'mongoose';
 import { Context } from "./context-interface";
 import { mongoose } from "@typegoose/typegoose";
-import { MessageModel } from 'src/models/message';
+import { MessageModel } from '../models/message';
 
 @Resolver()
 export class TopicResolver {
@@ -13,6 +13,7 @@ export class TopicResolver {
   @Authorized(['user'])
   @Query(() => [Topic])
   public async topics(@Ctx() context: Context) {
+    // Add a test of what is happening when login fails
     const userId = new mongoose.Types.ObjectId(context.user.userId);
     const query: FilterQuery<typeof TopicModel> = {shares: {$elemMatch: {userId}}};
     const topics = await TopicModel.find(query);

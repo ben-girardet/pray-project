@@ -8,19 +8,6 @@ import { Context } from './context-interface';
 import crypto from 'crypto';
 import moment from 'moment';
 
-/*
- * Options used in resolvers to issue the refresh token cookie.
- */
-const REFRESH_TOKEN_COOKIE_OPTIONS = {
-    // Get part after // and before : (in case port number in URL)
-    // E.g. <http://localhost:3000> becomes localhost
-    domain: 'localhost', // TODO: fix domain here process.env.BASE_URL.split('//')[1].split(':')[0],
-    httpOnly: true,
-    path: '/',
-    sameSite: true,
-    // Allow non-secure cookies only in development environment without HTTPS
-    secure: false // TODO: fix secure !!process.env.BASE_URL.includes('https'),
-  };
 
 @Resolver()
 export class AuthResolver {
@@ -38,7 +25,9 @@ export class AuthResolver {
         const refreshTokenData = user.generateRefreshToken();
         await user.save();
         this.sendRefreshToken(context.res, refreshTokenData);
-        return jwt.sign({userId: user.id, roles: user.roles}, process.env.JWT_SECRET_OR_KEY as string, { expiresIn: process.env.JWT_TOKEN_EXPIRATION, algorithm: 'HS256' });
+        const jwtString = jwt.sign({userId: user.id, roles: user.roles}, process.env.JWT_SECRET_OR_KEY as string, { expiresIn: process.env.JWT_TOKEN_EXPIRATION, algorithm: 'HS256' });
+        this.setJWTCookie(context.res, jwtString);
+        return jwtString;
     }
 
     @Mutation(() => String)
@@ -65,7 +54,20 @@ export class AuthResolver {
         const refreshTokenData = foundUser.generateRefreshToken();
         await foundUser.save();
         this.sendRefreshToken(context.res, refreshTokenData);
-        return jwt.sign({userId: foundUser.id, roles: foundUser.roles}, process.env.JWT_SECRET_OR_KEY as string, { expiresIn: process.env.JWT_TOKEN_EXPIRATION, algorithm: 'HS256'});
+        const jwtString = jwt.sign({userId: foundUser.id, roles: foundUser.roles}, process.env.JWT_SECRET_OR_KEY as string, { expiresIn: process.env.JWT_TOKEN_EXPIRATION, algorithm: 'HS256'});
+        this.setJWTCookie(context.res, jwtString);
+        return jwtString;
+    }
+
+    private setJWTCookie(res: Response, jwtString: string) {
+        res.cookie('jwt', jwtString, {
+            path: '/graphql',
+            httpOnly: true,
+            expires: moment().add(15, 'minutes').toDate(),
+            domain: undefined,
+            //domain: 'localhost',
+            sameSite: true,
+        });
     }
 
     private sendRefreshToken(res: Response, refreshTokenData: RefreshTokenData) {
@@ -92,6 +94,9 @@ export const customAuthChecker: AuthChecker<Context> =
     // and check his permission in the db against the `roles` argument
     // that comes from the `@Authorized` decorator, eg. ["ADMIN", "MODERATOR"]
 
+    if (!context.user) {
+        return false;
+    }
 
     if (root && root._id && root._id.toString() === context.user.userId) {
         context.user.roles.push('me');

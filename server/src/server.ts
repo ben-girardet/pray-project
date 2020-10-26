@@ -11,6 +11,7 @@ import { ApolloServer } from 'apollo-server-express';
 import { buildSchema, NonEmptyArray } from 'type-graphql';
 import contextService from 'request-context';
 import jwt from 'express-jwt';
+import cors, { CorsOptions } from 'cors';
 
 import * as sessionAuth from './middleware/session-auth';
 
@@ -41,6 +42,11 @@ const resolvers: NonEmptyArray<Function> | NonEmptyArray<string> =
 
 
 dotenv.config();
+
+const corsOptions: CorsOptions = {
+    origin: 'http://localhost:9000',
+    credentials: true
+};
 
 passport.serializeUser((user: any, done) => {
     done(null, user.id);
@@ -129,12 +135,23 @@ mongoose.connect(
                 return context;
             },
         });
+    app.use('/graphql', (req: express.Request, res: express.Response, next: express.NextFunction) => {
+        if (!req.header('Authorization')) {
+            // if not Authorization header, check in cookie
+            const { jwt } = req.cookies;
+            if (jwt) {
+                req.headers.authorization = `Bearer ${jwt}`;
+            }
+        }
+        next();
+        // TODO: Add test for this authoritation via cookie
+    });
     app.use('/graphql', jwt({
         secret: process.env.JWT_SECRET_OR_KEY as string,
         credentialsRequired: false,
         algorithms: ['HS256']
     }))
-    apolloServer.applyMiddleware({app, path: '/graphql'});
+    apolloServer.applyMiddleware({app, path: '/graphql', cors: corsOptions});
 
 
     // Register our controllers with Express
