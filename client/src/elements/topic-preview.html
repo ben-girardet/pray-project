@@ -1,0 +1,13 @@
+<div class="topic-preview">
+  <img if.bind="topic.imageSmallB64" class="topic_preview__preview" src="${topic.imageMedium | file}">
+  <div if.bind="!topic.imageSmallB64" class="topic_preview__img-placeholder" style="background: ${gradient(topic.color)}"></div>
+  <div class="topic_preview__content">
+    <div class="topic_preview__author">
+      <mini-user user-id="${topic.author}" size="small"></mini-user>
+    </div>
+    <div class="topic_preview__main-content">
+      <div class="topic_preview__title">${topic.title}</div>
+      <div class="topic_preview__description">${topic.description || ''}</div>
+    </div>
+  </div>
+</div>

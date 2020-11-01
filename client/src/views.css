@@ -1,0 +1,226 @@
+* {
+  --header-color: #335BBB;
+  --body-color: #fff;
+  --bottom-bar-color: #efefef;
+}
+
+@media (prefers-color-scheme: dark) {
+  * {
+    --header-color: #000;
+    --body-color: #000;
+    --bottom-bar-color: #111;
+  }
+}
+
+html {
+  background: var(--bottom-bar-color);
+}
+
+body {
+  background: linear-gradient(180deg, 
+  var(--header-color) 0px,
+  var(--header-color) var(--top-bar-end),
+  var(--body-color) var(--body-start),
+  var(--body-color) var(--body-end),
+  var(--bottom-bar-color) var(--bottom-bar-start),
+  var(--bottom-bar-color) 100%
+  );
+}
+html.bottom body {
+  background: #000;
+}
+
+
+/* VIEWPORTS */
+au-viewport {
+  position: absolute;
+  overflow-x: hidden;
+  overflow-y: auto;
+  width: 100vw;
+}
+au-viewport[name=main] { 
+  z-index: 1;
+  top: 0;
+  top: constant(safe-area-inset-top);
+  top: env(safe-area-inset-top);
+  left: 0;
+  bottom: 50px;
+  /* bottom: calc(50px + constant(safe-area-inset-bottom));
+  bottom: calc(50px + env(safe-area-inset-bottom)); */
+  /* background-color: var(--background-color); */
+  background: linear-gradient(180deg, var(--header-color) 500px, var(--body-color) 500px);
+  transition: all 250ms ease-out;
+}
+
+au-viewport[name=praying] {
+  overflow: hidden;
+  z-index: 3;
+  height: 100%;
+  top: 0;
+  left: 0;
+  transform: translateY(150%);
+  transition: transform 250ms ease-out;
+  padding: 16px;
+  background-color: #000;
+}
+body.praying au-viewport[name=praying] {
+  transform: translateY(0);
+}
+au-viewport[name=bottom] {
+  z-index: 3;
+  height: calc(95%);
+  bottom: 0;
+  left: 0;
+  transform: translateY(150%);
+  transition: transform 250ms ease-out;
+  padding: 16px;
+  background-color: var(--body-color);
+  border-radius: 0;
+  box-shadow: var(--elevation2);
+}
+html.bottom au-viewport[name=bottom] {
+  transform: translateY(0px);
+  border-top-left-radius: 15px;
+  border-top-right-radius: 15px;
+}
+html.bottom au-viewport[name=main],
+html.bottom au-viewport[name=detail] {
+  transform: scale(0.95);
+  border-radius: 15px;
+  box-shadow: var(--elevation0);
+  overflow: hidden;
+  background: var(--body-color);
+}
+au-viewport[name=detail] {
+  z-index: 3;
+  width: 0;
+  height: 0;
+  top: 50%;
+  left: 50%;
+  opacity: 0;
+  transition: all 300ms ease-out;
+}
+html.detail au-viewport[name=detail] {
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  opacity: 1;
+}
+
+/* VIEWPARTS */
+
+.bottom-bar {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 50px;
+  /* height: calc(50px + constant(safe-area-inset-bottom));
+  height: calc(50px + env(safe-area-inset-bottom)); */
+  background: var(--bottom-bar-color);
+  border-top: #fefefe 1px solid;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.bottom-bar-button {
+  height: 50px;
+  cursor: pointer;
+  flex-shrink: 1;
+  width: 25%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.bottom-bar-button.praying-button img {
+  width: 45px;
+  height: 45px;
+  border-radius: calc(var(--corner-radius) * 1px);
+  overflow: hidden;
+}
+
+.bottom-bar-button mini-user.active .mini-user__avatar {
+  border: 1px solid #000;
+  padding: 1px;
+}
+
+.list-head {
+  width: 100%;
+  background-color: var(--header-color);
+  padding-top: 0px;
+  /* padding-top: calc(0px + constant(safe-area-inset-top));
+  padding-top: calc(0px + env(safe-area-inset-top)); */
+}
+.list-content {
+  min-height: 2000px;
+  background: var(--body-color);
+}
+.list-content-head {
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0;
+  background-color: var(--header-color);
+  padding: 16px;
+  z-index:1;
+  transform: translateY(-1px);
+}
+.list-content-head h2 {
+  margin: 0px;
+}
+.list-content-list {
+  padding: 16px;
+}
+
+.head {
+  width: 100%;
+  position: relative;
+  height: 50px;
+  overflow: hidden;
+}
+
+.head__left,
+.head__right {
+  position: fixed;
+  top: 16px;
+  top: calc(16px + constant(safe-area-inset-top));
+  top: calc(16px + env(safe-area-inset-top));
+  left: 16px;
+  left: calc(16px + constant(safe-area-inset-left));
+  left: calc(16px + env(safe-area-inset-left));
+  color: white;
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-start;
+  text-rendering: optimizelegibility;
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, .8);
+}
+.head__right {
+  left: auto;
+  right: 16px;
+  right: calc(16px + constant(safe-area-inset-right));
+  right: calc(16px + env(safe-area-inset-right));
+}
+
+.head__left pray-icon {
+  margin-right: 8px;
+}
+.head__right pray-icon {
+  margin-left: 8px;
+}
+
+/* TECHNICAL VARIABLES */
+* {
+  --top-bar-end: 0;
+  --body-start: 0;
+  --top-bar-end: constant(safe-area-inset-top);
+  --top-bar-end: env(safe-area-inset-top);
+  --body-start: calc(var(--top-bar-end) + 0px);
+  --bottom-bar-height: 0;
+  --bottom-bar-height: constant(safe-area-inset-bottom);
+  --bottom-bar-height: env(safe-area-inset-bottom);
+  --body-end: calc(100% - var(--bottom-bar-height));
+  --bottom-bar-start: calc(var(--body-end) + 1px);
+}

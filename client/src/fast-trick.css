@@ -1,0 +1,28 @@
+* {
+  --corner-radius: 10;
+}
+fast-design-system-provider {
+  display: inline;
+}
+fast-design-system-provider.dw {
+  display: block;
+  width: 100%;
+}
+fast-text-field::part(control) {
+  width: 100%;
+  font-family: var(--body-font);
+}
+fast-text-field::part(label),
+fast-text-area::part(label) {
+  color: var(--accent-fill-rest);
+}
+fast-tabs.centered {
+  grid-template-columns: none;
+}
+fast-tabs::part(activeIndicator) {
+  height: 2px;
+  border-radius: 0;
+}
+fast-tab:focus {
+  box-shadow: none;
+}

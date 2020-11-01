@@ -1,0 +1,38 @@
+.avatar-selection {
+  display: flex;
+  justify-content: center;
+}
+
+.avatar-selection .placeholder,
+.avatar-selection img {
+  width: 50px;
+  height: 50px;
+  border-radius: 50px;
+  overflow: hidden;
+  margin-right: 16px;
+  cursor: pointer;
+  opacity: 0.5;
+}
+.avatar-selection .placeholder:hover,
+.avatar-selection img:hover {
+  box-shadow: 0 0 3px rgba(70,51,175,1);
+}
+.avatar-selection .placeholder.selected,
+.avatar-selection img.selected {
+  opacity: 1;
+  box-shadow: 0 0 3px rgba(70,51,175,1);
+}
+.avatar-selection .placeholder {
+  display: flex;
+  background: #dadada;
+  align-items: center;
+  justify-content: center;
+  color: white;
+}
+
+.input-file-container {
+  position: absolute;
+  margin-left: -100%;
+  display: none;
+  opacity: 0;
+}

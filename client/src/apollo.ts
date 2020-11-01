@@ -4,11 +4,21 @@ import { refreshToken } from './commands/login';
 import moment from 'moment';
 
 class ApolloAuth {
-    expires: Date;
-    userId: string;
+
+    private expires: Date;
+    private userId: string; 
+    
+    public setLogin(login: {userId: string, expires: Date | string}) {
+      this.userId = login.userId;
+      this.expires = login.expires instanceof Date ? login.expires : moment(login.expires).toDate();
+    }
 
     public isTokenValid() {
         return moment(this.expires).isAfter(moment());
+    }
+
+    public get authenticated(): boolean {
+      return this.isTokenValid();
     }
 }
 

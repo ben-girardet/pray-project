@@ -1,0 +1,18 @@
+[
+  {
+    "id": "1",
+    "firstname": "Ben",
+    "lastname": "Girardet",
+    "email": "ben@platform5.ch",
+    "mobile": "0792567760",
+    "password": "0123"
+  },
+  {
+    "id": "1",
+    "firstname": "Chantal",
+    "lastname": "Girardet",
+    "email": "chantal@girardet.ch",
+    "mobile": "0797325550",
+    "password": "Pray41"
+  }
+]

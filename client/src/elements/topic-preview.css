@@ -1,0 +1,64 @@
+.topic-preview {
+  contain: content;
+  display: flex;    
+  align-items: center;
+  justify-content: space-between;
+  height: 120px;
+  border-radius: calc(var(--corner-radius) * 1px);
+  background: var(--neutral-fill-active);
+  overflow: hidden;
+}
+.topic-preview:hover {
+  background: var(--neutral-fill-hover);
+}
+.topic_preview__preview,
+.topic_preview__img-placeholder {
+  width: 100px;
+  height: 120px;
+  flex-shrink: 0;
+}
+.topic_preview__content {
+  box-sizing: border-box;
+  width: 100%;
+  height: 120px;
+  flex-shrink: 1;
+  padding: 8px 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+.topic_preview__main-content {
+  margin-bottom: auto;
+  max-height: 70px;
+  overflow: hidden;
+}
+.topic_preview__author {
+  flex-direction: row;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  font-family: 'Montserrat', sans-serif;
+}
+.topic_preview__author img {
+  margin-right: 8px;
+}
+.topic_preview__author span {
+  opacity: 0.8;
+}
+.topic_preview__author {
+  padding: 4px;
+  font-size: 12px;
+  font-weight: 100;
+}
+.topic_preview__title {
+  font-size: 16px;
+}
+.topic_preview__description {
+  font-size: 12px;
+  font-weight: 100;
+}
+.topic_preview__title,
+.topic_preview__description {
+  padding: 4px;
+  line-height: 20px;
+}

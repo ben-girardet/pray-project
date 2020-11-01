@@ -1,0 +1,31 @@
+/* Dark mode */
+@media (prefers-color-scheme: dark) {
+  * {
+    --elevation0: 0 0 3px rgba(255,255,255,0.12), 0 1px 1px rgba(255,255,255,0.12);
+    --elevation1: 0 1px 3px rgba(255,255,255,0.12), 0 1px 2px rgba(255,255,255,0.24);
+    --elevation2: 0 3px 6px rgba(255,255,255,0.16), 0 3px 6px rgba(255,255,255,0.23);
+    --elevation3: 0 10px 20px rgba(255,255,255,0.19), 0 6px 6px rgba(255,255,255,0.23);
+    --elevation4: 0 14px 28px rgba(255,255,255,0.25), 0 10px 10px rgba(255,255,255,0.22);
+    --elevation5: 0 19px 38px rgba(255,255,255,0.30), 0 15px 12px rgba(255,255,255,0.22);
+    --top-bar-color: #000;
+    --body-color: #000;
+    --bottom-bar-color: #111;
+  }
+  body {
+    background-color: #000;
+  }
+  body.bottom au-viewport[name=main] {
+    background: #1A1A1A!important;
+  }
+  .topics .fast-tab-panel__title {
+    background: rgb(0,0,0)!important;
+    background: linear-gradient(180deg, rgba(0,0,0,1) 0%, rgba(0,0,0,1) 80%, rgba(0,0,0,0) 100%)!important;
+  }
+  .topics pray-item {
+    background: #1A1A1A!important;
+  }
+  .bottom-bar {
+    /* background: #111; */
+    border-top: #0A0A0A 1px solid;
+  }
+}

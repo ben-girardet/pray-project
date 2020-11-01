@@ -23,12 +23,10 @@ mutation RefreshToken($userId: String!) {
 
 export async function login(username: string, password: string) {
   const result = await client.mutate({mutation: loginMutation, variables: {username, password}, fetchPolicy: 'no-cache'});
-  apolloAuth.expires = moment(result.data.login.expires).toDate();
-  apolloAuth.userId = result.data.login.userId;
+  apolloAuth.setLogin(result.data.login);
 }
 
 export async function refreshToken(userId: string) {
   const result = await client.mutate({mutation: refreshTokenMutation, variables: {userId}, fetchPolicy: 'no-cache'});
-  apolloAuth.expires = moment(result.data.refreshToken.expires).toDate();
-  apolloAuth.userId = result.data.refreshToken.userId;
+  apolloAuth.setLogin(result.data.refreshToken);
 }

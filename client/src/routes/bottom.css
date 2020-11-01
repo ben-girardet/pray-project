@@ -1,0 +1,39 @@
+.bottom-headview {
+  position: absolute;
+  top: 0;
+  /* top: constant(safe-area-inset-top);
+  top: env(safe-area-inset-top); */
+  left: 0;
+  width: 100%;
+  height: 50px;
+  display: grid;
+  grid-template-columns: 1fr 2fr 1fr;
+  justify-items: center;
+  align-items: center;
+  box-shadow: var(--elevation1);
+}
+.bottom-headview > * {
+  padding: 0 16px;
+  font-size: 1rem;
+}
+.bottom-headview > :first-child {
+  justify-self: flex-start;
+  font-size: 1.1rem;
+}
+.bottom-headview > :last-child {
+  justify-self: flex-end;
+  font-size: 1.1rem;
+}
+.bottom-contentview {
+  position: absolute;
+  top: 50px;
+  /* top: calc(50px + constant(safe-area-inset-top));
+  top: calc(50px + env(safe-area-inset-top)); */
+  left: 0;
+  width: 100%;
+  bottom: 0;
+  /* bottom: constant(safe-area-inset-bottom);
+  bottom: env(safe-area-inset-bottom); */
+  overflow-y: auto;
+  padding: 16px;
+}

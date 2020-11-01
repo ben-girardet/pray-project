@@ -1,0 +1,41 @@
+.topics {
+  /* padding-top: constant(safe-area-inset-top)
+  padding-top: env(safe-area-inset-top);  */
+}
+/* .topics fast-tabs, */
+.topics fast-tab { 
+  --type-ramp-base-font-size: 12px;
+  --design-unit: 3;
+}
+.topics fast-tab-panel {
+  flex-direction: column;
+  padding-left: 16px;
+  padding-right: 16px;
+}
+.topics .fast-tab-panel__title {
+  background: rgb(255,255,255);
+  background: linear-gradient(180deg, rgba(255,255,255,1) 0%, rgba(255,255,255,1) 70%, rgba(255,255,255,0) 100%);
+  position: sticky;
+  top: 0px;
+  z-index: 1;
+  padding: 24px 8px;
+  height: 75px;
+}
+.topics pray-search-input {
+  margin-bottom: 16px;
+}
+.topics .topic-preview {
+  margin-bottom: 16px;
+  background: #FAFAFA;
+}
+#add-button {
+  position: fixed;
+  top: 6px;
+  right: 16px;
+  transform: translateY(constant(safe-area-inset-top)) translateX(calc(constant(safe-area-inset-right) * -1));
+  transform: translateY(env(safe-area-inset-top)) translateX(calc(env(safe-area-inset-right) * -1));
+  z-index: 2;
+}
+/* html.bottom au-viewport[name=main] #add-button{
+  display: none;
+} */

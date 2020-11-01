@@ -1,0 +1,23 @@
+.container {
+  width: 600px;
+  margin: auto;
+  padding: 40px 0;
+}
+
+.container fast-text-field,
+.container fast-text-area {
+  width: 100%;
+  border: dotted 2px #fcc;
+}
+
+.container fast-text-field::part(control),
+.container fast-text-area::part(control) {
+  background-color: #ccc; /* in order to reveal the control width bug */
+} 
+
+.container fast-text-field::part(start) {
+  width: 24px;
+  height: 24px;
+  background: red;
+  border-radius: 4px;
+}

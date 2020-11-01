@@ -1,0 +1,49 @@
+<import from="./account.css"></import>
+<div class="account">
+  <div class="account-profile" if.bind="user">
+    <img src="${user.profilePicMedium | file}">
+    <div>
+      <div class="name">${user.firstname} ${user.lastname}</div>
+      <div class="details">
+        <div class="detail">
+          <div>14</div>
+          <div>Topics</div>
+        </div>
+        <div class="detail">
+          <div>25</div>
+          <div>Messages</div>
+        </div>
+        <div class="detail" goto="../friends">
+          <div>6</div>
+          <div>Friends</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <fast-divider style="margin: 32px 0;"></fast-divider>
+
+  <fast-menu>
+    <fast-menu-item>
+      <pray-icon icon="User" slot="start"></pray-icon>
+      My Account
+    </fast-menu-item>
+    <fast-menu-item goto="../friends">
+      <pray-icon icon="Users" slot="start"></pray-icon>
+      Friends
+    </fast-menu-item>
+    <fast-menu-item>
+      <pray-icon icon="TrendingUp" slot="start"></pray-icon>
+      Stats
+    </fast-menu-item>
+    <fast-menu-item>
+      <pray-icon icon="Key" slot="start"></pray-icon>
+      Privacy
+    </fast-menu-item>
+    <fast-divider></fast-divider>
+    <fast-menu-item click.trigger="logout()">
+      <pray-icon icon="Logout" slot="start"></pray-icon>
+      Logout
+    </fast-menu-item>
+  </fast-menu>
+</div>

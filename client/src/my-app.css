@@ -1,18 +1,90 @@
-nav {
-  background: #eee;
-  display: flex;
+/*
+#4633AF
+#00C9DB
+*/
+
+* {
+  box-sizing: border-box;
+  --gradient: linear-gradient(135deg, rgba(70,51,175,1) 0%, rgba(0,201,219,1) 100%);
+  --elevation0: 0 0 3px rgba(0,0,0,0.3), 0 1px 1px rgba(0,0,0,0.12);
+  --elevation1: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+  --elevation2: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+  --elevation3: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
+  --elevation4: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
+  --elevation5: 0 19px 38px rgba(0,0,0,0.30), 0 15px 12px rgba(0,0,0,0.22);
 }
 
-a {
-  padding: 10px;
+.gradient {
+  background: var(--gradient);
+}
+
+html, body {
+  overflow: hidden;
+  position: fixed;
+  height: 100%;
+  width: 100%;
+}
+body {
+  margin: 0;
+}
+a,
+a:visited,
+a:hover,
+a:active {
+  background: transparent;
+  color: var(--neutral-foreground-hint);
+  color: var(--neutral-foreground-rest);
   text-decoration: none;
-  color: black;
 }
 
-a:hover {
-  background-color: darkgray;
-}
-
-.load-active {
+/* .goto-active {
   background-color: lightgray;
+} */
+
+
+form {
+  display: grid;
+  grid-auto-rows: max-content;
+  gap: 20px;
+}
+form label {
+  color: var(--accent-fill-rest);
+  font-family: 'Montserrat', sans-serif;
+  --body-font: 'Montserrat', sans-serif;
+  display: block;
+  cursor: pointer;
+  font-size: var(--type-ramp-base-font-size);
+  line-height: var(--type-ramp-base-line-height);
+  margin-bottom: 4px;
+}
+.button-row__two {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  align-items: center;
+}
+.button-row__two--small-left {
+  grid-template-columns: auto 1fr;
+}
+.button-row__two--small-right {
+  grid-template-columns: 1fr auto;
+}
+.button-row__two--centered {
+  justify-items: center;
+}
+
+
+
+.head.on-image pray-icon::part(svg) {
+  -webkit-filter: drop-shadow( 1px 1px 3px rgba(0, 0, 0, .8));
+  filter: drop-shadow( 1px 1px 3px rgba(0, 0, 0, .8));
+}
+
+
+#reset {
+  position: fixed;
+  top: 4px;
+  left: 150px;
+  z-index: 10;
+  opacity: 0.3;
 }

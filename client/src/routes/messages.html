@@ -1,0 +1,24 @@
+<div class="topics">
+  <a goto="../topic-form" id="add-button">
+    <pray-icon icon="Plus" size="lg" button lightweight></pray-icon>
+  </a>
+  
+  <fast-tabs activeId="active">
+    <fast-tab id="active">Active</fast-tab>
+    <fast-tab id="archived">Archived</fast-tab>
+    
+    <fast-tab-panel id="activePanel">
+
+      <h2 class="fast-tab-panel__title" click.delegate="scrollToTop()">Messages</h2>
+      
+      <pray-search-input placeholder="Search" value.two-way="search"></pray-search-input>
+
+
+    </fast-tab-panel>
+    <fast-tab-panel id="archivedPanel">
+      <h2 class="fast-tab-panel__title" click.delegate="scrollToTop()">Archived Messages</h2>
+    </fast-tab-panel>
+  </fast-tabs>
+
+</div>  
+

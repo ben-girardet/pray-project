@@ -1,0 +1,73 @@
+<import from="./bottom.css"></import>
+<import from="../cropping.css"></import>
+
+<div class="bottom-headview">
+  <fast-button appearance="lightweight" click.trigger="cancel()">Annuler</fast-button>
+  <span if.bind="!topicId">New Topic</span>
+  <span if.bind="topicId">Edit Topic</span>
+  <fast-button appearance="lightweight" click.trigger="save()">Save</fast-button>
+</div>
+
+<div class="bottom-contentview">
+  <form class="topic-form">
+  
+    <fast-text-field value.two-way="title" ref="titleElement" placeholder="What do you want to say to God ?">Title</fast-text-field>
+    <fast-text-area value.two-way="description" placeholder="Add some specific details">Description</fast-text-area>
+  
+    <label>Illustrate your topic</label>
+  
+    <div class="select-two__head">
+      <span class="${illustrateWith === 'color' ? 'selected':''}">Color</span>
+      <span class="${illustrateWith === 'picture' ? 'selected':''}">Picture</span>
+    </div>
+  
+    <div class="select-two__zone">
+      <div class="topic-form__image-preview ${illustrateWith === 'color' ? 'selected':''}" click.delegate="illustrateWith = 'color'">
+        <div class="topic_form__image_preview_placeholder"
+          style="background: ${color | gradient};"
+        ></div>
+      </div>
+      
+      <div class="topic-form__image-preview ${illustrateWith === 'picture' ? 'selected':''}" click.delegate="illustrateWith = 'picture'">
+        <div class="topic_form__image_preview_placeholder" if.bind="!imageService.mediumB64 && !preview" click.delegate="imageService.selectImage()"></div>
+        <img src="${preview | file}" if.bind="preview" />
+        <img src="${imageService.mediumB64}" if.bind="!preview && imageService.mediumB64" />
+      </div>
+    </div>
+  
+    <div class="select-two__head">
+      <div class="color-picker ${illustrateWith === 'color' ? 'selected':''}" 
+        ref="colorPickerElement" 
+        click.delegate="illustrateWith = 'color'"
+        mousemove.delegate="pickColor($event)"
+        mousedown.delegate="pickColor($event)"
+        mouseup.delegate="pickColor($event)"
+        mouseleave.delegate="pickColor($event)"
+        touchstart.delegate="pickColor($event)"
+        touchmove.delegate="pickColor($event)"
+        touchend.delegate="pickColor($event)">
+        <span class="indicator" style="left: ${percent * 100}%;"></span>
+      </div>
+      
+      <fast-button class="illustration-button ${illustrateWith === 'picture' ? 'selected':''}" style="display: ${image ? 'none':'block'}" click.trigger="imageService.selectImage()">Select an image</fast-button>
+      <fast-button class="illustration-button ${illustrateWith === 'picture' ? 'selected':''}" style="display: ${image ? 'block':'none'}" click.trigger="imageService.removeImage()">Remove image</fast-button>
+    </div>
+  
+    <div class="input-file-container" ref="inputFileContainer"></div>
+    
+  </form>
+</div>
+
+
+<div class="image-cropping ${imageService.cropping ? '':'hidden'}" ref="croppieElement">
+  <div class="head on-image">
+    <span class="head__left" click.delegate="imageService.cancelImage()">
+      <pray-icon icon="ArrowLeft" weight="2"></pray-icon>
+      Cancel
+    </span>
+    <span class="head__right" click.delegate="imageService.saveCrop()">
+      Save
+      <pray-icon icon="Check" weight="2"></pray-icon>
+    </span>
+  </div>
+</div>

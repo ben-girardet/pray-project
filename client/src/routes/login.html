@@ -1,0 +1,22 @@
+<import from="./welcome.css"></import>
+<fast-design-system-provider background-color="#335BBB" type-ramp-base-font-size="16px" class="dw">
+  <div class="login welcome">
+
+      <div class="welcome__container">
+        <h2 t="hello">Welcome</h2>
+        <form submit.delegate="login()">
+          <fast-text-field placeholder="Email or Mobile" value.two-way="username" autofocus>
+            <pray-icon icon="User" size="sm" slot="start"></pray-icon>
+          </fast-text-field>
+          <fast-text-field type="password" placeholder="Your password" value.two-way="password">
+            <pray-icon icon="Key" size="sm" slot="start"></pray-icon>
+          </fast-text-field>
+          <div class="button-row__two">
+            <fast-button appearance="lightweight" goto="../register">Create an account</fast-button>
+            <fast-button appearance="accent" click.trigger="login()">Login</fast-button>
+          </div>
+        </form>
+      </div>
+
+  </div>
+</fast-design-system-provider>

@@ -1,0 +1,34 @@
+.mini-user {
+  contain: content;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+.mini-user__avatar {
+  width: 25px;
+  height: 25px;
+  border-radius: 25px;
+  overflow: hidden;
+  margin-right: 8px;
+}
+.mini-user__avatar > img {
+  width: 100%;
+  border-radius: 25px;
+}
+.mini-user__name {
+  
+}
+
+.mini-user.small .mini-user__avatar {
+  width: 20px;
+  height: 20px;
+}
+
+.mini-user.large .mini-user__avatar {
+  width: 30px;
+  height: 30px;
+}
+
+.mini-user.only-avatar {
+  margin-right: 0;
+}

@@ -1,0 +1,21 @@
+.topic-detail .head {
+  height: calc(100vw * 1.2);
+  border-bottom-left-radius: calc(var(--corner-radius) * 2px);
+  border-bottom-right-radius: calc(var(--corner-radius) * 2px);
+}
+
+.topic-detail .head img,
+.topic-detail .head .placeholder {
+  width: 100%;
+  height: calc(100vw * 1.2);
+}
+
+.topic-detail .content {
+  padding: 16px;
+  /* min-height: 2000px; */
+}
+
+.topic-detail .content h2,
+.topic-detail .content p {
+  text-align: center;
+}

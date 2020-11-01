@@ -1,0 +1,6 @@
+<div class="mini-user ${onlyAvatar ? 'only-avatar':''} ${size}">
+  <div class="mini-user__avatar">
+    <img src="${avatarSrc | file}" if.bind="avatarSrc">
+  </div>
+  <div class="mini-user__name" if.bind="!onlyAvatar">${firstname} ${lastname}</div>
+</div>
