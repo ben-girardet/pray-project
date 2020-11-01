@@ -1,36 +1,32 @@
 import ApolloClient, { Operation } from 'apollo-boost';
 import gql from 'graphql-tag';
+import { refreshToken } from './commands/login';
+import moment from 'moment';
+
+class ApolloAuth {
+    expires: Date;
+    userId: string;
+
+    public isTokenValid() {
+        return moment(this.expires).isAfter(moment());
+    }
+}
+
+export const apolloAuth = new ApolloAuth();
 
 // Standard client
 // Perfect if you're not working with authentication
 const client = new ApolloClient({
   uri: 'http://localhost:3000/graphql',
-  credentials: 'include'
+  credentials: 'include',
+  request: async (operation: Operation) => {
+    if (operation.operationName !== 'Login' && operation.operationName !== 'RefreshToken' && !apolloAuth.isTokenValid() && apolloAuth.userId) {
+        await refreshToken(apolloAuth.userId);
+    }
+  }
 });
 
 (window as any).__APOLLO_CLIENT__ = client;
-
-// Client with modification of headers
-// Use the following if you want to send a token
-// along with every request to Apollo
-
-/*
-const client = new ApolloClient({
-    uri: environment.apiUrl,
-    request: async (operation: Operation) => {
-        // Auth might be a service which provides you a token
-        const token = await auth.getToken();
-        
-        // Set the authorization header with the token value
-        operation.setContext(context => ({
-            headers: {
-                ...context.headers,
-                authorization: token
-            }
-        }));
-    }
-});
-*/
 
 // Convenient helper method for queries and mutations
 const query = (query) => client.query({ query: gql(query) });

@@ -11,6 +11,7 @@
     "apollo-boost": "^0.4.9",
     "aurelia": "dev",
     "graphql": "^15.3.0",
+    "moment": "^2.29.1",
     "react-apollo": "^3.1.5"
   },
   "devDependencies": {

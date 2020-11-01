@@ -1,7 +1,7 @@
-import { ApolloQueryResult, gql } from 'apollo-boost';
-import { mutate, watch } from './apollo';
+import { apolloAuth, watch } from './apollo';
 import { login } from './commands/login';
 import {getTopics } from './commands/topics';
+import moment from 'moment';
 
 interface QueryUserInterface {
   users: [{
@@ -44,11 +44,6 @@ export class Welcome {
         throw new Error('Could not load users');
     } 
 
-    console.log('start timeout');
-    setTimeout(() => {
-      console.log('call editfirstname');
-      // this.editFirstname();
-    }, 3000);
   }
 
   public async unload() {
@@ -56,15 +51,4 @@ export class Welcome {
       this.sub.unsubscribe();
     }
   }
-
-  // No query exists yet to edit user
-  // public async editFirstname() {
-  //   console.log('editFirstname');
-  //   const result = await mutate(`mutation {
-  //     editUser(id: "${this.users[0].id}", ) {
-  //         firstname: "Ben 2"
-  //     } {id, firstname}
-  //   }`);
-  //   console.log('result', result);
-  // }
 }
