@@ -59,7 +59,7 @@ export class User implements IUser {
 
     @Field(type => [Image], {nullable: true})
     @prop({type: () => [Image]})
-    picture?: Image[];
+    public picture?: Image[];
 
     @prop()
     public hash: string;

@@ -5,10 +5,10 @@ import { InputType, Field } from "type-graphql";
 export class EditMeInput {
 
     @Field({nullable: true})
-    firstname: string;
+    firstname?: string;
 
     @Field({nullable: true})
-    lastname: string;
+    lastname?: string;
 
     @Field(type => [ImageInput], {nullable: true})
     picture?: ImageInput[];
