@@ -3,11 +3,11 @@ import { InputType, Field } from "type-graphql";
 @InputType()
 export class RegisterInput {
 
-    @Field()
-    firstname: string;
+    @Field({nullable: true})
+    firstname?: string;
 
-    @Field()
-    lastname: string;
+    @Field({nullable: true})
+    lastname?: string;
 
     @Field({nullable: true})
     email?: string;

@@ -55,8 +55,8 @@ export class RegistrationResolver {
             }
         }
         const newUser = new UserModel();
-        newUser.firstname = token.data.firstname;
-        newUser.lastname = token.data.lastname;
+        newUser.firstname = token.data.firstname || '';
+        newUser.lastname = token.data.lastname || '';
         newUser.email = token.data.email;
         newUser.mobile = token.data.mobile;
         newUser.roles = ['user'];

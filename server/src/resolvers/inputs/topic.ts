@@ -13,6 +13,9 @@ export class CreateTopicInput {
     @Field()
     color: string;
 
+    @Field(type => String, {nullable: true})
+    status: 'active' | 'answered' | 'archived';
+
     @Field(type => [ImageInput], {nullable: true})
     image?: ImageInput[];
 
@@ -31,6 +34,9 @@ export class EditTopicInput {
 
     @Field({nullable: true})
     color?: string;
+
+    @Field(type => String, {nullable: true})
+    status: 'active' | 'answered' | 'archived';
 
     @Field(type => [ImageInput], {nullable: true})
     image?: ImageInput[];

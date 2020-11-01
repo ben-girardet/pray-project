@@ -55,6 +55,7 @@ export class TopicResolver {
     newTopic.description = data.description;
     newTopic.image = data.image ? data.image : [];
     newTopic.color = data.color;
+    newTopic.status = data.status;
 
     const share = new Share();
     share.userId = userId;
@@ -81,6 +82,7 @@ export class TopicResolver {
     originalTopic.description = data.description !== undefined ? data.description : originalTopic.description;
     originalTopic.image = data.image !== undefined ? data.image : originalTopic.image;
     originalTopic.color = data.color !== undefined ? data.color : originalTopic.color;
+    originalTopic.status = data.status !== undefined ? data.status : originalTopic.status;
 
     const updatedTopic = await originalTopic.save();
     const updatedTopicInstance = new TopicModel(updatedTopic);

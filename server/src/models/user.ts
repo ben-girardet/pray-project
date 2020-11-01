@@ -6,6 +6,7 @@ import { prop, Ref, getModelForClass } from "@typegoose/typegoose";
 import mongoose from 'mongoose';
 import { config, RoleType } from '../core/config';
 import moment from 'moment';
+import { Image } from './image';
 
 export interface RefreshTokenData {
     refreshToken: string;
@@ -55,6 +56,10 @@ export class User implements IUser {
 
     @prop()
     public mobileValidated?: boolean;
+
+    @Field(type => [Image], {nullable: true})
+    @prop({type: () => [Image]})
+    picture?: Image[];
 
     @prop()
     public hash: string;

@@ -35,6 +35,10 @@ export class Topic implements ITopic {
     @prop()
     color: string;
 
+    @Field(() => String)
+    @prop({default: 'active'})
+    status: 'active' | 'answered' | 'archived' = 'active'
+
     @Field(() => User)
     @prop({ref: () => User})
     public createdBy?: Ref<User>;

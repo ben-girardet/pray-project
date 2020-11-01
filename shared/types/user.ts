@@ -1,8 +1,11 @@
+import { Image } from '../../server/src/models/image';
+
 export interface User {
     id: string;
     firstname?: string;
     lastname?: string;
     password?: string;
+    picture?: Image[];
     email: string;
     emailValidated?: boolean;
     mobile: string;

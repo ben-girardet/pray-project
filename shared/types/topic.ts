@@ -8,6 +8,7 @@ export interface Topic {
   description?: string;
   image?: Image[];
   color: string;
+  status: 'active' | 'answered' | 'archived';
   createdAt: Date;
   createdBy?: mongoose.Types.ObjectId | User;
   updatedAt: Date;
