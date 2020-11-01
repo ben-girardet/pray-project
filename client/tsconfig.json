@@ -8,7 +8,13 @@
     "rootDir": "src",
     "target": "ES2017",
     "esModuleInterop": true,
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
+    "baseUrl": "./",
+    "paths": {
+      "shared/*": [
+        "../shared/*"
+      ]
+    }
   },
   "include": [
     "src"

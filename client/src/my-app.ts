@@ -1,4 +1,3 @@
-// import { AuthService, ApiService, StateService, GunService } from './services/internals';
 import { IRouter, IViewModel, ViewportInstruction, inject, ILogger, EventAggregator } from 'aurelia';
 import { parseColorWebRGB } from "@microsoft/fast-colors";
 import { createColorPalette, parseColorString } from "@microsoft/fast-components";

@@ -17,8 +17,16 @@ class ApolloAuth {
         return moment(this.expires).isAfter(moment());
     }
 
+    public getUserId(): string {
+      return this.userId;
+    }
+
     public get authenticated(): boolean {
       return this.isTokenValid();
+    }
+
+    public logout() {
+      // TODO: implement logout method
     }
 }
 
@@ -30,8 +38,8 @@ const client = new ApolloClient({
   uri: 'http://localhost:3000/graphql',
   credentials: 'include',
   request: async (operation: Operation) => {
-    if (operation.operationName !== 'Login' && operation.operationName !== 'RefreshToken' && !apolloAuth.isTokenValid() && apolloAuth.userId) {
-        await refreshToken(apolloAuth.userId);
+    if (operation.operationName !== 'Login' && operation.operationName !== 'RefreshToken' && !apolloAuth.isTokenValid() && apolloAuth.getUserId()) {
+        await refreshToken(apolloAuth.getUserId());
     }
   }
 });

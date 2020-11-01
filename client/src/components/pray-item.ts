@@ -1,20 +1,21 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
-import { ITopic } from '../services/internals';
+// TODO: fix missing TOPIC model (interface)
 import { attr } from "@microsoft/fast-element";
 import { FASTElement, customElement, html, css, when } from '@microsoft/fast-element';
 import { neutralFillHoverBehavior, neutralFillActiveBehavior, neutralFillInput, neutralFillInputActive } from "@microsoft/fast-components";
 import { parseColorString } from "@microsoft/fast-components";
 import { darkenViaLAB, lightenViaLAB } from "@microsoft/fast-colors";
+import { Topic as ITopic } from 'shared/types/topic'
 
 const template = html<PrayItem>`
-${when(x => x.topic.imageSmallB64, html<PrayItem>`<img class="preview" src="${x => x.topic.imageSmallB64}">`)}
-${when(x => !x.topic.imageSmallB64, html<PrayItem>`<div class="img-placeholder" style="background: ${x => x.gradient(x.topic.color)}"></div>`)}
+${when(x => x.imageSmallB64, html<PrayItem>`<img class="preview" src="${x => x.imageSmallB64}">`)}
+${when(x => !x.imageSmallB64, html<PrayItem>`<div class="img-placeholder" style="background: ${x => x.gradient(x.topic.color)}"></div>`)}
 <div class="content">
   <div class="author">
-    <mini-user user-id="${x => x.topic.author}"></mini-user>
+    <mini-user user-id="${x => x.topic.createdBy}"></mini-user>
   </div>
   <div class="main-content">
-    <div class="title">${x => x.topic.title}</div>
+    <div class="title">${x => x.topic.name}</div>
     <div class="description">${x => x.topic.description} ${x => x.topic.description} ${x => x.topic.description} ${x => x.topic.description} ${x => x.topic.description}</div>
   </div>
 </div>
@@ -111,5 +112,10 @@ export class PrayItem extends FASTElement {
     } catch (error) {
       return original;
     }
+  }
+
+  public get imageSmallB64(): string {
+    // TODO: return the small image
+    return '';
   }
 }

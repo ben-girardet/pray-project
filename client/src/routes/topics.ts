@@ -1,4 +1,4 @@
-import { ITopic, GunTopic, StateService } from './../services/internals';
+import { Topic as ITopic } from 'shared/types/topic';
 import { IRouteableComponent } from '@aurelia/router';
 import { IViewModel, ILogger, EventAggregator, IDisposable } from 'aurelia';
 import easyScroll from 'easy-scroll';
@@ -13,7 +13,7 @@ export class Topics implements IRouteableComponent, IViewModel {
   private logger: ILogger;
   public activeTab = 'active';
 
-  public constructor(public gunTopic: GunTopic, private stateService: StateService, private eventAggregator: EventAggregator, @ILogger iLogger: ILogger) {
+  public constructor(private eventAggregator: EventAggregator, @ILogger iLogger: ILogger) {
     this.logger = iLogger.scopeTo('topics-route');
   }
 
@@ -36,9 +36,10 @@ export class Topics implements IRouteableComponent, IViewModel {
 
   public async getTopics(): Promise<void> {
     try {
-      this.activeTopics = await this.gunTopic.getTopics(this.stateService.userId, this.stateService.pair, '-lastUpdateDate', 'active');
-      this.answeredTopics = await this.gunTopic.getTopics(this.stateService.userId, this.stateService.pair, '-lastUpdateDate', 'answered');
-      this.archivedTopics = await this.gunTopic.getTopics(this.stateService.userId, this.stateService.pair, '-lastUpdateDate', 'archived');
+      // TODO: fix these getTopics()
+      // this.activeTopics = await this.gunTopic.getTopics('-lastUpdateDate', 'active');
+      // this.answeredTopics = await this.gunTopic.getTopics('-lastUpdateDate', 'answered');
+      // this.archivedTopics = await this.gunTopic.getTopics('-lastUpdateDate', 'archived');
     } catch (error) {
       this.logger.error(error);
     }

@@ -1,4 +1,5 @@
-import { GunTopic, ITopic, StateService, ImageService } from './../services/internals';
+import { ImageService } from './../services/internals';
+import { Topic } from 'shared/types/topic';
 import { IRouteableComponent, IRouter } from '@aurelia/router';
 import { IViewModel, inject } from 'aurelia';
 import ImageBlobReduce from 'image-blob-reduce';
@@ -28,7 +29,7 @@ export class TopicForm implements IRouteableComponent, IViewModel {
   public illustrateWith: 'color' | 'picture' = 'color';
   public titleElement: HTMLElement;
 
-  public constructor(@IRouter private router: IRouter, private gunTopic: GunTopic, private stateService: StateService, private imageService: ImageService) {
+  public constructor(@IRouter private router: IRouter, private imageService: ImageService) {
     this.imageService.heightRatio = 1.2;
     this.imageService.cropType = 'square';
     this.imageService.onCancel = () => {
@@ -44,7 +45,7 @@ export class TopicForm implements IRouteableComponent, IViewModel {
 
   public async enter(parameters: {topicId?: string}): Promise<void> {
     if (parameters.topicId) {
-      const topic = await this.gunTopic.getTopic(this.stateService.userId, parameters.topicId, this.stateService.pair);
+      const topic = null as any; // TODO: fix this getTopic await this.gunTopic.getTopic();
       this.topicId = topic.id;
       this.color = topic.color;
       this.preview = topic.imageMedium;
@@ -71,28 +72,31 @@ export class TopicForm implements IRouteableComponent, IViewModel {
   }
 
   public async save(): Promise<void> {
-    const topic: ITopic = {
-      title: this.title,
+    // TODO: fix the topic interface here, it should follow the topic input required to create or edit a topic
+    const topic: any /* Topic */ = {
+      name: this.title,
       description: this.description,
       color: this.color,
-      status: 'active'
+      // status: 'active'
     };
     if (this.topicId) topic.id = this.topicId;
     if (this.illustrateWith === 'picture') {
       const imageData = await this.imageService.publish();
       if (imageData !== 'no-change') {
-        topic.imageSmallB64 = imageData.smallB64;
-        topic.imageSmall = imageData.small;
-        topic.imageMedium = imageData.medium;
-        topic.imageLarge = imageData.large;
+        // TODO: fix with the new multi size image field
+        // topic.imageSmallB64 = imageData.smallB64;
+        // topic.imageSmall = imageData.small;
+        // topic.imageMedium = imageData.medium;
+        // topic.imageLarge = imageData.large;
       }
     } else {
-      topic.imageSmallB64 = '';
-      topic.imageSmall = '';
-      topic.imageMedium = '';
-      topic.imageLarge = '';
+      // TODO: fix with the new multi size image field
+      // topic.imageSmallB64 = '';
+      // topic.imageSmall = '';
+      // topic.imageMedium = '';
+      // topic.imageLarge = '';
     }
-    await this.gunTopic.createTopic(this.stateService.userId, topic, this.stateService.pair);
+    // TODO: await this.gunTopic.createTopic();
     this.router.goto('../-@bottom');
   }
   

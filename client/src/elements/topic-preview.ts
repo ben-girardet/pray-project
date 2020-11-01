@@ -1,11 +1,11 @@
-import { ITopic } from '../services/internals'
 import { bindable } from 'aurelia';
 import { parseColorString } from "@microsoft/fast-components";
 import { darkenViaLAB, lightenViaLAB } from "@microsoft/fast-colors";
+import { Topic } from 'shared/types/topic';
 
 export class TopicPreview {
 
-  @bindable topic: ITopic;
+  @bindable topic: Topic;
 
   constructor() {
     /* */

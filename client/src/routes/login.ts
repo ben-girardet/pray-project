@@ -1,8 +1,8 @@
-import { AuthService } from './../services/auth-service';
-import { StateService } from './../services/state-service';
+import { apolloAuth } from './../apollo';
 import { IRouteableComponent } from '@aurelia/router';
 import { IViewModel, IRouter, ILogger } from 'aurelia';
 import { AppNotification } from '../components/app-notification';
+import { login } from '../commands/login';
 
 export class Login implements IRouteableComponent, IViewModel {
 
@@ -10,13 +10,14 @@ export class Login implements IRouteableComponent, IViewModel {
   public password = '';
 
   private logger: ILogger;
+  // private apolloAuth = apolloAuth;
 
-  public constructor(@IRouter private router: IRouter, @ILogger iLogger: ILogger, private stateService: StateService, private authService: AuthService) {
+  public constructor(@IRouter private router: IRouter, @ILogger iLogger: ILogger) {
     this.logger = iLogger.scopeTo('login route');
   }
 
   public async beforeBind(): Promise<void> {
-    if (this.stateService.authenticated) {
+    if (apolloAuth.authenticated) {
       this.router.goto('topics');
     }
   }
@@ -25,8 +26,8 @@ export class Login implements IRouteableComponent, IViewModel {
     if (!this.username || !this.password) {
       AppNotification.notify('Please fill in your username and password first', 'info');
     }
-    const login = await this.authService.login(this.username, this.password);
-    if (!login) {
+    const loginResult = await login(this.username, this.password);
+    if (!loginResult) {
       AppNotification.notify('Authentication failed', 'error');
     }
   }

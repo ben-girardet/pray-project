@@ -1,20 +1,22 @@
-import { AuthService, GunUser, StateService, IUser } from './../services/internals';
+import { apolloAuth } from './../apollo';
 import { IRouteableComponent } from '@aurelia/router';
 import { IViewModel } from 'aurelia';
+import { User as IUser } from 'shared/types/user';
 
 export class Account implements IRouteableComponent, IViewModel {
 
+  // TODO: fix user interface here
   public user: IUser;
 
-  public constructor(private authService: AuthService, private gunUser: GunUser, private stateService: StateService) {
+  public constructor() {
     
   }
 
   public async beforeAttach(): Promise<void> {
-    this.user = await this.gunUser.getUser(this.stateService.userId);
+    // TODO: fix get current uesr here
   }
 
   public logout(): void {
-    this.authService.logout();
+    apolloAuth.logout();
   }
 }

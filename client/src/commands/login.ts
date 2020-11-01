@@ -1,6 +1,6 @@
-import { gql } from 'apollo-boost';
+import { ApolloQueryResult, gql } from 'apollo-boost';
 import { client, apolloAuth } from '../apollo';
-import moment from 'moment';
+import { Login } from 'shared/types/login';
 
 const loginMutation = gql`
 mutation Login($username: String!, $password: String!) {
@@ -22,11 +22,13 @@ mutation RefreshToken($userId: String!) {
 }`;
 
 export async function login(username: string, password: string) {
-  const result = await client.mutate({mutation: loginMutation, variables: {username, password}, fetchPolicy: 'no-cache'});
+  const result = await client.mutate({mutation: loginMutation, variables: {username, password}, fetchPolicy: 'no-cache'}) as ApolloQueryResult<{login: Login}>;
   apolloAuth.setLogin(result.data.login);
+  return result.data.login;
 }
 
 export async function refreshToken(userId: string) {
-  const result = await client.mutate({mutation: refreshTokenMutation, variables: {userId}, fetchPolicy: 'no-cache'});
+  const result = await client.mutate({mutation: refreshTokenMutation, variables: {userId}, fetchPolicy: 'no-cache'}) as ApolloQueryResult<{refreshToken: Login}>;
   apolloAuth.setLogin(result.data.refreshToken);
+  return result.data.refreshToken;
 }

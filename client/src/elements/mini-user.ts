@@ -1,4 +1,4 @@
-import { GunUser } from '../services/internals';
+// TODO: fix missing User model
 import { bindable } from 'aurelia';
 
 export class MiniUser {
@@ -10,7 +10,7 @@ export class MiniUser {
   @bindable private onlyAvatar = false;
   @bindable private size: 'small' | 'medium' | 'large' = 'medium';
 
-  public constructor(private gunUser: GunUser) {
+  public constructor() {
 
   }
 
@@ -22,7 +22,7 @@ export class MiniUser {
   public async userIdChanged(): Promise<void> {
     console.log('userIdChanged', this.userId);
     if (this.userId) {
-      const user = await this.gunUser.getUser(this.userId);
+      const user = null as any; // TODO: fix get user here await this.gunUser.getUser(this.userId);
       console.log('user', user);
       this.firstname = user.firstname;
       this.lastname = user.lastname;

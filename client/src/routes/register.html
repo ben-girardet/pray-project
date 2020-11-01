@@ -8,9 +8,6 @@
         <fast-text-field placeholder="Email or mobile" value.two-way="username" autofocus>
           <!-- <pray-icon icon="User" size="sm" slot="start"></pray-icon> -->
         </fast-text-field>
-        <fast-text-field type="password" placeholder="Password" value.two-way="password">
-          <!-- <pray-icon icon="Key" size="sm" slot="start"></pray-icon> -->
-        </fast-text-field>
         <div class="button-row__two">
           <fast-button appearance="lightweight" goto="../login">Back to login</fast-button>
           <fast-button appearance="accent" click.trigger="requestUsername()">Next</fast-button>
@@ -22,9 +19,13 @@
         <fast-text-field placeholder="Enter your 6 digit code" value.two-way="code">
           <!-- <pray-icon icon="User" size="sm" slot="start"></pray-icon> -->
         </fast-text-field>
-        <div style="text-align:center">
+        <fast-text-field type="password" placeholder="Password" value.two-way="password">
+          <!-- <pray-icon icon="Key" size="sm" slot="start"></pray-icon> -->
+        </fast-text-field>
+        <!-- TODO: active the resend code button -->
+        <!-- <div style="text-align:center">
           <fast-button appearance="lightweight" click.trigger="resendCode()">Send the code again</fast-button>
-        </div>
+        </div> -->
         <div class="button-row__two">
           <fast-button appearance="lightweight" goto="../login">Back to login</fast-button>
           <fast-button appearance="accent" click.trigger="validate()">Validate</fast-button>
