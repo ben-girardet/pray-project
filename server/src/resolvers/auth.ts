@@ -1,6 +1,6 @@
 import { Response } from 'express';
 import { RefreshTokenData, User, UserModel } from "../models/user";
-import { Token, TokenModel } from "../models/token";
+import { Login } from "../models/login";
 import { Resolver, Mutation, Ctx, Arg, AuthChecker } from "type-graphql";
 import { RegisterInput, ValidateRegistrationInput } from './inputs/registration';
 import jwt from 'jsonwebtoken';
@@ -12,7 +12,7 @@ import moment from 'moment';
 @Resolver()
 export class AuthResolver {
 
-    @Mutation(() => String)
+    @Mutation(() => Login)
     public async login(@Arg('username') username: string, @Arg('password') password: string, @Ctx() context: Context) {
         const user = await UserModel.findOne({$or: [{email: username, emailValidated: true}, {mobile: username, mobileValidated: true}]});
         if (!user) {
@@ -27,10 +27,14 @@ export class AuthResolver {
         this.sendRefreshToken(context.res, refreshTokenData);
         const jwtString = jwt.sign({userId: user.id, roles: user.roles}, process.env.JWT_SECRET_OR_KEY as string, { expiresIn: process.env.JWT_TOKEN_EXPIRATION, algorithm: 'HS256' });
         this.setJWTCookie(context.res, jwtString);
-        return jwtString;
+        const login = new Login();
+        login.token = jwtString;
+        login.expires = moment().add(15, 'minutes').toDate(); // TODO: fix this by using the env variable
+        login.userId = user._id.toString();
+        return login;
     }
 
-    @Mutation(() => String)
+    @Mutation(() => Login)
     public async refreshToken(@Arg('userId') userId: string, @Ctx() context: Context) {
         const { refreshToken } = context.req.cookies;
         if (!refreshToken) throw new Error('No refresh token provided');
@@ -56,7 +60,12 @@ export class AuthResolver {
         this.sendRefreshToken(context.res, refreshTokenData);
         const jwtString = jwt.sign({userId: foundUser.id, roles: foundUser.roles}, process.env.JWT_SECRET_OR_KEY as string, { expiresIn: process.env.JWT_TOKEN_EXPIRATION, algorithm: 'HS256'});
         this.setJWTCookie(context.res, jwtString);
-        return jwtString;
+        const login = new Login();
+        login.token = jwtString;
+        login.expires = moment().add(15, 'minutes').toDate(); // TODO: fix this by using the env variable
+        login.userId = foundUser._id.toString();
+        console.log('refresh login', login);
+        return login;
     }
 
     private setJWTCookie(res: Response, jwtString: string) {
