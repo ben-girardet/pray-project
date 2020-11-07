@@ -2,9 +2,9 @@ import { gql, ApolloQueryResult } from 'apollo-boost';
 import { client } from '../apollo';
 import { Topic } from 'shared/types/topic';
 
-const getTopicsQuery = gql`
-query Topics {
-  topics {
+export const getTopicsQuery = gql`
+query Topics($sort: SortBy, $status: String) {
+  topics(sort: $sort, status: $status) {
     id,
     name,
     description,
@@ -14,6 +14,7 @@ query Topics {
       height
     },
     color,
+    status,
     myShare {
       userId,
       encryptedContentKey,
@@ -22,7 +23,7 @@ query Topics {
   }
 }`;
 
-const getTopicQuery = gql`
+export const getTopicQuery = gql`
 query Topic($topicId: String!) {
   topic(id: $topicId) {
     id,
@@ -34,6 +35,7 @@ query Topic($topicId: String!) {
       height
     },
     color,
+    status,
     shares {
       userId,
       encryptedContentKey,
@@ -60,6 +62,7 @@ mutation CreateTopic($name: String!, $description: String!, $color: String!, $im
       height
     },
     color,
+    status,
     myShare {
       userId,
       encryptedContentKey,
@@ -68,14 +71,13 @@ mutation CreateTopic($name: String!, $description: String!, $color: String!, $im
   }
 }`;
 
-// TODO: add the sort and status variables
-export async function getTopics(sort: string, status: string): Promise<Topic[]> {
-  const result = await client.query<{topics: Topic[]}>({query: getTopicsQuery});
+export async function getTopics(sort: {field: string, order: -1 | 1}, status?: string): Promise<Topic[]> {
+  const result = await client.query<{topics: Topic[]}>({query: getTopicsQuery, variables: {sort, status}, fetchPolicy: 'network-only'});
   return result.data.topics;
 }
 
 export async function getTopic(topicId: string): Promise<Topic> {
-  const result = await client.query<{topic: Topic}>({query: getTopicQuery, variables: {topicId}});
+  const result = await client.query<{topic: Topic}>({query: getTopicQuery, variables: {topicId}, fetchPolicy: 'network-only'});
   return result.data.topic;
 }
 

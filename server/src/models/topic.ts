@@ -35,7 +35,7 @@ export class Topic implements ITopic {
     @prop()
     color: string;
 
-    @Field(() => String)
+    @Field(() => String, {defaultValue: 'active'})
     @prop({default: 'active'})
     status: 'active' | 'answered' | 'archived' = 'active'
 

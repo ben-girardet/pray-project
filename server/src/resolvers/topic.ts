@@ -1,4 +1,3 @@
-import { CreateTopicInput, EditTopicInput, AddShareToTopicInput } from './inputs/topic';
 import { Topic, TopicModel } from "../models/topic";
 import { Share } from "../models/share";
 import { Resolver, Query, Arg, Authorized, Ctx, Mutation } from "type-graphql";
@@ -6,18 +5,26 @@ import { FilterQuery } from 'mongoose';
 import { Context } from "./context-interface";
 import { mongoose } from "@typegoose/typegoose";
 import { MessageModel } from '../models/message';
+import { CreateTopicInput, EditTopicInput, AddShareToTopicInput } from './inputs/topic';
+import { SortBy, SortOrder } from './inputs/sorting';
 
 @Resolver()
 export class TopicResolver {
 
   @Authorized(['user'])
   @Query(() => [Topic])
-  public async topics(@Ctx() context: Context) {
+  public async topics(@Ctx() context: Context, @Arg('sort', {nullable: true}) sort: SortBy, @Arg('status', {nullable: true}) status: String) {
     // Add a test of what is happening when login fails
     const userId = new mongoose.Types.ObjectId(context.user.userId);
-    console.log('get topics for userId', userId);
+    const sortBy = {}
+    if (sort) {
+        sortBy[sort.field] = sort.order === SortOrder.ASC ? 1 : -1
+    }
     const query: FilterQuery<typeof TopicModel> = {shares: {$elemMatch: {userId}}};
-    const topics = await TopicModel.find(query);
+    if (status) {
+        query.status = status;
+    }
+    const topics = await TopicModel.find(query, null, {sort: sortBy});
     for (const topic of topics) {
         topic.setMyShare(userId);
     }
@@ -56,7 +63,7 @@ export class TopicResolver {
     newTopic.description = data.description;
     newTopic.image = data.image ? data.image : [];
     newTopic.color = data.color;
-    newTopic.status = data.status;
+    if (data.status) newTopic.status = data.status;
 
     const share = new Share();
     share.userId = userId;

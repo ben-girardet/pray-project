@@ -60,7 +60,7 @@ class ApolloAuth {
       try {
         // when the refreshToken command is successfull
         // it calls the apolloAuth setLogin method
-        const result = await refreshToken(this.userId);
+        const result = await refreshToken();
         console.log('result from refreshToken', result);
         if (!this.isTokenValid() || !this.authenticated) {
           return false;
@@ -83,7 +83,7 @@ const client = new ApolloClient({
   credentials: 'include',
   request: async (operation: Operation) => {
     if (operation.operationName !== 'Login' && operation.operationName !== 'RefreshToken' && !apolloAuth.isTokenValid() && apolloAuth.getUserId()) {
-        await refreshToken(apolloAuth.getUserId());
+        await refreshToken();
     }
     const token = apolloAuth.getToken();
     if (token) {

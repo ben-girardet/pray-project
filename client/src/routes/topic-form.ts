@@ -1,3 +1,4 @@
+import { AppNotification } from './../components/app-notification';
 import { ImageService } from './../services/internals';
 import { Topic } from 'shared/types/topic';
 import { IRouteableComponent, IRouter } from '@aurelia/router';
@@ -77,28 +78,32 @@ export class TopicForm implements IRouteableComponent, IViewModel {
   }
 
   public async save(): Promise<void> {
-    const topic: Topic = {
-      name: this.name,
-      description: this.description,
-      color: this.color,
-      status: 'active'
-    };
-    if (this.topicId) topic.id = this.topicId;
-    if (this.illustrateWith === 'picture') {
-      const imageData = await this.imageService.publish();
-      if (imageData !== 'no-change') {
-        topic.image = [
-          {fileId: imageData.smallB64, width: 40, height: 40},
-          {fileId: imageData.small, width: 40, height: 40},
-          {fileId: imageData.medium, width: 100, height: 1000},
-          {fileId: imageData.large, width: 1000, height: 1000},
-        ];
+    try {
+      const topic: Topic = {
+        name: this.name,
+        description: this.description,
+        color: this.color,
+        status: 'active'
+      };
+      if (this.topicId) topic.id = this.topicId;
+      if (this.illustrateWith === 'picture') {
+        const imageData = await this.imageService.publish();
+        if (imageData !== 'no-change') {
+          topic.image = [
+            {fileId: imageData.smallB64, width: 40, height: 40},
+            {fileId: imageData.small, width: 40, height: 40},
+            {fileId: imageData.medium, width: 100, height: 1000},
+            {fileId: imageData.large, width: 1000, height: 1000},
+          ];
+        }
+      } else {
+        topic.image = [];
       }
-    } else {
-      topic.image = [];
+      const createdTopic = await createTopic(topic.name, topic.description, topic.color, topic.image, 'key');
+      this.router.goto('../-@bottom');
+    } catch (error) {
+      AppNotification.notify(error.message, 'error');
     }
-    const createdTopic = await createTopic(topic.name, topic.description, topic.color, topic.image, 'key');
-    this.router.goto('../-@bottom');
   }
   
   public cancel(): void {

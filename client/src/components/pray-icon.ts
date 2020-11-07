@@ -113,7 +113,7 @@ export class PrayIcon extends FASTElement {
 
   private setIcon(): void {
     window.requestAnimationFrame(() => {
-      if (!this.shadowRoot) {
+      if (!this.shadowRoot || !this.shadowRoot.querySelector('span')) {
         this.setIcon();
         return;
       }

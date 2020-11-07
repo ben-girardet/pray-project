@@ -21,7 +21,7 @@ const styles = css`
     border-radius: calc(var(--corner-radius) * 1px);
     background: ${neutralFillRestBehavior.var};
     color: ${neutralForegroundRestBehavior.var};
-    z-index: 1;
+    z-index: 10;
   }
   :host(.success) {
     background: #00FF00;
