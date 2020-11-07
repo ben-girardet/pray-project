@@ -9,7 +9,7 @@
           <!-- <pray-icon icon="User" size="sm" slot="start"></pray-icon> -->
         </fast-text-field>
         <div class="button-row__two">
-          <fast-button appearance="lightweight" goto="../login">Back to login</fast-button>
+          <fast-button appearance="lightweight" load="../login">Back to login</fast-button>
           <fast-button appearance="accent" click.trigger="requestUsername()">Next</fast-button>
         </div>
       </form>
@@ -27,7 +27,7 @@
           <fast-button appearance="lightweight" click.trigger="resendCode()">Send the code again</fast-button>
         </div> -->
         <div class="button-row__two">
-          <fast-button appearance="lightweight" goto="../login">Back to login</fast-button>
+          <fast-button appearance="lightweight" load="../login">Back to login</fast-button>
           <fast-button appearance="accent" click.trigger="validate()">Validate</fast-button>
         </div>
       </form>
@@ -45,7 +45,7 @@
         <avatar-selection value.bind="profilePic" view-model.ref="avatar"></avatar-selection>
 
         <div class="button-row__two">
-          <fast-button appearance="lightweight" goto="../login">Back to login</fast-button>
+          <fast-button appearance="lightweight" load="../login">Back to login</fast-button>
           <fast-button appearance="accent" click.trigger="setIdentity()">Next</fast-button>
         </div>
       </form>

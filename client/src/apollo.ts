@@ -5,28 +5,54 @@ import moment from 'moment';
 
 class ApolloAuth {
 
-    private expires: Date;
-    private userId: string; 
+    private expires: moment.Moment;
+    private userId: string;
+    public authenticated: boolean = false;
+    private jwt: string;
     
-    public setLogin(login: {userId: string, expires: Date | string}) {
+    public setLogin(login: {token: string, userId: string, expires: string}) {
+      if (typeof login.expires === 'string') {
+        const expDate = moment(login.expires);
+        this.expires = expDate;
+        this.authenticated = true;
+        this.jwt = login.token;
+      } else {
+        this.expires = undefined;
+        this.userId = undefined;
+        this.authenticated = false;
+        this.jwt = '';
+        throw new Error('Invalid login');
+      }
       this.userId = login.userId;
-      this.expires = login.expires instanceof Date ? login.expires : moment(login.expires).toDate();
     }
 
     public isTokenValid() {
-        return moment(this.expires).isAfter(moment());
+      if (this.expires === undefined) {
+        return false;
+      }
+      if (moment.isMoment(this.expires)) {
+        return this.expires.isAfter(moment());
+      } else {
+        return false;
+      }
     }
 
     public getUserId(): string {
       return this.userId;
     }
 
-    public get authenticated(): boolean {
-      return this.isTokenValid();
+    public getToken(): string {
+      return this.jwt;
+    }
+
+    public getJWT(): string {
+      return this.jwt;
     }
 
     public logout() {
-      // TODO: implement logout method
+      this.userId = undefined;
+      this.expires = undefined;
+      this.authenticated = false;
     }
 }
 
@@ -40,6 +66,15 @@ const client = new ApolloClient({
   request: async (operation: Operation) => {
     if (operation.operationName !== 'Login' && operation.operationName !== 'RefreshToken' && !apolloAuth.isTokenValid() && apolloAuth.getUserId()) {
         await refreshToken(apolloAuth.getUserId());
+    }
+    const token = apolloAuth.getToken();
+    if (token) {
+      operation.setContext(context => ({
+        headers: {
+            ...context.headers,
+            authorization: `Bearer ${token}`
+        }
+      }));
     }
   }
 });

@@ -53,12 +53,9 @@ export class MessageResolver {
     newMessage.text = data.text;
     newMessage.topicId = topicId;
 
-    console.log('newMessage', newMessage);
 
     const createdMessage = await newMessage.save();
-    console.log('createdMessage', createdMessage);
     const createdMessageInstance = new MessageModel(createdMessage);
-    console.log('createdMessage', createdMessage);
     return createdMessageInstance.toObject();
   }
 

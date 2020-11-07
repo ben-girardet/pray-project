@@ -1,7 +1,7 @@
 <import from="./bottom.css"></import>
 <import from="./sharing.css"></import>
 <div class="bottom-headview">
-  <fast-button appearance="lightweight" goto="../-@bottom">Annuler</fast-button>
+  <fast-button appearance="lightweight" load="../-@bottom">Annuler</fast-button>
   <span>Sharing</span>
   <fast-button appearance="lightweight">Save</fast-button>
 </div>
@@ -10,7 +10,7 @@
   <topic-preview
     class="content"
     topic.bind="topic"
-    goto="../topic-detail(${topic.id})"
+    load="../topic-detail(${topic.id})"
     >
   </topic-preview>
   <p>Share with</p>

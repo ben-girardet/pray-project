@@ -1,16 +1,19 @@
-import { Image } from '../../server/src/models/image';
 
 export interface User {
     id: string;
     firstname?: string;
     lastname?: string;
     password?: string;
-    picture?: Image[];
+    picture?: {fileId: string, width: number, height: number}[];
     email: string;
     emailValidated?: boolean;
     mobile: string;
     mobileValidated?: boolean;
     roles?: any[];
+    createdAt?: Date;
+    createdBy?: string | any; // must be more clearly defined from client / server;
+    updatedAt?: Date;
+    updatedBy?: string | any; // must be more clearly defined from client / server;
 }
 
 export interface TokenUserPayload {

@@ -1,0 +1,21 @@
+{
+    "name": "Prayer App",  
+    "short_name": "Prayer",  
+    "scope": "/",  
+    "start_url": "../../",
+    "icons": [
+        {
+            "src": "/images/apple-touch-icon.png",
+            "sizes": "1024x1024",
+            "type": "image/png"
+        },
+        {
+            "src": "/images/launch.png",
+            "sizes": "2049x2049",
+            "type": "image/png"
+        }
+    ],
+    "theme_color": "#ffffff",
+    "background_color": "#ffffff",
+    "display": "standalone"
+}

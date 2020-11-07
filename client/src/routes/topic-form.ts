@@ -6,7 +6,12 @@ import ImageBlobReduce from 'image-blob-reduce';
 import Croppie from 'croppie';
 import { parseColorString } from "@microsoft/fast-components";
 import { ColorRGBA64, ColorHSL, rgbToHSL, hslToRGB } from "@microsoft/fast-colors";
+import { apolloAuth, client } from './../apollo';
+import { ApolloQueryResult, gql } from 'apollo-boost';
+import { createTopic, getTopic } from '../commands/topic';
 const reducer = ImageBlobReduce();
+
+
 
 @inject()
 export class TopicForm implements IRouteableComponent, IViewModel {
@@ -14,7 +19,7 @@ export class TopicForm implements IRouteableComponent, IViewModel {
   public static parameters = ['topicId'];
 
   public topicId: string;
-  public title: string;
+  public name: string;
   public description: string;
   public preview: string;
   public color = '#0000ff';
@@ -27,7 +32,7 @@ export class TopicForm implements IRouteableComponent, IViewModel {
   public originalImageUrl: string;
   public croppie: Croppie;
   public illustrateWith: 'color' | 'picture' = 'color';
-  public titleElement: HTMLElement;
+  public nameElement: HTMLElement;
 
   public constructor(@IRouter private router: IRouter, private imageService: ImageService) {
     this.imageService.heightRatio = 1.2;
@@ -43,60 +48,56 @@ export class TopicForm implements IRouteableComponent, IViewModel {
     }
   }
 
-  public async enter(parameters: {topicId?: string}): Promise<void> {
+  public async load(parameters: {topicId?: string}): Promise<void> {
     if (parameters.topicId) {
-      const topic = null as any; // TODO: fix this getTopic await this.gunTopic.getTopic();
+      const topic = await getTopic(parameters.topicId);
       this.topicId = topic.id;
       this.color = topic.color;
-      this.preview = topic.imageMedium;
+      this.preview = topic.image && topic.image.length ? topic.image.find(i => i.height > 50 && i.width > 50).fileId : '';
       if (this.preview) {
         this.illustrateWith = 'picture';
       }
       setTimeout(() => {
-        this.title = topic.title;
+        this.name = topic.name;
         this.description = topic.description;
       }, 300);
     }
   }
 
-  public afterBind(): void {
+  public bound(): void {
     this.computePercent(this.color);
   }
 
-  public afterAttach(): void {
+  public attached(): void {
     setTimeout(() => {
-      this.titleElement.focus();
+      this.nameElement.focus();
     }, 200);
     this.imageService.inputFileContainer = this.inputFileContainer;
     this.imageService.croppieElement = this.croppieElement;
   }
 
   public async save(): Promise<void> {
-    // TODO: fix the topic interface here, it should follow the topic input required to create or edit a topic
-    const topic: any /* Topic */ = {
-      name: this.title,
+    const topic: Topic = {
+      name: this.name,
       description: this.description,
       color: this.color,
-      // status: 'active'
+      status: 'active'
     };
     if (this.topicId) topic.id = this.topicId;
     if (this.illustrateWith === 'picture') {
       const imageData = await this.imageService.publish();
       if (imageData !== 'no-change') {
-        // TODO: fix with the new multi size image field
-        // topic.imageSmallB64 = imageData.smallB64;
-        // topic.imageSmall = imageData.small;
-        // topic.imageMedium = imageData.medium;
-        // topic.imageLarge = imageData.large;
+        topic.image = [
+          {fileId: imageData.smallB64, width: 40, height: 40},
+          {fileId: imageData.small, width: 40, height: 40},
+          {fileId: imageData.medium, width: 100, height: 1000},
+          {fileId: imageData.large, width: 1000, height: 1000},
+        ];
       }
     } else {
-      // TODO: fix with the new multi size image field
-      // topic.imageSmallB64 = '';
-      // topic.imageSmall = '';
-      // topic.imageMedium = '';
-      // topic.imageLarge = '';
+      topic.image = [];
     }
-    // TODO: await this.gunTopic.createTopic();
+    const createdTopic = await createTopic(topic.name, topic.description, topic.color, topic.image, 'key');
     this.router.goto('../-@bottom');
   }
   

@@ -1,10 +1,10 @@
 <div class="topic-detail">
   <div class="head on-image">
-    <span class="head__left" goto="../-@detail">
+    <span class="head__left" load="../-@detail">
       <pray-icon icon="ArrowLeft" weight="2"></pray-icon>
       Back
     </span>
-    <span class="head__right" goto="../topic-form(${topicId})">
+    <span class="head__right" load="../topic-form(${topicId})">
       Edit
       <pray-icon icon="Pencil" weight="2"></pray-icon>
     </span>
@@ -27,7 +27,7 @@
     </fast-button>
 
     <div class="button-row__two" style="margin-bottom: 32px;" if.bind="topic.status === 'active'">
-      <fast-button goto="../sharing(${topicId})">Share</fast-button>
+      <fast-button load="../sharing(${topicId})">Share</fast-button>
       <fast-button click.trigger="markTopicAs('archived')">Archive</fast-button>
     </div>
 

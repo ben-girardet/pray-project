@@ -26,7 +26,7 @@ export class AuthResolver {
         await user.save();
         this.sendRefreshToken(context.res, refreshTokenData);
         const jwtString = jwt.sign({userId: user.id, roles: user.roles}, process.env.JWT_SECRET_OR_KEY as string, { expiresIn: process.env.JWT_TOKEN_EXPIRATION, algorithm: 'HS256' });
-        this.setJWTCookie(context.res, jwtString);
+        // this.setJWTCookie(context.res, jwtString);
         const login = new Login();
         login.token = jwtString;
         login.expires = moment().add(15, 'minutes').toDate(); // TODO: fix this by using the env variable
@@ -59,12 +59,11 @@ export class AuthResolver {
         await foundUser.save();
         this.sendRefreshToken(context.res, refreshTokenData);
         const jwtString = jwt.sign({userId: foundUser.id, roles: foundUser.roles}, process.env.JWT_SECRET_OR_KEY as string, { expiresIn: process.env.JWT_TOKEN_EXPIRATION, algorithm: 'HS256'});
-        this.setJWTCookie(context.res, jwtString);
+        // this.setJWTCookie(context.res, jwtString);
         const login = new Login();
         login.token = jwtString;
         login.expires = moment().add(15, 'minutes').toDate(); // TODO: fix this by using the env variable
         login.userId = foundUser._id.toString();
-        console.log('refresh login', login);
         return login;
     }
 
@@ -72,10 +71,11 @@ export class AuthResolver {
         res.cookie('jwt', jwtString, {
             path: '/graphql',
             httpOnly: true,
-            expires: moment().add(15, 'minutes').toDate(),
+            expires: moment().add(1, 'hour').add(15, 'minutes').toDate(),
             domain: undefined,
             //domain: 'localhost',
             sameSite: true,
+            secure: true
         });
     }
 
@@ -83,10 +83,11 @@ export class AuthResolver {
         res.cookie('refreshToken', refreshTokenData.refreshToken, {
             path: '/graphql',
             httpOnly: true,
-            expires: refreshTokenData.expiry,
+            expires: moment(refreshTokenData.expiry).add(1, 'hour').toDate(),
             domain: undefined,
             //domain: 'localhost',
             sameSite: true,
+            secure: true
         });
     }
 

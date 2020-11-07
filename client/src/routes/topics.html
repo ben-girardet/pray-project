@@ -14,7 +14,7 @@
         </fast-tab-panel>
       </fast-tabs>
     </div>
-    <a goto="../topic-form" id="add-button">
+    <a load="../topic-form" id="add-button">
       <pray-icon icon="Plus" size="lg" button lightweight></pray-icon>
     </a>
   </fast-design-system-provider>
@@ -32,7 +32,7 @@
         class="content"
         repeat.for="topic of activeTopics"
         topic.bind="topic"
-        goto="../topic-detail(${topic.id})"
+        load="../topic-detail(${topic.id})"
         >
       </topic-preview>
     </div>
@@ -41,7 +41,7 @@
         class="content"
         repeat.for="topic of answeredTopics"
         topic.bind="topic"
-        goto="../topic-detail(${topic.id})"
+        load="../topic-detail(${topic.id})"
         >
       </topic-preview>
     </div>
@@ -50,7 +50,7 @@
         class="content"
         repeat.for="topic of archivedTopics"
         topic.bind="topic"
-        goto="../topic-detail(${topic.id})"
+        load="../topic-detail(${topic.id})"
         >
       </topic-preview>
     </div>
@@ -72,13 +72,13 @@
       <pray-search-input placeholder="Search" value.two-way="search" style="display: ${activeTopics.length > 5 ? 'flex':'none'}"></pray-search-input>
 
       <p if.bind="activeTopics.length === 0">It's time to create your first topic</p>
-      <p if.bind="activeTopics.length === 0"><fast-button goto="../topic-form">Let's add one</fast-button></p>
+      <p if.bind="activeTopics.length === 0"><fast-button load="../topic-form">Let's add one</fast-button></p>
 
       <topic-preview
         class="content"
         repeat.for="topic of activeTopics"
         topic.bind="topic"
-        goto="../topic-detail(${topic.id})"
+        load="../topic-detail(${topic.id})"
         >
       </topic-preview>
     </fast-tab-panel>
@@ -91,7 +91,7 @@
         class="content"
         repeat.for="topic of answeredTopics"
         topic.bind="topic"
-        goto="../topic-detail(${topic.id})"
+        load="../topic-detail(${topic.id})"
         >
       </topic-preview>
     </fast-tab-panel>
@@ -104,7 +104,7 @@
         class="content"
         repeat.for="topic of archivedTopics"
         topic.bind="topic"
-        goto="../topic-detail(${topic.id})"
+        load="../topic-detail(${topic.id})"
         >
       </topic-preview>
     </fast-tab-panel>

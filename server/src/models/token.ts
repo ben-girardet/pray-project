@@ -15,7 +15,6 @@ export class Token implements IToken {
         return (this as any)._id ? (this as any)._id.toString() : '';
     };
 
-    @prop()
     public _id: mongoose.Types.ObjectId;
 
     @Field(() => String)

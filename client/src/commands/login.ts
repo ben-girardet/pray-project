@@ -23,12 +23,30 @@ mutation RefreshToken($userId: String!) {
 
 export async function login(username: string, password: string) {
   const result = await client.mutate({mutation: loginMutation, variables: {username, password}, fetchPolicy: 'no-cache'}) as ApolloQueryResult<{login: Login}>;
-  apolloAuth.setLogin(result.data.login);
+  if (result.data.login.expires instanceof Date) {
+    result.data.login.expires = result.data.login.expires.toString();
+  }
+  if (typeof result.data.login.expires === 'string') {
+    apolloAuth.setLogin({
+      token: result.data.login.token,
+      userId: result.data.login.userId, 
+      expires: result.data.login.expires
+    });
+  }
   return result.data.login;
 }
 
 export async function refreshToken(userId: string) {
   const result = await client.mutate({mutation: refreshTokenMutation, variables: {userId}, fetchPolicy: 'no-cache'}) as ApolloQueryResult<{refreshToken: Login}>;
-  apolloAuth.setLogin(result.data.refreshToken);
+  if (result.data.refreshToken.expires instanceof Date) {
+    result.data.refreshToken.expires = result.data.refreshToken.expires.toString();
+  }
+  if (typeof result.data.refreshToken.expires === 'string') {
+    apolloAuth.setLogin({
+      token: result.data.refreshToken.token,
+      userId: result.data.refreshToken.userId, 
+      expires: result.data.refreshToken.expires,
+    });
+  }
   return result.data.refreshToken;
 }

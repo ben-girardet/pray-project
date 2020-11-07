@@ -2,6 +2,7 @@ import { Topic as ITopic } from 'shared/types/topic';
 import { IRouteableComponent } from '@aurelia/router';
 import { IViewModel, ILogger, EventAggregator, IDisposable } from 'aurelia';
 import easyScroll from 'easy-scroll';
+import { getTopics } from '../commands/topic';
 
 export class Topics implements IRouteableComponent, IViewModel {
 
@@ -17,7 +18,7 @@ export class Topics implements IRouteableComponent, IViewModel {
     this.logger = iLogger.scopeTo('topics-route');
   }
 
-  public async beforeBind(): Promise<void> {
+  public async binding(): Promise<void> {
     await this.getTopics();
     this.events.push(this.eventAggregator.subscribe('topic-form-out', async () => {
       await this.getTopics();
@@ -27,7 +28,7 @@ export class Topics implements IRouteableComponent, IViewModel {
     }));
   }
 
-  public afterDetach(): void {
+  public detaching(): void {
     for (const event of this.events) {
       event.dispose();
     }
@@ -36,10 +37,9 @@ export class Topics implements IRouteableComponent, IViewModel {
 
   public async getTopics(): Promise<void> {
     try {
-      // TODO: fix these getTopics()
-      // this.activeTopics = await this.gunTopic.getTopics('-lastUpdateDate', 'active');
-      // this.answeredTopics = await this.gunTopic.getTopics('-lastUpdateDate', 'answered');
-      // this.archivedTopics = await this.gunTopic.getTopics('-lastUpdateDate', 'archived');
+      this.activeTopics = await getTopics('-lastUpdateDate', 'active');
+      this.answeredTopics = await getTopics('-lastUpdateDate', 'active');
+      this.archivedTopics = await getTopics('-lastUpdateDate', 'active');
     } catch (error) {
       this.logger.error(error);
     }

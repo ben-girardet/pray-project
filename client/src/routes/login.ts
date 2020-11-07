@@ -1,4 +1,4 @@
-import { apolloAuth } from './../apollo';
+import { apolloAuth, client } from './../apollo';
 import { IRouteableComponent } from '@aurelia/router';
 import { IViewModel, IRouter, ILogger } from 'aurelia';
 import { AppNotification } from '../components/app-notification';
@@ -19,6 +19,8 @@ export class Login implements IRouteableComponent, IViewModel {
   public async beforeBind(): Promise<void> {
     if (apolloAuth.authenticated) {
       this.router.goto('topics');
+    } else {
+      client.clearStore();
     }
   }
 
@@ -27,6 +29,9 @@ export class Login implements IRouteableComponent, IViewModel {
       AppNotification.notify('Please fill in your username and password first', 'info');
     }
     const loginResult = await login(this.username, this.password);
+    if (apolloAuth.isTokenValid()) {
+      this.router.goto('topics');
+    }
     if (!loginResult) {
       AppNotification.notify('Authentication failed', 'error');
     }

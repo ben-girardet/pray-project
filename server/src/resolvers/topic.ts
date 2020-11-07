@@ -15,6 +15,7 @@ export class TopicResolver {
   public async topics(@Ctx() context: Context) {
     // Add a test of what is happening when login fails
     const userId = new mongoose.Types.ObjectId(context.user.userId);
+    console.log('get topics for userId', userId);
     const query: FilterQuery<typeof TopicModel> = {shares: {$elemMatch: {userId}}};
     const topics = await TopicModel.find(query);
     for (const topic of topics) {

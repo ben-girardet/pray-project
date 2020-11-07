@@ -10,6 +10,13 @@ const accent = '#335BBB';
 const neutralPalette = createColorPalette(parseColorWebRGB(neutral));
 const accentPalette = createColorPalette(parseColorString(accent));
 
+// TODO: replace all lifecycle hooks:
+// afterBind: bound
+// afterAttach: attached
+// beforeBind: binding
+// beforeAttach: attaching
+// ...
+
 @inject()
 export class MyApp implements IViewModel {
 
@@ -25,7 +32,7 @@ export class MyApp implements IViewModel {
     this.logger = iLogger.scopeTo('app');
   }
 
-  public afterAttach(): void {
+  public attached(): void {
     const darkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
     this.logger.debug('darkMode', darkMode);
     const provider = document.querySelector("fast-design-system-provider") as HTMLElement & {backgroundColor: string; neutralPalette: string[]; accentPalette: string[]; accentBaseColor: string};
@@ -44,12 +51,13 @@ export class MyApp implements IViewModel {
     p.disabledOpacity = 0.2;
   }
 
-  public async beforeBind(): Promise<void> {
+  public async binding(): Promise<void> {
     // TODO: if not authenticated, here is a good
     // place to start authentication (silent try)
   }
 
-  public async afterBind(): Promise<void> {
+  public async bound(): Promise<void> {
+    console.log('my-app afterBind');
     // Authentication HOOK
     this.router.addHook(async (instructions: ViewportInstruction[]) => {
       // User is not logged in, so redirect them back to login page

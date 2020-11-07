@@ -1,5 +1,5 @@
 export interface Login {
   token: string;
-  expires: Date;
+  expires: Date | string;
   userId: string;
 }

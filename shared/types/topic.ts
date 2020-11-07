@@ -1,16 +1,12 @@
-import mongoose from 'mongoose';
-import { User } from '../../server/src/models/user';
-import { Image } from '../../server/src/models/image';
-
 export interface Topic {
-  id: string;
+  id?: string;
   name: string;
   description?: string;
-  image?: Image[];
+  image?: {fileId: string, width: number, height: number}[];
   color: string;
   status: 'active' | 'answered' | 'archived';
-  createdAt: Date;
-  createdBy?: mongoose.Types.ObjectId | User;
-  updatedAt: Date;
-  updatedBy?: mongoose.Types.ObjectId | User;
+  createdAt?: Date;
+  createdBy?: string | any; // must be more clearly defined from client / server;
+  updatedAt?: Date;
+  updatedBy?: string | any; // must be more clearly defined from client / server;
 }
