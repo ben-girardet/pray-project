@@ -35,26 +35,16 @@ export class AuthResolver {
     }
 
     @Mutation(() => Login)
-    public async refreshToken(@Arg('userId') userId: string, @Ctx() context: Context) {
+    public async refreshToken(@Ctx() context: Context) {
         const { refreshToken } = context.req.cookies;
-        if (!refreshToken) throw new Error('No refresh token provided');
-        const foundUser = await UserModel.findById(userId);
-        if (!foundUser) throw new Error('Invalid user');
-        let isRefreshTokenValid = false;
+        console.log('refreshToken', refreshToken);
+        if (!refreshToken) {
+            throw new Error('No refresh token');
+        }
+        const hashRefreshToken = crypto.pbkdf2Sync(refreshToken, process.env.JWT_REFRESH_TOKEN_SECRET_OR_KEY as string, 10000, 512, 'sha512').toString('hex');
 
-
-        foundUser.refreshTokens = foundUser.refreshTokens.filter(
-            (storedToken) => {
-                const hashRefreshToken = crypto.pbkdf2Sync(refreshToken, process.env.JWT_REFRESH_TOKEN_SECRET_OR_KEY as string, 10000, 512, 'sha512').toString('hex');
-                const isMatch = hashRefreshToken === storedToken.hash;
-                const isValid = moment(storedToken.expiry).isAfter(moment());
-                if (isMatch && isValid) {
-                    isRefreshTokenValid = true;
-                }
-                return !isMatch && isValid;
-            }
-        );
-        if (!isRefreshTokenValid) throw new Error('Invalid refresh token');
+        const foundUser = await UserModel.findOne({refreshTokens: {$elemMatch: {hash: hashRefreshToken, expiry: {$gt: moment().toDate()}}}});
+        if (!foundUser) throw new Error('Invalid refresh token');
         const refreshTokenData = foundUser.generateRefreshToken();
         await foundUser.save();
         this.sendRefreshToken(context.res, refreshTokenData);
@@ -86,8 +76,7 @@ export class AuthResolver {
             expires: moment(refreshTokenData.expiry).add(1, 'hour').toDate(),
             domain: undefined,
             //domain: 'localhost',
-            sameSite: true,
-            secure: true
+            sameSite: true
         });
     }
 

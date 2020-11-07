@@ -54,6 +54,24 @@ class ApolloAuth {
       this.expires = undefined;
       this.authenticated = false;
     }
+
+    public async refresh(): Promise<boolean> {
+      console.log('refresh');
+      try {
+        // when the refreshToken command is successfull
+        // it calls the apolloAuth setLogin method
+        const result = await refreshToken(this.userId);
+        console.log('result from refreshToken', result);
+        if (!this.isTokenValid() || !this.authenticated) {
+          return false;
+        }
+        return true;
+      } catch (error) {
+        // silent refresh failing
+        return false;
+      }
+        
+    }
 }
 
 export const apolloAuth = new ApolloAuth();

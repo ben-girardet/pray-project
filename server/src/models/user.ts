@@ -101,7 +101,7 @@ export class User implements IUser {
     public generateRefreshToken(): RefreshTokenData {
         const refreshToken = crypto.randomBytes(16).toString('hex');
         const hash = crypto.pbkdf2Sync(refreshToken, process.env.JWT_REFRESH_TOKEN_SECRET_OR_KEY as string, 10000, 512, 'sha512').toString('hex');
-        const expiry = moment().add(process.env.JWT_REFRESH_TOKEN_EXPIRATION, 'days').toDate();
+        const expiry = moment().add(30, 'days').toDate();
         this.refreshTokens.push({
             hash,
             expiry
