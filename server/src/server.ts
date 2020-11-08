@@ -155,6 +155,7 @@ mongoose.connect(
 
 
     // Register our controllers with Express
+    app.use(cors(corsOptions));
     registerControllers(controllers, app);
 
     io.on('connection', (socket) => {
