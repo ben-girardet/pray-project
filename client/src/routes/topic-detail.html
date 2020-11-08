@@ -8,8 +8,8 @@
       Edit
       <pray-icon icon="Pencil" weight="2"></pray-icon>
     </span>
-    <div class="placeholder" style="background: ${topic.color | gradient};" if.bind="!topic.imageLarge"></div>
-    <img src="${topic.imageLarge | file}" if.bind="topic.imageLarge">
+    <div class="placeholder" style="background: ${topic.color | gradient};" if.bind="!topic.image.length"></div>
+    <img src="${topic.image[3].fileId | file}" if.bind="topic.image.length">
   </div>
 
   <div class="content">

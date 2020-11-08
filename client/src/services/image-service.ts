@@ -145,9 +145,9 @@ export class ImageService {
     mediumForm.append('file', this.mediumBlob);
     largeForm.append('file', this.largeBlob);
 
-    const smallSrc = await this.apiService.post('/images/add', smallForm);
-    const mediumSrc = await this.apiService.post('/images/add', mediumForm);
-    const largeSrc = await this.apiService.post('/images/add', largeForm);
+    const smallSrc = await this.apiService.post('/image', smallForm);
+    const mediumSrc = await this.apiService.post('/image', mediumForm);
+    const largeSrc = await this.apiService.post('/image', largeForm);
     return {
       smallB64: this.smallB64,
       small: `api:${smallSrc.id}`,

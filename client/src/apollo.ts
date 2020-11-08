@@ -2,6 +2,7 @@ import ApolloClient, { Operation } from 'apollo-boost';
 import gql from 'graphql-tag';
 import { refreshToken } from './commands/login';
 import moment from 'moment';
+import conf from './config';
 
 class ApolloAuth {
 
@@ -79,7 +80,7 @@ export const apolloAuth = new ApolloAuth();
 // Standard client
 // Perfect if you're not working with authentication
 const client = new ApolloClient({
-  uri: 'http://localhost:3000/graphql',
+  uri: `${conf.apiHost}/graphql`,
   credentials: 'include',
   request: async (operation: Operation) => {
     if (operation.operationName !== 'Login' && operation.operationName !== 'RefreshToken' && !apolloAuth.isTokenValid() && apolloAuth.getUserId()) {
