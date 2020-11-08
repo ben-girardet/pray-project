@@ -9,10 +9,8 @@ import { parseColorString } from "@microsoft/fast-components";
 import { ColorRGBA64, ColorHSL, rgbToHSL, hslToRGB } from "@microsoft/fast-colors";
 import { apolloAuth, client } from './../apollo';
 import { ApolloQueryResult, gql } from 'apollo-boost';
-import { createTopic, getTopic } from '../commands/topic';
+import { createTopic, getTopic, editTopic } from '../commands/topic';
 const reducer = ImageBlobReduce();
-
-
 
 @inject()
 export class TopicForm implements IRouteableComponent, IViewModel {
@@ -99,7 +97,18 @@ export class TopicForm implements IRouteableComponent, IViewModel {
       } else {
         topic.image = [];
       }
-      const createdTopic = await createTopic(topic.name, topic.description, topic.color, topic.image, 'key');
+      if (!topic.id) {
+        const createdTopic = await createTopic(topic.name, topic.description, topic.color, topic.image, 'key');
+      } else {
+        const editedTopic = await editTopic(topic.id, {
+          name: topic.name, 
+          description: topic.description, 
+          color: topic.color, 
+          status: topic.status,
+          image: topic.image
+        });
+        // throw new Error('Edit topic not implemented');
+      }
       this.router.goto('../-@bottom');
     } catch (error) {
       AppNotification.notify(error.message, 'error');

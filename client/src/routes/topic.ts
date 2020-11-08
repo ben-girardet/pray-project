@@ -1,6 +1,7 @@
 import { Topic as ITopic } from 'shared/types/topic';
 import { IRouteableComponent } from '@aurelia/router';
 import { IViewModel } from 'aurelia';
+import { getTopic } from '../commands/topic';
 
 export class Topic implements IRouteableComponent, IViewModel {
 
@@ -12,10 +13,10 @@ export class Topic implements IRouteableComponent, IViewModel {
   }
 
   public async canEnter(parameters: {id: string}): Promise<boolean> {
-    // TODO: fix getTopic this.topic = await this.gunTopic.getTopic();
-    // if (this.topic === undefined) {
-    //   throw new Error('Topic not found');
-    // }
+    this.topic = await getTopic(parameters.id);
+    if (this.topic === undefined) {
+      throw new Error('Topic not found');
+    }
     return this.topic !== undefined;
   }
 

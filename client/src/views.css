@@ -106,6 +106,7 @@ html.detail au-viewport[name=detail] {
   top: 0;
   left: 0;
   opacity: 1;
+  background: white; /* TODO: should adapt with dark mode */
 }
 
 /* VIEWPARTS */

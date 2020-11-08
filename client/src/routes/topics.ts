@@ -63,9 +63,9 @@ export class Topics implements IRouteableComponent, IViewModel {
 
   public async getTopics(): Promise<void> {
     try {
-      this.activeTopics = await getTopics({field: 'lastUpdateDate', order: -1}, 'active');
-      this.answeredTopics = await getTopics({field: 'lastUpdateDate', order: -1}, 'answered');
-      this.archivedTopics = await getTopics({field: 'lastUpdateDate', order: -1}, 'archived');
+      this.activeTopics = await getTopics({field: 'updatedAt', order: -1}, 'active');
+      this.answeredTopics = await getTopics({field: 'updatedAt', order: -1}, 'answered');
+      this.archivedTopics = await getTopics({field: 'updatedAt', order: -1}, 'archived');
     } catch (error) {
       this.logger.error(error);
     }

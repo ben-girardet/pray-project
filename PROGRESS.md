@@ -25,8 +25,10 @@ Login is now pretty well in place. Now is the time to improve the topic experien
 [*] Add sorting and filtering options in topic requests
 [*] Implement sort by last update and filter by status on topics view
 [*] Try to watch the topics in the topics view so that when a topic is created or edited it is refreshed on the page (tried to used watch without much success yet, try again another time)
-[ ] Make Open topic work
-[ ] Make the edit topic work
+[*] Make Open topic work
+[*] Make the edit topic work
+[*] Make change topic status work
+[ ] Make delete topic status work
 [ ] Try the imageService for topic images
 [ ] Implement function API tests for topics filtering and sorting
 

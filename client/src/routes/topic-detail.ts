@@ -1,6 +1,7 @@
 import { Topic } from 'shared/types/topic';
 import { IRouteableComponent, IRouter } from '@aurelia/router';
 import { IViewModel, ILogger, EventAggregator, IDisposable } from 'aurelia';
+import { editTopic, getTopic, removeTopic } from '../commands/topic';
 
 export class TopicDetail implements IRouteableComponent, IViewModel {
 
@@ -16,18 +17,18 @@ export class TopicDetail implements IRouteableComponent, IViewModel {
     this.logger = iLogger.scopeTo('topic-detail-route');
   }
 
-  public enter(parameters: {topicId: string}): void {
-    this.topicId = parameters.topicId;    
+  public load(parameters: {topicId: string}): void {
+    this.topicId = parameters.topicId;
   }
 
-  public async beforeBind(): Promise<void> {
+  public async binding(): Promise<void> {
     await this.getTopic();
     this.event = this.eventAggregator.subscribe('topic-form-out', async () => {
       await this.getTopic();
     });
   }
 
-  public afterDetach(): void {
+  public detached(): void {
     if (this.event) {
       this.event.dispose();
     }
@@ -36,7 +37,7 @@ export class TopicDetail implements IRouteableComponent, IViewModel {
 
   public async getTopic(): Promise<void> {
     try {
-      // this.topic = await this.gunTopic.getTopic();
+      this.topic = await getTopic(this.topicId);
     } catch (error) {
       this.logger.error(error);
     }
@@ -44,7 +45,7 @@ export class TopicDetail implements IRouteableComponent, IViewModel {
 
   public async removeTopic(): Promise<void> {
     try {
-      // await this.gunTopic.removeTopic(this.topicId, 'total');
+      await removeTopic(this.topicId);
       this.router.goto('../-@detail');
     } catch (error) {
       this.logger.error(error);
@@ -53,7 +54,7 @@ export class TopicDetail implements IRouteableComponent, IViewModel {
 
   public async markTopicAs(status: 'active' | 'answered' | 'archived'): Promise<void> {
     try {
-      // await this.gunTopic.markTopicAs(this.topicId, status);
+      await editTopic(this.topicId, {status});
       await this.getTopic();
     } catch (error) {
       this.logger.error(error);
