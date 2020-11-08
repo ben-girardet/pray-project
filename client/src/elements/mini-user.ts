@@ -14,7 +14,7 @@ export class MiniUser {
 
   }
 
-  public afterBind(): void {
+  public attached(): void {
     console.log('afterBind');
     this.userIdChanged();
   }
@@ -22,6 +22,7 @@ export class MiniUser {
   public async userIdChanged(): Promise<void> {
     console.log('userIdChanged', this.userId);
     if (this.userId) {
+      return;
       const user = null as any; // TODO: fix get user here await this.gunUser.getUser(this.userId);
       console.log('user', user);
       this.firstname = user.firstname;

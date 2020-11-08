@@ -24,7 +24,7 @@ export class AvatarSelection {
     }
   }
 
-  public afterAttach(): void {
+  public attached(): void {
     this.imageService.inputFileContainer = this.inputFileContainer;
     this.imageService.croppieElement = this.croppieElement;
   }
