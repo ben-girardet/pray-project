@@ -1,6 +1,7 @@
 import { ApiService } from './api-service';
 import ImageBlobReduce from 'image-blob-reduce';
 import Croppie from 'croppie';
+import 'croppie/croppie.css';
 const reducer = ImageBlobReduce();
 import { transient } from 'aurelia';
 
