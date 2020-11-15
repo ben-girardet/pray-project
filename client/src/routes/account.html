@@ -1,7 +1,8 @@
 <import from="./account.css"></import>
 <div class="account">
   <div class="account-profile" if.bind="user">
-    <img src="${user.profilePicMedium | file}">
+    <img src="${user.picture | file:100}" if.bind="user.picture.length">
+    <img src="images/avatars/liquid1.gif" if.bind="!user.picture.length">
     <div>
       <div class="name">${user.firstname} ${user.lastname}</div>
       <div class="details">

@@ -57,12 +57,10 @@ class ApolloAuth {
     }
 
     public async refresh(): Promise<boolean> {
-      console.log('refresh');
       try {
         // when the refreshToken command is successfull
         // it calls the apolloAuth setLogin method
         const result = await refreshToken();
-        console.log('result from refreshToken', result);
         if (!this.isTokenValid() || !this.authenticated) {
           return false;
         }

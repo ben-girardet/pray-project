@@ -29,11 +29,11 @@ export class MiniUser {
     }
   }
 
-  public async getUser(): Promise<{firstname: string, lastname: string, picture:{fileId: string, width: number, height: number}[]}> {
+  public async getUser(): Promise<{id: string, firstname: string, lastname: string, picture:{fileId: string, width: number, height: number}[]}> {
     if (!this.userId) {
       return null
     }
-    const result = await client.query<{user: {firstname: string, lastname: string, picture: {fileId: string, width: number, height: number}[]}}>({query: gql`query User($userId: String!) {
+    const result = await client.query<{user: {id: string, firstname: string, lastname: string, picture: {fileId: string, width: number, height: number}[]}}>({query: gql`query User($userId: String!) {
 user(id: $userId) {
   id,
   firstname,

@@ -21,6 +21,11 @@ mutation RefreshToken {
   }
 }`;
 
+const logoutMutation = gql`
+mutation Logout {
+  logout
+}`;
+
 export async function login(username: string, password: string) {
   const result = await client.mutate({mutation: loginMutation, variables: {username, password}, fetchPolicy: 'no-cache'}) as ApolloQueryResult<{login: Login}>;
   if (result.data.login.expires instanceof Date) {
@@ -37,7 +42,6 @@ export async function login(username: string, password: string) {
 }
 
 export async function refreshToken() {
-  console.log('refreshToken', refreshToken);
   const result = await client.mutate({mutation: refreshTokenMutation, fetchPolicy: 'no-cache'}) as ApolloQueryResult<{refreshToken: Login}>;
   if (result.data.refreshToken.expires instanceof Date) {
     result.data.refreshToken.expires = result.data.refreshToken.expires.toString();
@@ -50,4 +54,9 @@ export async function refreshToken() {
     });
   }
   return result.data.refreshToken;
+}
+
+export async function logout(): Promise<boolean> {
+  const result = await client.mutate({mutation: logoutMutation, fetchPolicy: 'no-cache'}) as ApolloQueryResult<{logout: boolean}>;
+  return result.data.logout;
 }
