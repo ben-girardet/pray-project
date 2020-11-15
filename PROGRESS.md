@@ -36,6 +36,14 @@ Login is now pretty well in place. Now is the time to improve the topic experien
 [*] Fix getUser in mini-user component
 [ ] Implement function API tests for topics filtering and sorting
 
+## 2020-11-15
+
+[ ] Work on Profile page so we can
+[ ] Edit current user
+[ ] Logout
+[ ] Create friendship
+[ ] Manage friendships
+
 Once this is done, would be good to implement crypting
 
 [ ] Crypt Messages before creating or after editing
