@@ -46,7 +46,7 @@ export class TopicDetail implements IRouteableComponent, IViewModel {
   public async removeTopic(): Promise<void> {
     try {
       await removeTopic(this.topicId);
-      this.router.goto('../-@detail');
+      this.router.load('../-@detail');
     } catch (error) {
       this.logger.error(error);
     }

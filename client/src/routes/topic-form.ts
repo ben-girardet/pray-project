@@ -109,7 +109,7 @@ export class TopicForm implements IRouteableComponent, IViewModel {
         });
         // throw new Error('Edit topic not implemented');
       }
-      this.router.goto('../-@bottom');
+      this.router.load('../-@bottom');
     } catch (error) {
       AppNotification.notify(error.message, 'error');
     }
@@ -117,7 +117,7 @@ export class TopicForm implements IRouteableComponent, IViewModel {
   
   public cancel(): void {
     console.log('cancel');
-    this.router.goto('../-@bottom');
+    this.router.load('../-@bottom');
     console.log('here ok');
   }
 

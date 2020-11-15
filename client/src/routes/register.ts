@@ -40,7 +40,7 @@ export class Register implements IRouteableComponent, IViewModel {
 
   public async beforeBind(): Promise<void> {
     if (apolloAuth.authenticated) {
-      this.router.goto('topics');
+      this.router.load('topics');
     }
   }
 

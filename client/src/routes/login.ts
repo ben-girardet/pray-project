@@ -18,7 +18,7 @@ export class Login implements IRouteableComponent, IViewModel {
 
   public async beforeBind(): Promise<void> {
     if (apolloAuth.authenticated) {
-      this.router.goto('topics');
+      this.router.load('topics');
     } else {
       client.clearStore();
     }
@@ -30,7 +30,7 @@ export class Login implements IRouteableComponent, IViewModel {
     }
     const loginResult = await login(this.username, this.password);
     if (apolloAuth.isTokenValid()) {
-      this.router.goto('topics');
+      this.router.load('topics');
     }
     if (!loginResult) {
       AppNotification.notify('Authentication failed', 'error');

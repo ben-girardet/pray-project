@@ -37,11 +37,6 @@ a:active {
   text-decoration: none;
 }
 
-/* .goto-active {
-  background-color: lightgray;
-} */
-
-
 form {
   display: grid;
   grid-auto-rows: max-content;
