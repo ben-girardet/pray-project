@@ -565,3 +565,101 @@ scenarios:
             - equals:
                 - "{{ data.removeMessage.deleted }}"
                 - true
+    - post:
+        name: "Create a second topic with Ben"
+        url: "/graphql"
+        json:
+            operationName: null
+            query: 'mutation {createTopic(data: {name: "Second topic", description: "", color: "#ff0000", encryptedContentKey: "key"}) {id}}'
+            variables: '{}'
+        headers:
+            Authorization: "Bearer {{ benToken }}"
+        capture:
+            - json: "$.data"
+              as: "data"
+            - json: "$.data.createTopic.id"
+              as: "secondTopicId"
+        expect:
+            - statusCode: 200
+    - post:
+        name: "Get Ben Topics (test sorting)"
+        url: "/graphql"
+        json:
+            operationName: null
+            query: 'query {topics(sort: {field: "updatedAt", order: -1}) {id}}'
+            variables: '{}'
+        headers:
+            Authorization: "Bearer {{ benToken }}"
+        capture:
+            - json: "$.data.topics"
+              as: "topics"
+        expect:
+            - statusCode: 200
+            - equals:
+                - "{{ topics[0].id }}"
+                - "{{ secondTopicId }}"
+            - equals:
+                - "{{ topics[1].id }}"
+                - "{{ createdTopicId }}"
+    - post:
+        name: "Edit firstly created topic"
+        url: "/graphql"
+        json:
+            operationName: null
+            query: 'mutation {editTopic(id: "{{ createdTopicId }}", data: {name: "Edited Topic again"}) {id}}'
+            variables: '{}'
+        headers:
+            Authorization: "Bearer {{ benToken }}"
+        expect:
+            - statusCode: 200
+    - post:
+        name: "Get Ben Topics (test sorting 2)"
+        url: "/graphql"
+        json:
+            operationName: null
+            query: 'query {topics(sort: {field: "updatedAt", order: -1}) {id}}'
+            variables: '{}'
+        headers:
+            Authorization: "Bearer {{ benToken }}"
+        capture:
+            - json: "$.data.topics"
+              as: "topics"
+        expect:
+            - statusCode: 200
+            - equals:
+                - "{{ topics[0].id }}"
+                - "{{ createdTopicId }}"
+            - equals:
+                - "{{ topics[1].id }}"
+                - "{{ secondTopicId }}"
+    - post:
+        name: "Edit firstly created topic"
+        url: "/graphql"
+        json:
+            operationName: null
+            query: 'mutation {editTopic(id: "{{ createdTopicId }}", data: {status: "archived"}) {id}}'
+            variables: '{}'
+        headers:
+            Authorization: "Bearer {{ benToken }}"
+        expect:
+            - statusCode: 200
+    - post:
+        name: "Get Ben Topics (test filter)"
+        url: "/graphql"
+        json:
+            operationName: null
+            query: 'query {topics(status: "archived") {id}}'
+            variables: '{}'
+        headers:
+            Authorization: "Bearer {{ benToken }}"
+        capture:
+            - json: "$.data.topics"
+              as: "topics"
+        expect:
+            - statusCode: 200
+            - equals:
+                - "{{ topics[0].id }}"
+                - "{{ createdTopicId }}"
+            - equals:
+                - "{{ topics.length }}"
+                - 1
