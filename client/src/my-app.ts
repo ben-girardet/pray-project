@@ -57,7 +57,6 @@ export class MyApp implements IViewModel {
   }
 
   public async bound(): Promise<void> {
-    console.log('my-app afterBind');
     // Authentication HOOK
     this.router.addHook(async (instructions: ViewportInstruction[]) => {
       // User is not logged in, so redirect them back to login page
@@ -73,7 +72,7 @@ export class MyApp implements IViewModel {
     // Add HTML class component HOOK
     this.router.addHook(async (instructions: ViewportInstruction[]) => {
       for (const instruction of instructions) {
-        console.log('instruction', instruction);
+        // console.log('instruction', instruction);
       }
       return true;
     });

@@ -116,9 +116,7 @@ export class TopicForm implements IRouteableComponent, IViewModel {
   }
   
   public cancel(): void {
-    console.log('cancel');
     this.router.load('../-@bottom');
-    console.log('here ok');
   }
 
   public removeImage(): void {
