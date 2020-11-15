@@ -15,7 +15,7 @@
   <div class="content">
 
     <div class="button-row__two button-row__two--centered" style="font-size: 10px; color: #888;">
-      <mini-user user-id="${topic.author}" size="small"></mini-user>
+      <mini-user user-id="${topic.createdBy.id}" size="small"></mini-user>
       <span>${topic.creationDate | date:'nice'}</span>
     </div>
 

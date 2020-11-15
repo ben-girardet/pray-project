@@ -1,14 +1,37 @@
 import conf from '../config';
 
 export class FileValueConverter {
-  public toView(filename: string): string {
-    if (!filename) {
+  public toView(filename: string | {fileId: string, width: number, height: number}[], imageWidth: string = '0', imageHeight: string = '0'): string {
+    if (!filename || (Array.isArray(filename) && filename.length === 0)) {
       return '';
     }
-    if (filename.substr(0, 4) === 'api:') {
+    if (Array.isArray(filename)) {
+      const width = imageWidth ? 10000 : parseInt(imageWidth, 10);
+      const height = imageHeight ? 10000 : parseInt(imageHeight, 10);
+      let maxWidth = 0;
+      let maxImage = '';
+      for (const image of filename) {
+        if (image.width >= width && image.height >= height) {
+          filename = image.fileId;
+          break;
+        }
+        if (image.width > maxWidth) {
+          maxWidth = image.width;
+          maxImage = image.fileId;
+        }
+      }
+      if (Array.isArray(filename)) {
+        if (maxImage) {
+          filename = maxImage;
+        } else {
+          return '';
+        }
+      }
+    }
+    if (typeof filename === 'string' && filename.substr(0, 4) === 'api:') {
       //return `http://localhost:3000/api/images/get/${filename.substr(4)}`
       return `${conf.apiHost}/image/${filename.substr(4)}`
-    } else if (filename.substr(0, 7) === 'static:') {
+    } else if (typeof filename === 'string' && filename.substr(0, 7) === 'static:') {
       return `/images/avatars/${filename.substr(7)}`;
     }
     return filename;

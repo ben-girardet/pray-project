@@ -12,7 +12,7 @@ ${when(x => x.imageSmallB64, html<PrayItem>`<img class="preview" src="${x => x.i
 ${when(x => !x.imageSmallB64, html<PrayItem>`<div class="img-placeholder" style="background: ${x => x.gradient(x.topic.color)}"></div>`)}
 <div class="content">
   <div class="author">
-    <mini-user user-id="${x => x.topic.createdBy}"></mini-user>
+    <mini-user user-id="${x => x.topic.createdBy.id}"></mini-user>
   </div>
   <div class="main-content">
     <div class="title">${x => x.topic.name}</div>

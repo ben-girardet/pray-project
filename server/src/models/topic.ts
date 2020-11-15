@@ -39,11 +39,11 @@ export class Topic implements ITopic {
     @prop({default: 'active'})
     status: 'active' | 'answered' | 'archived' = 'active'
 
-    @Field(() => User)
+    // @Field(() => User)
     @prop({ref: () => User})
     public createdBy?: Ref<User>;
 
-    @Field(() => User)
+    // @Field(() => User)
     @prop({ref: () => User})
     public updatedBy?: Ref<User>;
 

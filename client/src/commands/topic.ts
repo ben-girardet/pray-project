@@ -19,7 +19,18 @@ query Topics($sort: SortBy, $status: String) {
       userId,
       encryptedContentKey,
       encryptedBy
-    }
+    },
+    createdBy {
+      id,
+      firstname,
+      lastname,
+      picture {
+        fileId,
+        width,
+        height
+      }
+    },
+    updatedAt
   }
 }`;
 
@@ -45,7 +56,18 @@ query Topic($topicId: String!) {
       userId,
       encryptedContentKey,
       encryptedBy
-    }
+    },
+    createdBy {
+      id,
+      firstname,
+      lastname,
+      picture {
+        fileId,
+        width,
+        height
+      }
+    },
+    updatedAt
   }
 }`;
 
@@ -67,7 +89,18 @@ mutation CreateTopic($name: String!, $description: String!, $color: String!, $im
       userId,
       encryptedContentKey,
       encryptedBy
-    }
+    },
+    createdBy {
+      id,
+      firstname,
+      lastname,
+      picture {
+        fileId,
+        width,
+        height
+      }
+    },
+    updatedAt
   }
 }`;
 
@@ -89,7 +122,18 @@ mutation EditTopic($id: String!, $data: EditTopicInput!) {
       userId,
       encryptedContentKey,
       encryptedBy
-    }
+    },
+    createdBy {
+      id,
+      firstname,
+      lastname,
+      picture {
+        fileId,
+        width,
+        height
+      }
+    },
+    updatedAt
   }
 }`;
 

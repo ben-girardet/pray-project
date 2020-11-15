@@ -88,6 +88,14 @@ export class User implements IUser {
     @prop({type: () => [RefreshToken], _id: false})
     public refreshTokens: RefreshToken[];
 
+    @Field(() => Date)
+    @prop()
+    public createdAt: Date;
+
+    @Field(() => Date)
+    @prop()
+    public updatedAt: Date;
+
     public hashPassword(password: string) {
         this.salt = crypto.randomBytes(16).toString('hex');
         this.hash = crypto.pbkdf2Sync(password, this.salt, 10000, 512, 'sha512').toString('hex');

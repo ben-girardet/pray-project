@@ -29,11 +29,9 @@ export class Message implements IMessage {
     @prop({ref: () => Topic})
     public topicId?: Ref<Topic>;
 
-    @Field(() => User)
     @prop({ref: () => User})
     public createdBy?: Ref<User>;
 
-    @Field(() => User)
     @prop({ref: () => User})
     public updatedBy?: Ref<User>;
 

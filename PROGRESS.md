@@ -32,8 +32,8 @@ Login is now pretty well in place. Now is the time to improve the topic experien
 [*] Try the imageService for topic images
 [*] Fix implementation of croppie in avatar and topic-form (fixed adding croppie css)
 [*] Display preview image in topic preview and topic detail
-[ ] Create a Value Converter to "select" the best image from the image array when displaying an image (ex: | getFileId:400)
-[ ] Fix getUser in mini-user component
+[*] Create a Value Converter to "select" the best image from the image array when displaying an image (ex: | getFileId:400)
+[*] Fix getUser in mini-user component
 [ ] Implement function API tests for topics filtering and sorting
 
 Once this is done, would be good to implement crypting

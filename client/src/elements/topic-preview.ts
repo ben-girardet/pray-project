@@ -7,13 +7,6 @@ export class TopicPreview {
 
   @bindable topic: Topic;
 
-  constructor() {
-    /* */
-  }
-
-  public topicChanged(): void {
-    /* */
-  }
 
   public gradient(original: string): string {
     try {

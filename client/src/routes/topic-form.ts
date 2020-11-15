@@ -88,10 +88,10 @@ export class TopicForm implements IRouteableComponent, IViewModel {
         const imageData = await this.imageService.publish();
         if (imageData !== 'no-change') {
           topic.image = [
-            {fileId: imageData.smallB64, width: 40, height: 40},
-            {fileId: imageData.small, width: 40, height: 40},
-            {fileId: imageData.medium, width: 100, height: 1000},
-            {fileId: imageData.large, width: 1000, height: 1000},
+            {fileId: imageData.smallB64, width: 40, height: 40 * 1.2},
+            {fileId: imageData.small, width: 40, height: 40 * 1.2},
+            {fileId: imageData.medium, width: 100, height: 100 * 1.2},
+            {fileId: imageData.large, width: 1000, height: 1000 * 1.2},
           ];
         }
       } else {
