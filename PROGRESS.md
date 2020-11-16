@@ -40,7 +40,7 @@ Login is now pretty well in place. Now is the time to improve the topic experien
 
 [ ] Work on Profile page so we can
 [ ] Edit current user
-[ ] Logout
+[*] Logout
 [ ] Create friendship
 [ ] Manage friendships
 

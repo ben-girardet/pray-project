@@ -34,13 +34,15 @@ import { UserResolver } from './resolvers/user';
 import { UserMessagesResolver } from './resolvers/user.messages';
 import { TopicResolver } from './resolvers/topic';
 import { TopicMessagesResolver } from './resolvers/topic.messages';
-import { TopicUserResolver } from './resolvers/x.user';
+import { TopicUserResolver, MessageUserResolver, FriendshipUserResolver } from './resolvers/x.user';
 import { MessageResolver } from './resolvers/message';
+import { FriendshipResolver } from './resolvers/friendship';
 import { RegistrationResolver } from './resolvers/registration';
 import { AuthResolver, customAuthChecker } from './resolvers/auth';
 const resolvers: NonEmptyArray<Function> | NonEmptyArray<string> =
     [UserResolver, UserMessagesResolver, TopicResolver, TopicMessagesResolver, TopicUserResolver,
-        MessageResolver, RegistrationResolver, AuthResolver];
+        MessageResolver, MessageUserResolver, RegistrationResolver, AuthResolver,
+        FriendshipResolver, FriendshipUserResolver];
 
 
 dotenv.config();

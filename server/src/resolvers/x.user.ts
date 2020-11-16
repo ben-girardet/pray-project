@@ -2,22 +2,22 @@ import { Topic } from '../models/topic';
 import { User, UserModel } from '../models/user';
 import { Message, MessageModel } from '../models/message';
 import { Resolver, FieldResolver, ResolverInterface, Root } from 'type-graphql';
-
+import { Friendship } from '../models/friendship';
 @Resolver(of => Topic)
 export class TopicUserResolver /*implements ResolverInterface<Topic>*/ {
 
     constructor() {}
 
     @FieldResolver(() => User)
-    public async createdBy(@Root() topic: Topic) {
-        const createdByUser = await UserModel.findById(topic.createdBy);
-        return createdByUser?.toObject();
+    public async createdBy(@Root() instance: Topic) {
+        const user = await UserModel.findById(instance.createdBy);
+        return user?.toObject();
     }
 
     @FieldResolver(() => User)
-    public async updatedBy(@Root() topic: Topic) {
-        const updatedByUser = await UserModel.findById(topic.updatedBy);
-        return updatedByUser?.toObject();
+    public async updatedBy(@Root() instance: Topic) {
+        const user = await UserModel.findById(instance.updatedBy);
+        return user?.toObject();
     }
 }
 
@@ -27,14 +27,38 @@ export class MessageUserResolver /*implements ResolverInterface<Topic>*/ {
     constructor() {}
 
     @FieldResolver(() => User)
-    public async createdBy(@Root() message: Message) {
-        const createdByUser = await UserModel.findById(message.createdBy);
-        return createdByUser?.toObject();
+    public async createdBy(@Root() instance: Message) {
+        const user = await UserModel.findById(instance.createdBy);
+        return user?.toObject();
     }
 
     @FieldResolver(() => User)
-    public async updatedBy(@Root() message: Message) {
-        const updatedByUser = await UserModel.findById(message.updatedBy);
-        return updatedByUser?.toObject();
+    public async updatedBy(@Root() instance: Message) {
+        const user = await UserModel.findById(instance.updatedBy);
+        return user?.toObject();
+    }
+}
+
+@Resolver(of => Friendship)
+export class FriendshipUserResolver /*implements ResolverInterface<Topic>*/ {
+
+    constructor() {}
+
+    @FieldResolver(() => User)
+    public async user1(@Root() instance: Friendship) {
+        const user = await UserModel.findById(instance.user1);
+        return user?.toObject();
+    }
+
+    @FieldResolver(() => User)
+    public async user2(@Root() instance: Friendship) {
+        const user = await UserModel.findById(instance.user2);
+        return user?.toObject();
+    }
+
+    @FieldResolver(() => User)
+    public async requestedBy(@Root() instance: Friendship) {
+        const user = await UserModel.findById(instance.requestedBy);
+        return user?.toObject();
     }
 }
