@@ -1,4 +1,3 @@
-import { CreateFriendshipInput } from './inputs/friendship';
 import { Friendship, FriendshipModel } from "../models/friendship";
 import { User, UserModel } from "../models/user";
 import { Resolver, Query, Arg, Authorized, Ctx, Mutation } from "type-graphql";
@@ -12,12 +11,11 @@ export class FriendshipResolver {
 
   @Authorized(['user'])
   @Mutation(() => Friendship)
-  public async createFriendship(@Ctx() context: Context, @Arg('data') data: CreateFriendshipInput) {
+  public async requestFriendship(@Ctx() context: Context, @Arg('friendId') friendId: string) {
     const userId = new mongoose.Types.ObjectId(context.user.userId);
-    const friendId = new mongoose.Types.ObjectId(data.friendId);
 
     const user = await UserModel.findById(userId);
-    const friend = await UserModel.findById(friendId);
+    const friend = await UserModel.findById(new mongoose.Types.ObjectId(friendId));
 
     if (!user || !friend) {
         throw new Error('Invalid request');
@@ -25,8 +23,8 @@ export class FriendshipResolver {
 
     const existingFriendship = await FriendshipModel.findOne({$and: [
         {$or: [
-            {user1: userId, user2: friendId},
-            {user1: friendId, user2: userId}
+            {user1: userId, user2: friend._id},
+            {user1: friend._id, user2: userId}
         ]},
         {status: {$ne: 'removed'}},
         {status: {$ne: 'declined'}},
@@ -43,7 +41,7 @@ export class FriendshipResolver {
 
     const newFriendship = new FriendshipModel();
     newFriendship.user1 = userId;
-    newFriendship.user2 = friendId;
+    newFriendship.user2 = friend._id;
     newFriendship.requestedBy = userId;
     newFriendship.requestedAt = new Date();
     newFriendship.status = 'requested';
@@ -55,29 +53,25 @@ export class FriendshipResolver {
 
   @Authorized(['user'])
   @Mutation(() => Friendship)
-  public async respondToFriendshipRequest(@Ctx() context: Context, @Arg('friendshipId') friendshipId: string, @Arg('response') response: 'accepted' | 'declined') {
+  public async respondToFriendshipRequest(@Ctx() context: Context, @Arg('friendshipId') friendshipId: string, @Arg('response') response: string) {
     const userId = new mongoose.Types.ObjectId(context.user.userId);
     const user = await UserModel.findById(userId);
     const friendship = await FriendshipModel.findOne({
         _id: new mongoose.Types.ObjectId(friendshipId),
-        $or: [{user1: userId, user2: userId}]
+        status: 'requested',
+        requestedBy: {$ne: userId},
+        user2: userId
     });
 
     if (!user || !friendship) {
-        throw new Error('Invalid request');
-    }
-
-    if (friendship.requestedBy?.toString() === userId.toString()) {
-        throw new Error('Invalid request');
-    }
-
-    if (friendship.status !== 'requested') {
-        throw new Error('Friendship request has already been responded to');
+        throw new Error('Invalid request2');
     }
 
     if (response === 'accepted' || response === 'declined') {
-        friendship.status = 'accepted';
+        friendship.status = response;
         friendship.respondedAt = new Date();
+    } else {
+        throw new Error('Invalid request');
     }
 
     const updatedFriendship = await friendship.save();
@@ -90,18 +84,25 @@ export class FriendshipResolver {
   public async removeFriendship(@Ctx() context: Context, @Arg('friendshipId') friendshipId: string) {
     const userId = new mongoose.Types.ObjectId(context.user.userId);
     const user = await UserModel.findById(userId);
-    const friendship = await FriendshipModel.findOne({
-        _id: new mongoose.Types.ObjectId(friendshipId),
-        $or: [{user1: userId, user2: userId}]
-    });
+    if (!user) {
+        throw new Error('Invalid request');
+    }
+    const friendship = await FriendshipModel.findOne({$and: [
+        {_id: new mongoose.Types.ObjectId(friendshipId), status: 'accepted'},
+        // for an unknown reason the following line doesn't work
+        // { $or: [{user1: userId, user2: userId}]}
+    ]});
 
-    if (!user || !friendship) {
+    if (!friendship) {
         throw new Error('Invalid request');
     }
 
-    if (friendship.status !== 'accepted') {
-        throw new Error('Only accepted requests can be removed');
-    }
+    if (friendship.user1 && friendship.user2
+        && friendship.user1.toString() !== userId.toHexString()
+        && friendship.user2.toString() !== userId.toHexString()
+        ) {
+            throw new Error('Invalid request');
+        }
 
     friendship.status = 'removed';
     friendship.removedAt = new Date();
