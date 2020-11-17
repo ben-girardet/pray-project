@@ -89,20 +89,12 @@ export class FriendshipResolver {
     }
     const friendship = await FriendshipModel.findOne({$and: [
         {_id: new mongoose.Types.ObjectId(friendshipId), status: 'accepted'},
-        // for an unknown reason the following line doesn't work
-        // { $or: [{user1: userId, user2: userId}]}
+        { $or: [{user1: userId}, {user2: userId}]}
     ]});
 
     if (!friendship) {
         throw new Error('Invalid request');
     }
-
-    if (friendship.user1 && friendship.user2
-        && friendship.user1.toString() !== userId.toHexString()
-        && friendship.user2.toString() !== userId.toHexString()
-        ) {
-            throw new Error('Invalid request');
-        }
 
     friendship.status = 'removed';
     friendship.removedAt = new Date();
@@ -112,7 +104,7 @@ export class FriendshipResolver {
   }
 
   @Authorized(['user'])
-  @Mutation(() => [Friendship])
+  @Query(() => [Friendship])
   public async friendships(@Ctx() context: Context, @Arg('sort', {nullable: true}) sort: SortBy, @Arg('status', {nullable: true}) status: 'accepted' | 'requested') {
     const user = context.user;
     const userId = new mongoose.Types.ObjectId(user.userId);
@@ -121,8 +113,12 @@ export class FriendshipResolver {
     if (sort) {
         sortBy[sort.field] = sort.order === SortOrder.ASC ? 1 : -1
     }
-    const query: FilterQuery<typeof FriendshipModel> = {$or: [{user1: userId, user2: userId}]};
-    query.status = status === 'requested' ? 'requested' : 'accepted';
+    const query: FilterQuery<typeof FriendshipModel> = {$or: [{user1: userId}, {user2: userId}]};
+    if (status) {
+        query.status = status === 'requested' ? 'requested' : 'accepted';
+    } else {
+        query.status = {$in: ['accepted', 'requested']};
+    }
     const friendships = await FriendshipModel.find(query, null, {sort: sortBy});
     return friendships.map(f => f.toObject());
   }

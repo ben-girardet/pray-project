@@ -219,3 +219,229 @@ scenarios:
             - equals:
                 - "{{ data.removeFriendship }}"
                 - true
+    - post:
+        name: "Chantal requests friendship with Ben"
+        url: "/graphql"
+        json:
+            operationName: null
+            query: 'mutation {requestFriendship(friendId: "{{ benUserId }}") {id, status}}'
+            variables: '{}'
+        headers:
+            Authorization: "Bearer {{ chantalToken }}"
+        capture:
+            - json: "$.data.requestFriendship.id"
+              as: "friendshipBenChantalId"
+        expect:
+            - statusCode: 200
+    - post:
+        name: "Thomas requests friendship with Ben"
+        url: "/graphql"
+        json:
+            operationName: null
+            query: 'mutation {requestFriendship(friendId: "{{ benUserId }}") {id, status}}'
+            variables: '{}'
+        headers:
+            Authorization: "Bearer {{ thomasToken }}"
+        capture:
+            - json: "$.data.requestFriendship.id"
+              as: "friendshipThomasBenId"
+        expect:
+            - statusCode: 200
+    - post:
+        name: "Thomas requests friendship with Chantal"
+        url: "/graphql"
+        json:
+            operationName: null
+            query: 'mutation {requestFriendship(friendId: "{{ chantalUserId }}") {id, status}}'
+            variables: '{}'
+        headers:
+            Authorization: "Bearer {{ thomasToken }}"
+        capture:
+            - json: "$.data.requestFriendship.id"
+              as: "friendshipThomasChantalId"
+        expect:
+            - statusCode: 200
+    - post:
+        name: "Ben accepts Chantal request"
+        url: "/graphql"
+        json:
+            operationName: null
+            query: 'mutation {respondToFriendshipRequest(friendshipId: "{{ friendshipBenChantalId }}", response: "accepted") {id, status}}'
+            variables: '{}'
+        headers:
+            Authorization: "Bearer {{ benToken }}"
+        capture:
+            - json: "$.data"
+              as: "data"
+        expect:
+            - statusCode: 200
+            - equals:
+                - "{{ data.respondToFriendshipRequest.status }}"
+                - "accepted"
+    - post:
+        name: "Ben lists his friendships"
+        url: "/graphql"
+        json:
+            operationName: null
+            query: 'query {friendships {id, status}}'
+            variables: '{}'
+        headers:
+            Authorization: "Bearer {{ benToken }}"
+        capture:
+            - json: "$.data"
+              as: "data"
+        expect:
+            - statusCode: 200
+            - equals:
+                - "{{ data.friendships.length }}"
+                - 2
+    - post:
+        name: "Ben lists his pending requests friendships"
+        url: "/graphql"
+        json:
+            operationName: null
+            query: 'query {friendships(status: "requested") {id, status}}'
+            variables: '{}'
+        headers:
+            Authorization: "Bearer {{ benToken }}"
+        capture:
+            - json: "$.data"
+              as: "data"
+        expect:
+            - statusCode: 200
+            - equals:
+                - "{{ data.friendships.length }}"
+                - 1
+            - equals:
+                - "{{ data.friendships[0].id }}"
+                - "{{ friendshipThomasBenId }}"
+    - post:
+        name: "Ben lists his pending requests friendships"
+        url: "/graphql"
+        json:
+            operationName: null
+            query: 'query {friendships(status: "accepted") {id, status}}'
+            variables: '{}'
+        headers:
+            Authorization: "Bearer {{ benToken }}"
+        capture:
+            - json: "$.data"
+              as: "data"
+        expect:
+            - statusCode: 200
+            - equals:
+                - "{{ data.friendships.length }}"
+                - 1
+            - equals:
+                - "{{ data.friendships[0].id }}"
+                - "{{ friendshipBenChantalId }}"
+    - post:
+        name: "Ben accepts Thomas request"
+        url: "/graphql"
+        json:
+            operationName: null
+            query: 'mutation {respondToFriendshipRequest(friendshipId: "{{ friendshipThomasBenId }}", response: "accepted") {id, status}}'
+            variables: '{}'
+        headers:
+            Authorization: "Bearer {{ benToken }}"
+        capture:
+            - json: "$.data"
+              as: "data"
+        expect:
+            - statusCode: 200
+            - equals:
+                - "{{ data.respondToFriendshipRequest.status }}"
+                - "accepted"
+    - post:
+        name: "Chantal accepts Thomas request"
+        url: "/graphql"
+        json:
+            operationName: null
+            query: 'mutation {respondToFriendshipRequest(friendshipId: "{{ friendshipThomasChantalId }}", response: "accepted") {id, status}}'
+            variables: '{}'
+        headers:
+            Authorization: "Bearer {{ chantalToken }}"
+        capture:
+            - json: "$.data"
+              as: "data"
+        expect:
+            - statusCode: 200
+            - equals:
+                - "{{ data.respondToFriendshipRequest.status }}"
+                - "accepted"
+    - post:
+        name: "Ben lists his friendships"
+        url: "/graphql"
+        json:
+            operationName: null
+            query: 'query {friendships(status: "accepted") {id, status}}'
+            variables: '{}'
+        headers:
+            Authorization: "Bearer {{ benToken }}"
+        capture:
+            - json: "$.data"
+              as: "data"
+        expect:
+            - statusCode: 200
+            - equals:
+                - "{{ data.friendships.length }}"
+                - 2
+    - post:
+        name: "Ben lists his friendships (ascending respondedAt)"
+        url: "/graphql"
+        json:
+            operationName: null
+            query: 'query {friendships(status: "accepted", sort: {field: "respondedAt", order: 1}) {id, status}}'
+            variables: '{}'
+        headers:
+            Authorization: "Bearer {{ benToken }}"
+        capture:
+            - json: "$.data"
+              as: "data"
+        expect:
+            - statusCode: 200
+            - equals:
+                - "{{ data.friendships.length }}"
+                - 2
+            - equals:
+                - "{{ data.friendships[0].id }}"
+                - "{{ friendshipBenChantalId }}"
+    - post:
+        name: "Ben lists his friendships (descending respondedAt)"
+        url: "/graphql"
+        json:
+            operationName: null
+            query: 'query {friendships(status: "accepted", sort: {field: "respondedAt", order: -1}) {id, status}}'
+            variables: '{}'
+        headers:
+            Authorization: "Bearer {{ benToken }}"
+        capture:
+            - json: "$.data"
+              as: "data"
+        expect:
+            - statusCode: 200
+            - equals:
+                - "{{ data.friendships.length }}"
+                - 2
+            - equals:
+                - "{{ data.friendships[0].id }}"
+                - "{{ friendshipThomasBenId }}"
+    - post:
+        name: "Chantal tries to remove Thomas and Ben friendship (must fail)"
+        url: "/graphql"
+        json:
+            operationName: null
+            query: 'mutation {removeFriendship(friendshipId: "{{ friendshipThomasBenId }}")}'
+            variables: '{}'
+        headers:
+            Authorization: "Bearer {{ chantalToken }}"
+        capture:
+            - json: "$.errors"
+              as: "errors"
+        expect:
+            - statusCode: 200
+            - hasProperty: "errors[0].message"
+            - equals:
+                - "{{ errors[0].message }}"
+                - "Invalid request"
+

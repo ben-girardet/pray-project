@@ -44,8 +44,8 @@ Login is now pretty well in place. Now is the time to improve the topic experien
 [*] Create friendship API
 [*] Manage friendships API
 [*] Add tests for friendships
-[ ] Add test for listing my friendships, including sort and filters
-[ ] Add test that someone "else" tries to remove the friendship of someone else (must fail)
+[*] Add test for listing my friendships, including sort and filters
+[*] Add test that someone "else" tries to remove the friendship of someone else (must fail)
 
 Once this is done, would be good to implement crypting
 
