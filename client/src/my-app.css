@@ -93,3 +93,28 @@ form label {
   background: rgba(255, 255, 255, 0.5);
   color: black;
 }
+.searchbar {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-items: space-between;
+  margin-bottom: 8px;
+}
+.searchbar pray-search-input {
+  width: 100%;
+  display: flex;
+  margin-right: 16px;
+}
+.searchbar fast-button {
+  flex-shrink: 0;
+}
+.search__results > * {
+  margin-top: 16px;
+  margin-bottom: 8px;
+  width: 100%;
+}
+.search__result {
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px solid #ccc;
+}

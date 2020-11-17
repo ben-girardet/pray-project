@@ -6,5 +6,6 @@ export interface Context {
     user: {
         userId: string;
         roles: string[]
-    }
+    },
+    locals: {[key: string]: any}
 }

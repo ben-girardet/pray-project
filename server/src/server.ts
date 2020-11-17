@@ -135,6 +135,7 @@ mongoose.connect(
                   req,
                   res,
                   user: req.user,
+                  locals: {}
                 };
                 return context;
             },

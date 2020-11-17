@@ -1,11 +1,10 @@
 import { Length, IsNotEmpty, validateOrReject, MaxLength } from "class-validator";
-import { User } from "./user";
 import { Topic } from './topic';
 import { Friendship as IFriendship } from "shared/types/friendship";
 import { ObjectType, Field, ID } from "type-graphql";
-import { prop, Ref, getModelForClass, DocumentType } from "@typegoose/typegoose";
+import { prop, Ref, getModelForClass } from "@typegoose/typegoose";
 import mongoose from 'mongoose';
-import { identity } from './middleware/identity';
+import { User } from "./user";
 
 @ObjectType()
 export class Friendship implements IFriendship {
@@ -21,13 +20,16 @@ export class Friendship implements IFriendship {
     @prop()
     public text: string;
 
-    @prop({ref: () => User})
+    // https://typegoose.github.io/typegoose/docs/guides/advanced/reference-other-classes#common-problems
+    @prop({ref: () => 'User'})
     public user1: Ref<User>;;
 
-    @prop({ref: () => User})
+    // https://typegoose.github.io/typegoose/docs/guides/advanced/reference-other-classes#common-problems
+    @prop({ref: () => 'User'})
     public user2: Ref<User>;;
 
-    @prop({ref: () => User})
+    // https://typegoose.github.io/typegoose/docs/guides/advanced/reference-other-classes#common-problems
+    @prop({ref: () => 'User'})
     public requestedBy: Ref<User>;;
 
     @Field()

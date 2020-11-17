@@ -1,12 +1,14 @@
 import { Length, IsNotEmpty, validateOrReject, MaxLength } from "class-validator";
 import crypto from 'crypto';
 import { User as IUser } from "shared/types/user";
-import { ObjectType, Field, Authorized } from "type-graphql";
+import { ObjectType, Field, Authorized, FieldResolver, Ctx, Root } from "type-graphql";
 import { prop, Ref, getModelForClass } from "@typegoose/typegoose";
 import mongoose from 'mongoose';
 import { config, RoleType } from '../core/config';
 import moment from 'moment';
 import { Image } from './image';
+import { Context } from '../resolvers/context-interface';
+import { FriendshipModel } from "./friendship";
 
 export interface RefreshTokenData {
     refreshToken: string;
@@ -95,6 +97,32 @@ export class User implements IUser {
     @Field(() => Date)
     @prop()
     public updatedAt: Date;
+
+    @Field(() => String, {nullable: true})
+    public async friendshipStatus(@Ctx() context: Context) {
+        if (!context.locals.friendships) {
+            context.locals.friendships = {};
+            // fetch friendships and store them in the context
+            const userId = new mongoose.Types.ObjectId(context.user.userId);
+            const friendships = await FriendshipModel.find({$or: [
+                {user1: userId},
+                {user2: userId}
+            ], status: {$in: ['accepted', 'requested']}});
+            for (const friendship of friendships) {
+                if (!friendship.user1 || !friendship.user2) {
+                    continue;
+                }
+                const f1 = friendship.user1 as unknown as mongoose.Types.ObjectId;
+                const f2 = friendship.user2 as unknown as mongoose.Types.ObjectId;
+                if (f1.equals(userId)) {
+                    context.locals.friendships[f2.toString()] = friendship.status;
+                } else {
+                    context.locals.friendships[f1.toString()] = friendship.status;
+                }
+            }
+        }
+        return context.locals.friendships[this.id.toString()];
+    }
 
     public hashPassword(password: string) {
         this.salt = crypto.randomBytes(16).toString('hex');

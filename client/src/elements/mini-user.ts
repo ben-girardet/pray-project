@@ -2,7 +2,7 @@
 import { gql } from 'apollo-boost';
 import { bindable } from 'aurelia';
 import { client } from '../apollo';
-
+import { User } from 'shared/types/user';
 export class MiniUser {
   @bindable userId: string;
 
@@ -29,11 +29,11 @@ export class MiniUser {
     }
   }
 
-  public async getUser(): Promise<{id: string, firstname: string, lastname: string, picture:{fileId: string, width: number, height: number}[]}> {
+  public async getUser(): Promise<Partial<User>> {
     if (!this.userId) {
       return null
     }
-    const result = await client.query<{user: {id: string, firstname: string, lastname: string, picture: {fileId: string, width: number, height: number}[]}}>({query: gql`query User($userId: String!) {
+    const result = await client.query<{user: Partial<User>}>({query: gql`query User($userId: String!) {
 user(id: $userId) {
   id,
   firstname,

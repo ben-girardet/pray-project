@@ -2,7 +2,7 @@
 <import from="./friends.css"></import>
 <div class="bottom-headview">
   <!-- <fast-button appearance="lightweight" load="../-@bottom">Annuler</fast-button> -->
-  <fast-button appearance="lightweight" load="../friends">Annuler</fast-button>
+  <fast-button appearance="lightweight" load="../friends">Cancel</fast-button>
   <span>Add a friend</span>
   <span></span>
 </div>
@@ -14,7 +14,11 @@
     <fast-button click.trigger="search()">Search</fast-button>
   </div>
 
-  <div class="searchfound" if.bind="found">
-    ${found.firstname} ${found.lastname}
+  <div class="search__results" if.bind="found.length">
+    <div class="search__result" repeat.for="user of found">
+      <mini-user user-id.bind="user.id"></mini-user>
+      <fast-button appearance="lightweight" click.trigger="requestFriendship(user.id)" if.bind="!user.friendshipStatus">Request</fast-button>
+      <fast-button appearance="lightweight" disabled if.bind="user.friendshipStatus">${user.friendshipStatus}</fast-button>
+    </div>
   </div>
 </div>
