@@ -283,7 +283,7 @@ scenarios:
         url: "/graphql"
         json:
             operationName: null
-            query: 'query {friendships {id, status}}'
+            query: 'query {friendships {id, status, friend {id, firstname, lastname}}}'
             variables: '{}'
         headers:
             Authorization: "Bearer {{ benToken }}"
@@ -295,6 +295,12 @@ scenarios:
             - equals:
                 - "{{ data.friendships.length }}"
                 - 2
+            - equals:
+                - "{{ data.friendships[0].friend.id }}"
+                - "{{ chantalUserId }}"
+            - equals:
+                - "{{ data.friendships[0].friend.firstname }}"
+                - "Chantal"
     - post:
         name: "Ben lists his pending requests friendships"
         url: "/graphql"
