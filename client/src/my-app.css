@@ -108,12 +108,12 @@ form label {
 .searchbar fast-button {
   flex-shrink: 0;
 }
-.search__results > * {
+.user-list > * {
   margin-top: 16px;
   margin-bottom: 8px;
   width: 100%;
 }
-.search__result {
+.user-list-item {
   display: flex;
   justify-content: space-between;
   border-bottom: 1px solid #ccc;

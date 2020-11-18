@@ -88,7 +88,7 @@ export class FriendshipResolver {
         throw new Error('Invalid request');
     }
     const friendship = await FriendshipModel.findOne({$and: [
-        {_id: new mongoose.Types.ObjectId(friendshipId), status: 'accepted'},
+        {_id: new mongoose.Types.ObjectId(friendshipId), status: {$in: ['accepted', 'requested']}},
         { $or: [{user1: userId}, {user2: userId}]}
     ]});
 

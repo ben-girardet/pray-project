@@ -46,6 +46,7 @@ Login is now pretty well in place. Now is the time to improve the topic experien
 [*] Add tests for friendships
 [*] Add test for listing my friendships, including sort and filters
 [*] Add test that someone "else" tries to remove the friendship of someone else (must fail)
+[*] Add test including the new "friend" fieldResolver
 
 Once this is done, would be good to implement crypting
 

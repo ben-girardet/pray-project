@@ -9,7 +9,25 @@
 
 <div class="bottom-contentview">
 
-  <p>Friend Requests</p>
+  <template if.bind="requests.length">
+    <p>Friend Requests</p>
+    <div class="user-list">
+      <div class="user-list-item" repeat.for="friendship of requests">
+        <mini-user user-id.bind="friendship.friend.id"></mini-user>
+        <fast-button if.bind="isMyRequest(friendship)" appearance="lightweight" click.trigger="removeFriendship(friendship.id)">Cancel</fast-button>
+        <fast-button if.bind="!isMyRequest(friendship)" appearance="lightweight" click.trigger="respondToFriendshipRequest(friendship.id, 'accepted')">Accept</fast-button>
+        <fast-button if.bind="!isMyRequest(friendship)" appearance="lightweight" click.trigger="respondToFriendshipRequest(friendship.id, 'declined')">Decline</fast-button>
+      </div>
+    </div>
+  </template>
 
-  <p>Friends</p>
+  <template if.bind="friends.length">
+    <p>Friends</p>
+    <div class="user-list">
+      <div class="user-list-item" repeat.for="friendship of friends">
+        <mini-user user-id.bind="friendship.friend.id"></mini-user>
+        <fast-button appearance="lightweight" click.trigger="removeFriendship(friendship.id)">Remove</fast-button>
+      </div>
+    </div>
+  </template>
 </div>
