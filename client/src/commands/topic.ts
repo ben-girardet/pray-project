@@ -50,7 +50,8 @@ query Topic($topicId: String!) {
     shares {
       userId,
       encryptedContentKey,
-      encryptedBy
+      encryptedBy,
+      role
     },
     myShare {
       userId,
@@ -142,6 +143,30 @@ mutation RemoveTopic($id: String!) {
   removeTopic(id: $id)
 }`;
 
+const addShareToTopicMutation = gql`
+mutation AddShareToTopic($id: String!, $userId: String!, $encryptedContentKey: String!) {
+  addShareToTopic(id: $id, data: {userId: $userId, encryptedContentKey: $encryptedContentKey}) {
+    shares {
+      userId, 
+      encryptedBy, 
+      encryptedContentKey,
+      role
+    }
+  }
+}`
+
+const removeShareToTopicMutation = gql`
+mutation RemoveShareToTopicMutation($id: String!, $userId: String!) {
+  removeShareToTopic(id: $id, userId: $userId) {
+    shares {
+      userId, 
+      encryptedBy, 
+      encryptedContentKey,
+      role
+    }
+  }
+}`
+
 export async function getTopics(sort: {field: string, order: -1 | 1}, status?: string): Promise<Topic[]> {
   const result = await client.query<{topics: Topic[]}>({query: getTopicsQuery, variables: {sort, status}, fetchPolicy: 'network-only'});
   return result.data.topics;
@@ -181,4 +206,14 @@ export async function editTopic(id: string,
 export async function removeTopic(id: string): Promise<boolean> {
   const result = await client.mutate<{removeTopic: boolean}>({mutation: removeTopicMutation, variables: { id }});
   return result.data.removeTopic;
+}
+
+export async function addShareToTopic(id: string, userId: string, encryptedContentKey: string): Promise<{userId: string, encryptedBy: string, encryptedContentKey: string, role: string}[]> {
+  const result = await client.mutate<{addShareToTopic: {shares: {userId: string, encryptedBy: string, encryptedContentKey: string, role: string}[]}}>({mutation: addShareToTopicMutation, variables: { id, userId, encryptedContentKey }});
+  return result.data.addShareToTopic.shares;
+}
+
+export async function removeShareToTopic(id: string, userId: string): Promise<{userId: string, encryptedBy: string, encryptedContentKey: string, role: string}[]> {
+  const result = await client.mutate<{removeShareToTopic: {shares: {userId: string, encryptedBy: string, encryptedContentKey: string, role: string}[]}}>({mutation: removeShareToTopicMutation, variables: { id, userId }});
+  return result.data.removeShareToTopic.shares;
 }

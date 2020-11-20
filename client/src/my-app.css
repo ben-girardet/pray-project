@@ -109,12 +109,17 @@ form label {
   flex-shrink: 0;
 }
 .user-list > * {
-  margin-top: 16px;
-  margin-bottom: 8px;
   width: 100%;
 }
 .user-list-item {
   display: flex;
   justify-content: space-between;
   border-bottom: 1px solid #ccc;
+  height: 45px;
+  align-items: center;
+}
+.user-list-item fast-progress-ring {
+  margin: 0;
+  width: 20px;
+  height: 20px;
 }

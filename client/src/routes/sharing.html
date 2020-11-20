@@ -1,9 +1,9 @@
 <import from="./bottom.css"></import>
 <import from="./sharing.css"></import>
 <div class="bottom-headview">
-  <fast-button appearance="lightweight" load="../-@bottom">Annuler</fast-button>
+  <fast-button appearance="lightweight"></fast-button>
   <span>Sharing</span>
-  <fast-button appearance="lightweight">Save</fast-button>
+  <fast-button appearance="lightweight" load="../-@bottom">Close</fast-button>
 </div>
 
 <div class="bottom-contentview">
@@ -13,5 +13,13 @@
     load="../topic-detail(${topic.id})"
     >
   </topic-preview>
+
   <p>Share with</p>
+  <div class="user-list">
+    <div class="user-list-item" repeat.for="friendship of friends">
+      <mini-user user-id.bind="friendship.friend.id"></mini-user>
+      <fast-checkbox style="${changingUserId[friendship.friend.id] ? 'display:none':''}" checked.to-view="hasShare(friendship.friend.id)" change.trigger="shareChange($event, friendship.friend.id)"></fast-checkbox>
+      <fast-progress-ring style="${changingUserId[friendship.friend.id] ? '':'display:none'}"></fast-progress-ring>
+    </div>
+  </div>
 </div>
