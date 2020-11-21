@@ -47,6 +47,13 @@ const resolvers: NonEmptyArray<Function> | NonEmptyArray<string> =
 
 dotenv.config();
 
+console.log('ENV preview');
+console.log('MONGOHOST', process.env.MONGOHOST);
+console.log('MONGOPORT', process.env.MONGOPORT);
+console.log('DBNAME', process.env.DBNAME);
+console.log('REDIS_HOST', process.env.REDIS_HOST);
+console.log('REDIS_PORT', process.env.REDIS_PORT);
+
 const corsOptions: CorsOptions = {
     origin: 'http://localhost:9000',
     credentials: true
