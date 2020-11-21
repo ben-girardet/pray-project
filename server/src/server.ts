@@ -74,7 +74,7 @@ LocalStrategy.register(passport);
 // Connect to the database and then start Express
 // TODO: fix this connection (using mongoose)
 mongoose.connect(
-    'mongodb://localhost:27017/',
+    `mongodb://${process.env.MONGOHOST}:${process.env.MONGOPORT}/`,
     {
         useNewUrlParser: true,
         useUnifiedTopology: true,

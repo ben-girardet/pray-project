@@ -9,7 +9,7 @@ import moment from 'moment';
 dotenv.config();
 
 mongoose.connect(
-    'mongodb://localhost:27017/',
+    `mongodb://${process.env.MONGOHOST}:${process.env.MONGOPORT}/`,
     {
         useNewUrlParser: true,
         useUnifiedTopology: true,
