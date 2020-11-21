@@ -50,7 +50,7 @@ Login is now pretty well in place. Now is the time to improve the topic experien
 
 [*] Crypt Messages before creating or after editing
 [*] Have a simple thing in place to ensure that the topics in the view are decrypted easily (should be pretty simple with the "myShare" prop
-
+[*] Only request privateKey if not in memory
  
 ## 21.22.2020 - Profile
 

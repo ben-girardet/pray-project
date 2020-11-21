@@ -66,7 +66,7 @@ class ApolloAuth {
       try {
         // when the refreshToken command is successfull
         // it calls the apolloAuth setLogin method
-        const result = await refreshToken();
+        const result = await refreshToken(!this.privateKey);
         if (!this.isTokenValid() || !this.authenticated) {
           return false;
         }

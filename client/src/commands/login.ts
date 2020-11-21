@@ -14,12 +14,12 @@ mutation Login($username: String!, $password: String!) {
 }`;
 
 const refreshTokenMutation = gql`
-mutation RefreshToken {
+mutation RefreshToken($withPrivateKey: Boolean!) {
   refreshToken {
     token,
     userId,
     expires,
-    privateKey
+    privateKey @include(if: $withPrivateKey)
   }
 }`;
 
@@ -44,8 +44,11 @@ export async function login(username: string, password: string) {
   return result.data.login;
 }
 
-export async function refreshToken() {
-  const result = await client.mutate({mutation: refreshTokenMutation, fetchPolicy: 'no-cache'}) as ApolloQueryResult<{refreshToken: Login}>;
+export async function refreshToken(withPrivateKey = false) {
+  const result = await client.mutate({
+    mutation: refreshTokenMutation, 
+    variables: {withPrivateKey},
+    fetchPolicy: 'no-cache'}) as ApolloQueryResult<{refreshToken: Login}>;
   if (result.data.refreshToken.expires instanceof Date) {
     result.data.refreshToken.expires = result.data.refreshToken.expires.toString();
   }
