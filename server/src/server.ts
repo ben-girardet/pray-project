@@ -54,8 +54,17 @@ console.log('DBNAME', process.env.DBNAME);
 console.log('REDIS_HOST', process.env.REDIS_HOST);
 console.log('REDIS_PORT', process.env.REDIS_PORT);
 
+const whitelist = ['http://localhost:9000', 'https://app.deuxoutrois.com'];
 const corsOptions: CorsOptions = {
-    origin: 'http://localhost:9000',
+    origin: function (origin, callback) {
+        if (origin === undefined) {
+            callback(new Error('Undefined origin'));
+        } else if (whitelist.indexOf(origin) !== -1) {
+          callback(null, true)
+        } else {
+          callback(new Error('Not allowed by CORS'))
+        }
+    },
     credentials: true
 };
 
