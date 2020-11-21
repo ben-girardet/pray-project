@@ -31,6 +31,7 @@ export class AuthResolver {
         login.token = jwtString;
         login.expires = moment().add(15, 'minutes').toDate(); // TODO: fix this by using the env variable
         login.userId = user._id.toString();
+        login.privateKey = user.privateKey;
         return login;
     }
 
@@ -53,19 +54,8 @@ export class AuthResolver {
         login.token = jwtString;
         login.expires = moment().add(15, 'minutes').toDate(); // TODO: fix this by using the env variable
         login.userId = foundUser._id.toString();
+        login.privateKey = foundUser.privateKey;
         return login;
-    }
-
-    private setJWTCookie(res: Response, jwtString: string) {
-        res.cookie('jwt', jwtString, {
-            path: '/graphql',
-            httpOnly: true,
-            expires: moment().add(1, 'hour').add(15, 'minutes').toDate(),
-            domain: undefined,
-            //domain: 'localhost',
-            sameSite: true,
-            secure: true
-        });
     }
 
     private sendRefreshToken(res: Response, refreshTokenData: RefreshTokenData) {

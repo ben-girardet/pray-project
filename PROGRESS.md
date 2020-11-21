@@ -38,8 +38,6 @@ Login is now pretty well in place. Now is the time to improve the topic experien
 
 ## 2020-11-15
 
-[ ] Work on Profile page so we can
-[ ] Edit current user
 [*] Logout
 [*] Create friendship API
 [*] Manage friendships API
@@ -48,9 +46,21 @@ Login is now pretty well in place. Now is the time to improve the topic experien
 [*] Add test that someone "else" tries to remove the friendship of someone else (must fail)
 [*] Add test including the new "friend" fieldResolver
 
-Once this is done, would be good to implement crypting
+## 21.11.2020 - Crypting
 
-[ ] Crypt Messages before creating or after editing
-[ ] Have a simple thing in place to ensure that the topics in the view are decrypted easily (should be pretty simple with the "myShare" prop
+[*] Crypt Messages before creating or after editing
+[*] Have a simple thing in place to ensure that the topics in the view are decrypted easily (should be pretty simple with the "myShare" prop
 
  
+## 21.22.2020 - Profile
+
+[ ] Work on Profile page so we can
+[ ] Edit current profile avatar, name
+[ ] Change password
+
+## Next 
+
+[ ] Praying view
+[ ] Notes and messages
+[ ] Mark prayer as answered
+[ ] Deploy so we can use it on mobile device

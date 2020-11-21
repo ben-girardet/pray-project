@@ -1,6 +1,7 @@
 import { gql, ApolloQueryResult } from 'apollo-boost';
 import { client } from '../apollo';
 import { Topic } from 'shared/types/topic';
+import { WithShares } from 'shared/types/share';
 
 export const getTopicsQuery = gql`
 query Topics($sort: SortBy, $status: String) {
@@ -167,18 +168,18 @@ mutation RemoveShareToTopicMutation($id: String!, $userId: String!) {
   }
 }`
 
-export async function getTopics(sort: {field: string, order: -1 | 1}, status?: string): Promise<Topic[]> {
-  const result = await client.query<{topics: Topic[]}>({query: getTopicsQuery, variables: {sort, status}, fetchPolicy: 'network-only'});
+export async function getTopics(sort: {field: string, order: -1 | 1}, status?: string): Promise<(Topic & WithShares)[]> {
+  const result = await client.query<{topics: (Topic & WithShares)[]}>({query: getTopicsQuery, variables: {sort, status}, fetchPolicy: 'network-only'});
   return result.data.topics;
 }
 
-export async function getTopic(topicId: string): Promise<Topic> {
-  const result = await client.query<{topic: Topic}>({query: getTopicQuery, variables: {topicId}, fetchPolicy: 'network-only'});
+export async function getTopic(topicId: string): Promise<Topic & WithShares> {
+  const result = await client.query<{topic: Topic & WithShares}>({query: getTopicQuery, variables: {topicId}, fetchPolicy: 'network-only'});
   return result.data.topic;
 }
 
-export async function createTopic(name: string, description: string, color: string, image: {fileId: string, width: number, height: number}[], encryptedContentKey: string): Promise<Topic> {
-  const result = await client.mutate<{createTopic: Topic}>({mutation: createTopicMutation, variables: {
+export async function createTopic(name: string, description: string, color: string, image: {fileId: string, width: number, height: number}[], encryptedContentKey: string): Promise<Topic & WithShares> {
+  const result = await client.mutate<{createTopic: Topic & WithShares}>({mutation: createTopicMutation, variables: {
     name,
     description,
     color,

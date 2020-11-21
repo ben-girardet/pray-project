@@ -1,3 +1,5 @@
+import { CryptingService } from './../services/crypting-service';
+import { WithShares } from './../../../shared/types/share';
 import { AppNotification } from './../components/app-notification';
 import { IRouteableComponent, IRouter } from '@aurelia/router';
 import { IViewModel, inject } from 'aurelia';
@@ -10,24 +12,13 @@ import { apolloAuth, client } from '../apollo';
 import { gql } from 'apollo-boost';
 import { ExtendedFriendship } from './friends';
 import { wait } from '../util';
-
-
-interface Share {
-  userId: string,
-      encryptedContentKey: string,
-      encryptedBy: string,
-      role: string
-}
-interface ExtendedTopic extends Topic {
-  shares?: Share[];
-}
 @inject()
 export class Sharing implements IRouteableComponent, IViewModel {
 
   public static parameters = ['topicId'];
 
   public topicId: string;
-  public topic: ExtendedTopic;
+  public topic: Topic & WithShares;
   public friends: ExtendedFriendship[];
   public changingUserId: {[key: string]: boolean} = {};
   
@@ -85,7 +76,8 @@ export class Sharing implements IRouteableComponent, IViewModel {
       if (!this.hasShare(userId) && checked) {
         // add share
         this.changingUserId[userId] = true;
-        const shares = await addShareToTopic(this.topic.id, userId, 'key');
+        const encryptedContentKey = await CryptingService.recryptContentKeyFor(this.topic.myShare, userId);
+        const shares = await addShareToTopic(this.topic.id, userId, encryptedContentKey);
         this.topic.shares = shares;
       } else if (this.hasShare(userId) && !checked) {
         // remove share

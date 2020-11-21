@@ -8,7 +8,8 @@ mutation Login($username: String!, $password: String!) {
   {
     token,
     userId,
-    expires
+    expires,
+    privateKey
   }
 }`;
 
@@ -17,7 +18,8 @@ mutation RefreshToken {
   refreshToken {
     token,
     userId,
-    expires
+    expires,
+    privateKey
   }
 }`;
 
@@ -35,7 +37,8 @@ export async function login(username: string, password: string) {
     apolloAuth.setLogin({
       token: result.data.login.token,
       userId: result.data.login.userId, 
-      expires: result.data.login.expires
+      expires: result.data.login.expires,
+      privateKey: result.data.login.privateKey
     });
   }
   return result.data.login;
@@ -51,6 +54,7 @@ export async function refreshToken() {
       token: result.data.refreshToken.token,
       userId: result.data.refreshToken.userId, 
       expires: result.data.refreshToken.expires,
+      privateKey: result.data.refreshToken.privateKey
     });
   }
   return result.data.refreshToken;

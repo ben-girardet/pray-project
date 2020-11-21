@@ -18,6 +18,7 @@
     "croppie": "^2.6.5",
     "easy-scroll": "^0.7.0",
     "graphql": "^15.3.0",
+    "gun": "^0.2020.520",
     "heroicons": "^0.4.2",
     "image-blob-reduce": "^2.0.0",
     "lodash-es": "^4.17.15",

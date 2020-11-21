@@ -13,5 +13,8 @@ export class Login implements ILogin {
     @Field(() => String)
     public userId: string;
 
+    @Field(() => String)
+    public privateKey: string;
+
 
 }

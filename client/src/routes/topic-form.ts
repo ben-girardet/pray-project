@@ -1,6 +1,8 @@
+import { CryptingService } from './../services/crypting-service';
 import { AppNotification } from './../components/app-notification';
 import { ImageService } from './../services/internals';
 import { Topic } from 'shared/types/topic';
+import { Share, MyShare } from 'shared/types/share';
 import { IRouteableComponent, IRouter } from '@aurelia/router';
 import { IViewModel, inject } from 'aurelia';
 import ImageBlobReduce from 'image-blob-reduce';
@@ -24,6 +26,7 @@ export class TopicForm implements IRouteableComponent, IViewModel {
   public color = '#0000ff';
 
   private percent = 0;
+  private myShare: Share;
 
   public cropping = false;
   private croppieElement: HTMLElement;
@@ -50,12 +53,14 @@ export class TopicForm implements IRouteableComponent, IViewModel {
   public async load(parameters: {topicId?: string}): Promise<void> {
     if (parameters.topicId) {
       const topic = await getTopic(parameters.topicId);
+      CryptingService.decryptTopic(topic);
       this.topicId = topic.id;
       this.color = topic.color;
       this.preview = topic.image && topic.image.length ? topic.image.find(i => i.height > 50 && i.width > 50).fileId : '';
       if (this.preview) {
         this.illustrateWith = 'picture';
       }
+      this.myShare = topic.myShare;
       setTimeout(() => {
         this.name = topic.name;
         this.description = topic.description;
@@ -98,8 +103,12 @@ export class TopicForm implements IRouteableComponent, IViewModel {
         topic.image = [];
       }
       if (!topic.id) {
-        const createdTopic = await createTopic(topic.name, topic.description, topic.color, topic.image, 'key');
+        const encryptedTopic = await CryptingService.encryptNewTopic(topic);
+        const createdTopic = await createTopic(topic.name, topic.description, topic.color, topic.image, encryptedTopic.encryptedContentKey);
       } else {
+        const t: Topic & MyShare = topic;
+        t.myShare = this.myShare;
+        await CryptingService.encryptEditedTopic(t);
         const editedTopic = await editTopic(topic.id, {
           name: topic.name, 
           description: topic.description, 

@@ -1,4 +1,7 @@
+import { CryptingService } from './../services/crypting-service';
+import { AppNotification } from './../components/app-notification';
 import { Topic as ITopic } from 'shared/types/topic';
+import { MyShare } from 'shared/types/share';
 import { IRouteableComponent } from '@aurelia/router';
 import { IViewModel, ILogger, EventAggregator, IDisposable } from 'aurelia';
 import easyScroll from 'easy-scroll';
@@ -63,12 +66,28 @@ export class Topics implements IRouteableComponent, IViewModel {
 
   public async getTopics(): Promise<void> {
     try {
-      this.activeTopics = await getTopics({field: 'updatedAt', order: -1}, 'active');
-      this.answeredTopics = await getTopics({field: 'updatedAt', order: -1}, 'answered');
-      this.archivedTopics = await getTopics({field: 'updatedAt', order: -1}, 'archived');
+      const activeTopics = await getTopics({field: 'updatedAt', order: -1}, 'active');
+      const answeredTopics = await getTopics({field: 'updatedAt', order: -1}, 'answered');
+      const archivedTopics = await getTopics({field: 'updatedAt', order: -1}, 'archived');
+      this.activeTopics = await this.decryptTopics(activeTopics);
+      this.answeredTopics = await this.decryptTopics(answeredTopics);
+      this.archivedTopics = await this.decryptTopics(archivedTopics);
     } catch (error) {
       this.logger.error(error);
     }
+  }
+
+  public async decryptTopics(topics: (ITopic & MyShare)[]): Promise<(ITopic & MyShare)[]> {
+    const decryptedTopics: (ITopic & MyShare)[] = [];
+    for (const topic of topics) {
+      try {
+        await CryptingService.decryptTopic(topic);
+        decryptedTopics.push(topic);
+      } catch (error) {
+        AppNotification.notify(error.message, 'error');
+      }
+    }
+    return decryptedTopics;
   }
 
   public scrollToTop(): void {

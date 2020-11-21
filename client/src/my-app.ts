@@ -84,6 +84,8 @@ export class MyApp implements IViewModel {
       const detailInstruction = instructions.find(i => i.viewportName === 'detail');
       this.logger.debug('bottomInstruction', bottomInstruction);
       this.logger.debug('detailInstruction', detailInstruction);
+      const bottomViewport = this.router.getViewport('bottom');
+      this.logger.debug('bottomViewport', bottomViewport);
       if (prayingInstruction) {
         if (prayingInstruction.componentName === 'praying') {
           document.documentElement.classList.add('praying');
@@ -92,29 +94,14 @@ export class MyApp implements IViewModel {
         }
       }
       if (bottomInstruction) {
-        if (bottomInstruction.componentName === 'topic-form') {
-          document.documentElement.classList.add('bottom');
-        } else if (bottomInstruction.componentName === '-') {
+        if (bottomInstruction.componentName === '-') {
           document.documentElement.classList.remove('bottom');
-          this.eventAggregator.publish('topic-form-out');
-        }
-        if (bottomInstruction.componentName === 'sharing') {
+          this.logger.debug('publish:', `${bottomViewport.content.content.componentName}-out`);
+          this.eventAggregator.publish(`${bottomViewport.content.content.componentName}-out`);
+        } else {
           document.documentElement.classList.add('bottom');
-        } else if (bottomInstruction.componentName === '-') {
-          document.documentElement.classList.remove('bottom');
-          this.eventAggregator.publish('sharing-out');
-        }
-        if (bottomInstruction.componentName === 'friends') {
-          document.documentElement.classList.add('bottom');
-        } else if (bottomInstruction.componentName === '-') {
-          document.documentElement.classList.remove('bottom');
-          this.eventAggregator.publish('friends-out');
-        }
-        if (bottomInstruction.componentName === 'add-friend') {
-          document.documentElement.classList.add('bottom');
-        } else if (bottomInstruction.componentName === '-') {
-          document.documentElement.classList.remove('bottom');
-          this.eventAggregator.publish('add-friend-out');
+          this.logger.debug('publish:', `${bottomViewport.content.content.componentName}-in`);
+          this.eventAggregator.publish(`${bottomViewport.content.content.componentName}-in`);
         }
       }
       if (detailInstruction) {
