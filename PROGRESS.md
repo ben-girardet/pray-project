@@ -10,57 +10,58 @@ Observations:
 
 What I shoudl probably do:
 
-[*] Not JWT http-cookie storage anymore (server only sends token via json response)
-[*] Client stores the JWT in memory
-[*] The refreshToken can be stored in http cookie
-[*] In order to call refreshToken I need to provide userId, check if this is the right thing or if I could avoid that (removing the need of userId)
-[*] On refresh: try to get a new token with refresh token, if not working go to login
-[*] If successful: store the jwt
+- [x] Not JWT http-cookie storage anymore (server only sends token via json response)
+- [x] Client stores the JWT in memory
+- [x] The refreshToken can be stored in http cookie
+- [x] In order to call refreshToken I need to provide userId, check if this is the right thing or if I could avoid that (removing the need of userId)
+- [x] On refresh: try to get a new token with refresh token, if not working go to login
+- [x] If successful: store the jwt
 
 
 ## 2020-11-07
 
 Login is now pretty well in place. Now is the time to improve the topic experience
 
-[*] Add sorting and filtering options in topic requests
-[*] Implement sort by last update and filter by status on topics view
-[*] Try to watch the topics in the topics view so that when a topic is created or edited it is refreshed on the page (tried to used watch without much success yet, try again another time)
-[*] Make Open topic work
-[*] Make the edit topic work
-[*] Make change topic status work
-[*] Make delete topic status work
-[*] Try the imageService for topic images
-[*] Fix implementation of croppie in avatar and topic-form (fixed adding croppie css)
-[*] Display preview image in topic preview and topic detail
-[*] Create a Value Converter to "select" the best image from the image array when displaying an image (ex: | getFileId:400)
-[*] Fix getUser in mini-user component
-[*] Implement function API tests for topics filtering and sorting
+- [x] Add sorting and filtering options in topic requests
+- [x] Implement sort by last update and filter by status on topics view
+- [x] Try to watch the topics in the topics view so that when a topic is created or edited it is refreshed on the page (tried to used watch without much success yet, try again another time)
+- [x] Make Open topic work
+- [x] Make the edit topic work
+- [x] Make change topic status work
+- [x] Make delete topic status work
+- [x] Try the imageService for topic images
+- [x] Fix implementation of croppie in avatar and topic-form (fixed adding croppie css)
+- [x] Display preview image in topic preview and topic detail
+- [x] Create a Value Converter to "select" the best image from the image array when displaying an image (ex: | getFileId:400)
+- [x] Fix getUser in mini-user component
+- [x] Implement function API tests for topics filtering and sorting
 
 ## 2020-11-15
 
-[*] Logout
-[*] Create friendship API
-[*] Manage friendships API
-[*] Add tests for friendships
-[*] Add test for listing my friendships, including sort and filters
-[*] Add test that someone "else" tries to remove the friendship of someone else (must fail)
-[*] Add test including the new "friend" fieldResolver
+- [x] Logout
+- [x] Create friendship API
+- [x] Manage friendships API
+- [x] Add tests for friendships
+- [x] Add test for listing my friendships, including sort and filters
+- [x] Add test that someone "else" tries to remove the friendship of someone else (must fail)
+- [x] Add test including the new "friend" fieldResolver
 
 ## 21.11.2020 - Crypting
 
-[*] Crypt Messages before creating or after editing
-[*] Have a simple thing in place to ensure that the topics in the view are decrypted easily (should be pretty simple with the "myShare" prop
-[*] Only request privateKey if not in memory
+- [x] Crypt Messages before creating or after editing
+- [x] Have a simple thing in place to ensure that the topics in the view are decrypted easily (should be pretty simple with the "myShare" prop
+- [x] Only request privateKey if not in memory
+- [x]
  
 ## 21.22.2020 - Profile
 
-[ ] Work on Profile page so we can
-[ ] Edit current profile avatar, name
-[ ] Change password
+- [ ] Work on Profile page so we can
+- [ ] Edit current profile avatar, name
+- [ ] Change password
 
 ## Next 
 
-[ ] Praying view
-[ ] Notes and messages
-[ ] Mark prayer as answered
-[ ] Deploy so we can use it on mobile device
+- [ ] Praying view
+- [ ] Notes and messages
+- [ ] Mark prayer as answered
+- [ ] Deploy so we can use it on mobile device
