@@ -1,3 +1,3 @@
 export default {
-  apiHost: 'https://papi.girardet.ch'
+  apiHost: 'https://api.deuxoutrois.com'
 };
