@@ -12,6 +12,7 @@ import {
   FASTAnchor,
   FASTCard, 
   FASTButton,
+  FASTCheckbox,
   FASTTextField,
   FASTTextArea,
   FASTDialog,
@@ -30,6 +31,7 @@ FASTDesignSystemProvider;
 FASTAnchor;
 FASTCard;
 FASTButton;
+FASTCheckbox
 FASTTextField;
 FASTTextArea;
 FASTDialog;
