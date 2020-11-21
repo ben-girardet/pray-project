@@ -5,8 +5,6 @@ FROM node:14.15.1
 RUN apt update \
 	&& apt install vim git bash -y --no-install-recommends
 
-ARG SEED
-
 ENV NODE_ENV=development
 ENV SESSION_SECRET=fjsdh8472938
 ENV SERVER_PORT=3000
@@ -24,8 +22,6 @@ WORKDIR /home
 RUN git clone https://github.com/ben-girardet/pray-project.git
 WORKDIR /home/pray-project/server
 RUN npm install
-RUN if [ "$SEED" = "1" ] ; then npm run seed ; fi
-# CMD npm start
 EXPOSE 3000
 COPY ./update-and-run.sh /home/pray-project/server/update-and-run.sh
 CMD sh update-and-run.sh
