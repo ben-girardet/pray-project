@@ -58,7 +58,8 @@ const whitelist = ['http://localhost:9000', 'https://app.deuxoutrois.com'];
 const corsOptions: CorsOptions = {
     origin: function (origin, callback) {
         if (origin === undefined) {
-            callback(new Error('Undefined origin'));
+          console.warn('Allowing undefined origin');
+          callback(null, true)
         } else if (whitelist.indexOf(origin) !== -1) {
           callback(null, true)
         } else {
