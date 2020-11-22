@@ -1,4 +1,9 @@
+# Progress
+
+Sort of a roadmap
+
 ## 2020-11-05
+
 I am failing to get the right topics according to currently logged in user.
 
 Observations:
@@ -49,9 +54,8 @@ Login is now pretty well in place. Now is the time to improve the topic experien
 ## 21.11.2020 - Crypting
 
 - [x] Crypt Messages before creating or after editing
-- [x] Have a simple thing in place to ensure that the topics in the view are decrypted easily (should be pretty simple with the "myShare" prop
+- [x] Have a simple thing in place to ensure that the topics in the view are decrypted easily (should be pretty simple with the "myShare" prop
 - [x] Only request privateKey if not in memory
-- [x]
 
 ## 22.11.2020 - Branding
 
