@@ -2,7 +2,7 @@
 
 Sort of a roadmap
 
-## 2020-11-05
+## 2020-11-05
 
 I am failing to get the right topics according to currently logged in user.
 
@@ -23,7 +23,7 @@ What I shoudl probably do:
 - [x] If successful: store the jwt
 
 
-## 2020-11-07
+## 2020-11-07
 
 Login is now pretty well in place. Now is the time to improve the topic experience
 
@@ -41,7 +41,7 @@ Login is now pretty well in place. Now is the time to improve the topic experien
 - [x] Fix getUser in mini-user component
 - [x] Implement function API tests for topics filtering and sorting
 
-## 2020-11-15
+## 2020-11-15
 
 - [x] Logout
 - [x] Create friendship API
@@ -51,30 +51,30 @@ Login is now pretty well in place. Now is the time to improve the topic experien
 - [x] Add test that someone "else" tries to remove the friendship of someone else (must fail)
 - [x] Add test including the new "friend" fieldResolver
 
-## 21.11.2020 - Crypting
+## 21.11.2020 - Crypting
 
 - [x] Crypt Messages before creating or after editing
 - [x] Have a simple thing in place to ensure that the topics in the view are decrypted easily (should be pretty simple with the "myShare" prop
 - [x] Only request privateKey if not in memory
 
-## 22.11.2020 - Branding
+## 22.11.2020 - Branding
 
 - [x] Work on a name (Sunago)
 - [x] Web font: GFS Neohellenic
 
-## 23.11.2020 - Overall design
+## 23.11.2020 - Overall design
 
 - [ ] Simplify overall design (avoid complex thing with headbar and bottombar for now, make it white if possible)
 - [ ] Have the logo (sunago) always in main screen top left
 - [ ] Display tabs below (like Twitter)
  
-## 21.22.2020 - Profile
+## 21.22.2020 - Profile
 
 - [ ] Work on Profile page so we can
 - [ ] Edit current profile avatar, name
 - [ ] Change password
 
-## Next 
+## Next 
 
 - [ ] Praying view
 - [ ] Notes and messages
