@@ -52,6 +52,17 @@ Login is now pretty well in place. Now is the time to improve the topic experien
 - [x] Have a simple thing in place to ensure that the topics in the view are decrypted easily (should be pretty simple with the "myShare" prop
 - [x] Only request privateKey if not in memory
 - [x]
+
+## 22.11.2020 - Branding
+
+- [x] Work on a name (Sunago)
+- [x] Web font: GFS Neohellenic
+
+## 23.11.2020 - Overall design
+
+- [ ] Simplify overall design (avoid complex thing with headbar and bottombar for now, make it white if possible)
+- [ ] Have the logo (sunago) always in main screen top left
+- [ ] Display tabs below (like Twitter)
  
 ## 21.22.2020 - Profile
 
