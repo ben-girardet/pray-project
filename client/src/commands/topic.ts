@@ -8,7 +8,6 @@ query Topics($sort: SortBy, $status: String) {
   topics(sort: $sort, status: $status) {
     id,
     name,
-    description,
     image {
       fileId,
       width,
@@ -40,7 +39,6 @@ query Topic($topicId: String!) {
   topic(id: $topicId) {
     id,
     name,
-    description,
     image {
       fileId,
       width,
@@ -74,12 +72,11 @@ query Topic($topicId: String!) {
 }`;
 
 const createTopicMutation = gql`
-mutation CreateTopic($name: String!, $description: String!, $color: String!, $image: [ImageInput!], $encryptedContentKey: String!) {
-  createTopic(data: {name: $name, description: $description, color: $color, image: $image, encryptedContentKey: $encryptedContentKey})
+mutation CreateTopic($name: String!, $color: String!, $image: [ImageInput!], $encryptedContentKey: String!) {
+  createTopic(data: {name: $name, color: $color, image: $image, encryptedContentKey: $encryptedContentKey})
   {
     id,
     name,
-    description,
     image {
       fileId,
       width,
@@ -112,7 +109,6 @@ mutation EditTopic($id: String!, $data: EditTopicInput!) {
   {
     id,
     name,
-    description,
     image {
       fileId,
       width,
@@ -178,10 +174,9 @@ export async function getTopic(topicId: string): Promise<Topic & WithShares> {
   return result.data.topic;
 }
 
-export async function createTopic(name: string, description: string, color: string, image: {fileId: string, width: number, height: number}[], encryptedContentKey: string): Promise<Topic & WithShares> {
+export async function createTopic(name: string, color: string, image: {fileId: string, width: number, height: number}[], encryptedContentKey: string): Promise<Topic & WithShares> {
   const result = await client.mutate<{createTopic: Topic & WithShares}>({mutation: createTopicMutation, variables: {
     name,
-    description,
     color,
     image,
     encryptedContentKey
@@ -192,7 +187,6 @@ export async function createTopic(name: string, description: string, color: stri
 export async function editTopic(id: string,
   data: {
     name?: string,
-    description?: string,
     color?: string;
     status?: string;
     image?: {fileId: string, width: number, height: number}[];

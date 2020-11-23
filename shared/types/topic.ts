@@ -1,7 +1,6 @@
 export interface Topic {
   id?: string;
   name: string;
-  description?: string;
   image?: {fileId: string, width: number, height: number}[];
   color: string;
   status: 'active' | 'answered' | 'archived';

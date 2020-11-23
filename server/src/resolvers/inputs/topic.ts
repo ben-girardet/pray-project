@@ -8,9 +8,6 @@ export class CreateTopicInput {
     name: string;
 
     @Field()
-    description: string;
-
-    @Field()
     color: string;
 
     @Field(type => String, {nullable: true})
@@ -28,9 +25,6 @@ export class EditTopicInput {
 
     @Field({nullable: true})
     name?: string;
-
-    @Field({nullable: true})
-    description?: string;
 
     @Field({nullable: true})
     color?: string;

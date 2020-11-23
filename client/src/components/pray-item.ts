@@ -16,7 +16,6 @@ ${when(x => !x.imageSmallB64, html<PrayItem>`<div class="img-placeholder" style=
   </div>
   <div class="main-content">
     <div class="title">${x => x.topic.name}</div>
-    <div class="description">${x => x.topic.description} ${x => x.topic.description} ${x => x.topic.description} ${x => x.topic.description} ${x => x.topic.description}</div>
   </div>
 </div>
 `;
@@ -80,12 +79,7 @@ const styles = css`
   .title {
     font-size: 16px;
   }
-  .description {
-    font-size: 12px;
-    font-weight: 100;
-  }
-  .title,
-  .description {
+  .title {
     padding: 4px;
     line-height: 20px;
   }

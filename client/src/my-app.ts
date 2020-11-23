@@ -2,11 +2,10 @@ import { IRouter, IViewModel, ViewportInstruction, inject, ILogger, EventAggrega
 import { parseColorWebRGB } from "@microsoft/fast-colors";
 import { createColorPalette, parseColorString } from "@microsoft/fast-components";
 import { apolloAuth } from './apollo';
-import conf from './config';
 
 const neutral = 'rgb(200, 200, 200)'; // 'rgb(70,51,175)';
 // const accent = 'rgb(0,201,219)';
-const accent = '#335BBB';
+const accent = '#3AC3BD';
 const neutralPalette = createColorPalette(parseColorWebRGB(neutral));
 const accentPalette = createColorPalette(parseColorString(accent));
 
@@ -33,7 +32,8 @@ export class MyApp implements IViewModel {
   }
 
   public attached(): void {
-    const darkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    // TODO: enable darkMode later
+    const darkMode = false && window.matchMedia('(prefers-color-scheme: dark)').matches;
     this.logger.debug('darkMode', darkMode);
     const provider = document.querySelector("fast-design-system-provider") as HTMLElement & {backgroundColor: string; neutralPalette: string[]; accentPalette: string[]; accentBaseColor: string};
     if (darkMode) {

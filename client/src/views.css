@@ -1,33 +1,10 @@
 * {
-  --header-color: #335BBB;
   --body-color: #fff;
-  --bottom-bar-color: #efefef;
-}
-
-@media (prefers-color-scheme: dark) {
-  * {
-    --header-color: #000;
-    --body-color: #000;
-    --bottom-bar-color: #111;
-  }
+  --accent-color: #3AC3BD;
 }
 
 html {
-  background: var(--bottom-bar-color);
-}
-
-body {
-  background: linear-gradient(180deg, 
-  var(--header-color) 0px,
-  var(--header-color) var(--top-bar-end),
-  var(--body-color) var(--body-start),
-  var(--body-color) var(--body-end),
-  var(--bottom-bar-color) var(--bottom-bar-start),
-  var(--bottom-bar-color) 100%
-  );
-}
-html.bottom body {
-  background: #000;
+  background: var(--body-color);
 }
 
 
@@ -45,11 +22,10 @@ au-viewport[name=main] {
   top: env(safe-area-inset-top);
   left: 0;
   bottom: 50px;
-  /* bottom: calc(50px + constant(safe-area-inset-bottom));
-  bottom: calc(50px + env(safe-area-inset-bottom)); */
-  /* background-color: var(--background-color); */
-  background: linear-gradient(180deg, var(--header-color) 500px, var(--body-color) 500px);
+  bottom: calc(50px + constant(safe-area-inset-bottom));
+  bottom: calc(50px + env(safe-area-inset-bottom));
   transition: all 250ms ease-out;
+  background-color: var(--body-color);
 }
 
 au-viewport[name=praying] {
@@ -61,14 +37,14 @@ au-viewport[name=praying] {
   transform: translateY(150%);
   transition: transform 250ms ease-out;
   padding: 16px;
-  background-color: #000;
+  background-color: var(--body-color);
 }
 body.praying au-viewport[name=praying] {
   transform: translateY(0);
 }
 au-viewport[name=bottom] {
   z-index: 3;
-  height: calc(95%);
+  height: calc(100%);
   bottom: 0;
   left: 0;
   transform: translateY(150%);
@@ -80,14 +56,14 @@ au-viewport[name=bottom] {
 }
 html.bottom au-viewport[name=bottom] {
   transform: translateY(0px);
-  border-top-left-radius: 15px;
-  border-top-right-radius: 15px;
+  /* border-top-left-radius: 15px;
+  border-top-right-radius: 15px; */
 }
 html.bottom au-viewport[name=main],
 html.bottom au-viewport[name=detail] {
   transform: scale(0.95);
-  border-radius: 15px;
-  box-shadow: var(--elevation0);
+  /* border-radius: 15px; */
+  /* box-shadow: var(--elevation0); */
   overflow: hidden;
   background: var(--body-color);
 }
@@ -106,7 +82,7 @@ html.detail au-viewport[name=detail] {
   top: 0;
   left: 0;
   opacity: 1;
-  background: white; /* TODO: should adapt with dark mode */
+  background-color: var(--body-color);
 }
 
 /* VIEWPARTS */
@@ -117,9 +93,9 @@ html.detail au-viewport[name=detail] {
   left: 0;
   right: 0;
   height: 50px;
-  /* height: calc(50px + constant(safe-area-inset-bottom));
-  height: calc(50px + env(safe-area-inset-bottom)); */
-  background: var(--bottom-bar-color);
+  height: calc(50px + constant(safe-area-inset-bottom));
+  height: calc(50px + env(safe-area-inset-bottom));
+  background-color: var(--body-color);
   border-top: #fefefe 1px solid;
   display: flex;
   justify-content: space-between;
@@ -134,6 +110,12 @@ html.detail au-viewport[name=detail] {
   display: flex;
   align-items: center;
   justify-content: center;
+  border-top: solid 1px rgba(200, 200, 200, 0.5);
+}
+
+.bottom-bar-button.load-active {
+  color: var(--accent-color);;
+  border-top: solid 1px var(--accent-color);;
 }
 
 .bottom-bar-button.praying-button img {
@@ -150,7 +132,7 @@ html.detail au-viewport[name=detail] {
 
 .list-head {
   width: 100%;
-  background-color: var(--header-color);
+  background-color: var(--body-color);
   padding-top: 0px;
   /* padding-top: calc(0px + constant(safe-area-inset-top));
   padding-top: calc(0px + env(safe-area-inset-top)); */
@@ -163,10 +145,10 @@ html.detail au-viewport[name=detail] {
   position: -webkit-sticky;
   position: sticky;
   top: 0;
-  background-color: var(--header-color);
-  padding: 16px;
+  background-color: var(--body-color);
   z-index:1;
   transform: translateY(-1px);
+  border-bottom: 1px solid #efefef;
 }
 .list-content-head h2 {
   margin: 0px;
@@ -197,6 +179,7 @@ html.detail au-viewport[name=detail] {
   justify-content: flex-start;
   text-rendering: optimizelegibility;
   text-shadow: 1px 1px 3px rgba(0, 0, 0, .8);
+  cursor: pointer;
 }
 .head__right {
   left: auto;
@@ -210,18 +193,4 @@ html.detail au-viewport[name=detail] {
 }
 .head__right pray-icon {
   margin-left: 8px;
-}
-
-/* TECHNICAL VARIABLES */
-* {
-  --top-bar-end: 0;
-  --body-start: 0;
-  --top-bar-end: constant(safe-area-inset-top);
-  --top-bar-end: env(safe-area-inset-top);
-  --body-start: calc(var(--top-bar-end) + 0px);
-  --bottom-bar-height: 0;
-  --bottom-bar-height: constant(safe-area-inset-bottom);
-  --bottom-bar-height: env(safe-area-inset-bottom);
-  --body-end: calc(100% - var(--bottom-bar-height));
-  --bottom-bar-start: calc(var(--body-end) + 1px);
 }

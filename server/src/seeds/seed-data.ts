@@ -50,14 +50,13 @@ mongoose.connect(
                 newTopic.createdBy = user._id;
                 newTopic.updatedBy = user._id;
                 newTopic.name = topic.name;
-                newTopic.description = topic.description;
                 newTopic.image = [];
                 newTopic.image.push({fileId: 'original', width: 1200, height: 800});
                 newTopic.image.push({fileId: 'thumb', width: 400, height: 300});
                 newTopic.color = topic.color;
 
                 const contentKey = Encrypt.generateKey();
-                await Encrypt.encryptObject(newTopic, ['name', 'description'], contentKey);
+                await Encrypt.encryptObject(newTopic, ['name'], contentKey);
 
                 const share = new Share();
                 share.userId = user._id;

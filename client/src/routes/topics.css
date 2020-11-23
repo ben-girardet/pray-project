@@ -27,15 +27,5 @@
 .topics .topic-preview {
   margin-bottom: 16px;
   background: #FAFAFA;
+  cursor: pointer;
 }
-#add-button {
-  position: fixed;
-  top: 6px;
-  right: 16px;
-  transform: translateY(constant(safe-area-inset-top)) translateX(calc(constant(safe-area-inset-right) * -1));
-  transform: translateY(env(safe-area-inset-top)) translateX(calc(env(safe-area-inset-right) * -1));
-  z-index: 2;
-}
-/* html.bottom au-viewport[name=main] #add-button{
-  display: none;
-} */

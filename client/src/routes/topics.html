@@ -1,7 +1,9 @@
 <div class="topics">
-
-  <fast-design-system-provider background-color="#335BBB" type-ramp-base-font-size="16px">
-    <div class="list-head">
+  <div class="list-head" style="padding-left: 16px;">
+    <pray-logo size="medium"></pray-logo>
+  </div>
+  <div class="list-content-head">
+    <div style="display: flex; align-items: center; justify-content: space-between;">
       <fast-tabs change.trigger="tabChanged($event)">
         <fast-tab id="active">Active</fast-tab>
         <fast-tab id="answered" class="${archivedTopics.length > 0 ? '':'disabled'}">Answered</fast-tab>
@@ -13,17 +15,10 @@
         <fast-tab-panel id="archivedPanel">
         </fast-tab-panel>
       </fast-tabs>
+      <a load="../topic-form" id="add-button">
+        <pray-icon icon="Plus" size="lg" button lightweight></pray-icon>
+      </a>
     </div>
-    <a load="../topic-form" id="add-button">
-      <pray-icon icon="Plus" size="lg" button lightweight></pray-icon>
-    </a>
-  </fast-design-system-provider>
-  <div class="list-content-head">
-    <fast-design-system-provider use-defaults background-color="#335BBB" type-ramp-base-font-size="16px">
-      <h2 click.delegate="scrollToTop()" if.bind="activeTab === 'active'">Topics</h2>
-      <h2 click.delegate="scrollToTop()" if.bind="activeTab === 'answered'">Answered Topics</h2>
-      <h2 click.delegate="scrollToTop()" if.bind="activeTab === 'archived'">Archived Topics</h2>
-    </fast-design-system-provider>
   </div>
 
   <div class="list-content">
@@ -55,60 +50,6 @@
       </topic-preview>
     </div>
   </div>
-
-
-
-  
-  
-  <fast-tabs activeId="active">
-    <!-- <fast-tab id="active">Active</fast-tab>
-    <fast-tab id="answered" class="${archivedTopics.length > 0 ? '':'disabled'}">Answered</fast-tab>
-    <fast-tab id="archived" class="${archivedTopics.length > 0 ? '':'disabled'}">Archived</fast-tab> -->
-    
-    <fast-tab-panel id="activePanel">
-
-      <h2 class="fast-tab-panel__title" click.delegate="scrollToTop()">Topics</h2>
-      
-      <pray-search-input placeholder="Search" value.two-way="search" style="display: ${activeTopics.length > 5 ? 'flex':'none'}"></pray-search-input>
-
-      <p if.bind="activeTopics.length === 0">It's time to create your first topic</p>
-      <p if.bind="activeTopics.length === 0"><fast-button load="../topic-form">Let's add one</fast-button></p>
-
-      <topic-preview
-        class="content"
-        repeat.for="topic of activeTopics"
-        topic.bind="topic"
-        load="../topic-detail(${topic.id})"
-        >
-      </topic-preview>
-    </fast-tab-panel>
-    <fast-tab-panel id="answeredPanel">
-      <h2 class="fast-tab-panel__title" click.delegate="scrollToTop()">Answered Topics</h2>
-
-      <pray-search-input placeholder="Search" value.two-way="search" style="display: ${answeredTopics.length > 5 ? 'flex':'none'}"></pray-search-input>
-
-      <topic-preview
-        class="content"
-        repeat.for="topic of answeredTopics"
-        topic.bind="topic"
-        load="../topic-detail(${topic.id})"
-        >
-      </topic-preview>
-    </fast-tab-panel>
-    <fast-tab-panel id="archivedPanel">
-      <h2 class="fast-tab-panel__title" click.delegate="scrollToTop()">Archived Topics</h2>
-
-      <pray-search-input placeholder="Search" value.two-way="search" style="display: ${archivedTopics.length > 5 ? 'flex':'none'}"></pray-search-input>
-
-      <topic-preview
-        class="content"
-        repeat.for="topic of archivedTopics"
-        topic.bind="topic"
-        load="../topic-detail(${topic.id})"
-        >
-      </topic-preview>
-    </fast-tab-panel>
-  </fast-tabs>
 
 </div>  
 

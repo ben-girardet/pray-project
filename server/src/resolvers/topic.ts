@@ -60,7 +60,6 @@ export class TopicResolver {
     newTopic.createdBy = userId;
     newTopic.updatedBy = userId;
     newTopic.name = data.name;
-    newTopic.description = data.description;
     newTopic.image = data.image ? data.image : [];
     newTopic.color = data.color;
     if (data.status) newTopic.status = data.status;
@@ -87,7 +86,6 @@ export class TopicResolver {
 
     originalTopic.updatedBy = userId;
     originalTopic.name = data.name !== undefined ? data.name : originalTopic.name;
-    originalTopic.description = data.description !== undefined ? data.description : originalTopic.description;
     originalTopic.image = data.image !== undefined ? data.image : originalTopic.image;
     originalTopic.color = data.color !== undefined ? data.color : originalTopic.color;
     originalTopic.status = data.status !== undefined ? data.status : originalTopic.status;

@@ -47,7 +47,7 @@ query UserPubKey($id: String!) {
     `, variables: {id: topic.myShare.encryptedBy}});
     const publicKey = user.data.user.publicKey;
     const contentKey = await apolloAuth.decrypt(topic.myShare.encryptedContentKey, publicKey);
-    CryptingService.decryptObject(topic, ['name', 'description'], contentKey);
+    CryptingService.decryptObject(topic, ['name'], contentKey);
     Reflect.defineMetadata('decrypted', true, topic);
   }
 
@@ -62,7 +62,7 @@ query UserPubKey($id: String!) {
     `, variables: {id: topic.myShare.encryptedBy}});
     const publicKey = user.data.user.publicKey;
     const contentKey = await apolloAuth.decrypt(topic.myShare.encryptedContentKey, publicKey);
-    CryptingService.encryptObject(topic, ['name', 'description'], contentKey);
+    CryptingService.encryptObject(topic, ['name'], contentKey);
     return topic;
   }
 
@@ -78,7 +78,7 @@ query UserPubKey($id: String!) {
     const publicKey = user.data.user.publicKey;
     const contentKey = contentKeyGen();
     topic.encryptedContentKey = await apolloAuth.encrypt(contentKey, publicKey);
-    CryptingService.encryptObject(topic, ['name', 'description'], contentKey);
+    CryptingService.encryptObject(topic, ['name'], contentKey);
     return topic as {[key: string]: any, encryptedContentKey: string};
   }
 

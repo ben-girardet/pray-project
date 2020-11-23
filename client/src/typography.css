@@ -8,15 +8,16 @@ body {
 
 .content {
   font-family: 'Open Sans', serif;
-  font-weight: 600;
+  font-weight: 300;
   --body-font: 'Open Sans', serif;
+}
+
+.content strong,
+.content.strong,
+.content .strong {
+  font-weight: 600;
 }
 
 .light {
   font-weight: 100;
-}
-.logo {
-  font-family: 'GFS Neohellenic', sans-serif;
-  font-weight: 700;
-  font-style: italic;
 }

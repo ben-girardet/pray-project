@@ -21,7 +21,6 @@ export class TopicForm implements IRouteableComponent, IViewModel {
 
   public topicId: string;
   public name: string;
-  public description: string;
   public preview: string;
   public color = '#0000ff';
 
@@ -63,7 +62,6 @@ export class TopicForm implements IRouteableComponent, IViewModel {
       this.myShare = topic.myShare;
       setTimeout(() => {
         this.name = topic.name;
-        this.description = topic.description;
       }, 300);
     }
   }
@@ -84,7 +82,6 @@ export class TopicForm implements IRouteableComponent, IViewModel {
     try {
       const topic: Topic = {
         name: this.name,
-        description: this.description,
         color: this.color,
         status: 'active'
       };
@@ -104,14 +101,13 @@ export class TopicForm implements IRouteableComponent, IViewModel {
       }
       if (!topic.id) {
         const encryptedTopic = await CryptingService.encryptNewTopic(topic);
-        const createdTopic = await createTopic(topic.name, topic.description, topic.color, topic.image, encryptedTopic.encryptedContentKey);
+        const createdTopic = await createTopic(topic.name, topic.color, topic.image, encryptedTopic.encryptedContentKey);
       } else {
         const t: Topic & MyShare = topic;
         t.myShare = this.myShare;
         await CryptingService.encryptEditedTopic(t);
         const editedTopic = await editTopic(topic.id, {
-          name: topic.name, 
-          description: topic.description, 
+          name: topic.name,  
           color: topic.color, 
           status: topic.status,
           image: topic.image

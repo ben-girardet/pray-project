@@ -23,10 +23,6 @@ export class Topic implements ITopic {
     @prop()
     name: string;
 
-    @Field(() => String)
-    @prop()
-    description?: string;
-
     @Field(type => [Image], {nullable: true})
     @prop({type: () => [Image]})
     image?: Image[];
