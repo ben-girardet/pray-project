@@ -1,5 +1,5 @@
 import { IContainer, inject, Aurelia  } from 'aurelia';
-import { IAttrSyntaxTransformer, INodeObserverLocator, AppTask } from '@aurelia/runtime-html';
+import { IAttrSyntaxTransformer, NodeObserverLocator, AppTask } from '@aurelia/runtime-html';
 
 console.log('aurelia-fast-adapter', 'here');
 
@@ -11,10 +11,10 @@ export class AureliaFastAdapter {
 
   private static extendTemplatingSyntax(container) {
     console.log('extendTemplatingSyntax');
-    AppTask.with(container).beforeCreate().call(container => {
+    AppTask.with(IContainer).beforeCreate().call(container => {
       console.log('extendTemplatingSyntax', container);
       const attrSyntaxTransformer = container.get(IAttrSyntaxTransformer);
-      const nodeObserverLocator = container.get(INodeObserverLocator);
+      const nodeObserverLocator = container.get(NodeObserverLocator);
       attrSyntaxTransformer.useTwoWay((el, property) => {
         console.log('useTwoWay', el, property);
         switch (el.tagName) {
@@ -37,7 +37,7 @@ export class AureliaFastAdapter {
       // Because FAST components all use a single change event to notify,
       // we can use a single common object
       const valuePropertyConfig = { events: ['change'] };
-      (nodeObserverLocator as any).useConfig({
+      nodeObserverLocator.useConfig({
         'FAST-CHECKBOX': {
           value: valuePropertyConfig
         },
@@ -63,7 +63,7 @@ export class AureliaFastAdapter {
           value: valuePropertyConfig
         }
       });
-    });
+    }).register(container);
   }
 
 }

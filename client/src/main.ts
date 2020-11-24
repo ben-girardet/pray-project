@@ -1,5 +1,5 @@
 import Aurelia, { RouterConfiguration, LoggerConfiguration, LogLevel, ColorOptions, IContainer } from 'aurelia';
-import { IAttrSyntaxTransformer, INodeObserverLocator, AppTask } from '@aurelia/runtime-html';
+import { IAttrSyntaxTransformer, NodeObserverLocator, AppTask } from '@aurelia/runtime-html';
 import { TopicPreview } from './elements/topic-preview';
 import { MyApp } from './my-app';
 import { DateValueConverter } from './resources/date-value-converter';
@@ -61,58 +61,7 @@ PrayLogo;
 console.log('main', AureliaFastAdapter);
 
 Aurelia
-  .register(AppTask.with(IContainer).beforeCreate().call(container => {
-    const attrSyntaxTransformer = container.get(IAttrSyntaxTransformer);
-    const nodeObserverLocator = container.get(INodeObserverLocator);
-    attrSyntaxTransformer.useTwoWay((el, property) => {
-      switch (el.tagName) {
-        case 'FAST-SLIDER':
-        case 'FAST-TEXT-FIELD':
-        case 'FAST-TEXT-AREA':
-          return property === 'value';
-        case 'FAST-CHECKBOX':
-        case 'FAST-RADIO':
-        case 'FAST-RADIO-GROUP':
-        case 'FAST-SWITCH':
-          return property === 'checked';
-        case 'FAST-TABS':
-          return property === 'activeid';
-        default:
-          return false;
-      }
-    });
-  
-    // Teach Aurelia what events to use to observe properties of elements.
-    // Because FAST components all use a single change event to notify,
-    // we can use a single common object
-    const valuePropertyConfig = { events: ['change'] };
-    (nodeObserverLocator as any).useConfig({
-      'FAST-CHECKBOX': {
-        value: valuePropertyConfig
-      },
-      'FAST-RADIO': {
-        value: valuePropertyConfig
-      },
-      'FAST-RADIO-GROUP': {
-        value: valuePropertyConfig
-      },
-      'FAST-SLIDER': {
-        value: valuePropertyConfig
-      },
-      'FAST-SWITCH': {
-        value: valuePropertyConfig
-      },
-      'FAST-TABS': {
-        value: valuePropertyConfig
-      },
-      'FAST-TEXT-FIELD': {
-        value: valuePropertyConfig
-      },
-      'FAST-TEXT-AREA': {
-        value: valuePropertyConfig
-      }
-    });
-  }))
+  .register(AureliaFastAdapter)
   .register(RouterConfiguration)
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   .register(LoggerConfiguration.create({$console: console, level: LogLevel.debug, colorOptions: ColorOptions.noColors}))
