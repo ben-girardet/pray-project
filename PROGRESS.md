@@ -68,10 +68,10 @@ Login is now pretty well in place. Now is the time to improve the topic experien
 - [x] Have the logo (sunago) always in main screen top left
 - [x] Display tabs below (like Twitter)
  
-## 24.11.2020 - Profile
+## 24.11.2020 - Update packages
 
-- [ ] Identify issue with dirty-checker when updating to latest Aurelia
-- [ ] Open up an issue if needed, reach for help
+- [x] Identify issue with dirty-checker when updating to latest Aurelia
+- [x] Open up an issue if needed, reach for help
 - [ ] Identify issue with Safari and latest update of fast (fast-provider)
 - [ ] Open up an issue if needed, reach for help
 

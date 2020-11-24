@@ -12,7 +12,7 @@
     "@microsoft/fast-components": "^1.11.1",
     "@microsoft/fast-element": "^0.19.1",
     "apollo-boost": "^0.4.9",
-    "aurelia": "0.8.0-dev.202011010944",
+    "aurelia": "dev",
     "awesome-phonenumber": "^2.40.0",
     "copy-webpack-plugin": "^6.2.1",
     "croppie": "^2.6.5",

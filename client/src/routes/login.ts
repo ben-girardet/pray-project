@@ -27,6 +27,7 @@ export class Login implements IRouteableComponent, IViewModel {
   public async login(): Promise<void> {
     if (!this.username || !this.password) {
       AppNotification.notify('Please fill in your username and password first', 'info');
+      return;
     }
     try {
       const loginResult = await login(this.username, this.password);
