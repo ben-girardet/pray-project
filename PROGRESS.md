@@ -64,18 +64,22 @@ Login is now pretty well in place. Now is the time to improve the topic experien
 
 ## 23.11.2020 - Overall design
 
-- [ ] Simplify overall design (avoid complex thing with headbar and bottombar for now, make it white if possible)
-- [ ] Have the logo (sunago) always in main screen top left
-- [ ] Display tabs below (like Twitter)
+- [x] Simplify overall design (avoid complex thing with headbar and bottombar for now, make it white if possible)
+- [x] Have the logo (sunago) always in main screen top left
+- [x] Display tabs below (like Twitter)
  
-## 21.22.2020 - Profile
+## 24.11.2020 - Profile
+
+- [ ] Identify issue with dirty-checker when updating to latest Aurelia
+- [ ] Open up an issue if needed, reach for help
+- [ ] Identify issue with Safari and latest update of fast (fast-provider)
+- [ ] Open up an issue if needed, reach for help
+
+## Next 
 
 - [ ] Work on Profile page so we can
 - [ ] Edit current profile avatar, name
 - [ ] Change password
-
-## Next 
-
 - [ ] Praying view
 - [ ] Notes and messages
 - [ ] Mark prayer as answered
