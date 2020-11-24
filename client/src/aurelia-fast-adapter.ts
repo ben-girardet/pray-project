@@ -1,7 +1,5 @@
-import { IContainer, inject, Aurelia  } from 'aurelia';
+import { IContainer } from 'aurelia';
 import { IAttrSyntaxTransformer, NodeObserverLocator, AppTask } from '@aurelia/runtime-html';
-
-console.log('aurelia-fast-adapter', 'here');
 
 export class AureliaFastAdapter {
 
@@ -10,13 +8,10 @@ export class AureliaFastAdapter {
   }
 
   private static extendTemplatingSyntax(container) {
-    console.log('extendTemplatingSyntax');
     AppTask.with(IContainer).beforeCreate().call(container => {
-      console.log('extendTemplatingSyntax', container);
       const attrSyntaxTransformer = container.get(IAttrSyntaxTransformer);
       const nodeObserverLocator = container.get(NodeObserverLocator);
       attrSyntaxTransformer.useTwoWay((el, property) => {
-        console.log('useTwoWay', el, property);
         switch (el.tagName) {
           case 'FAST-SLIDER':
           case 'FAST-TEXT-FIELD':

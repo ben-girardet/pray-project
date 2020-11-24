@@ -58,8 +58,6 @@ PrayGridItem;
 PraySearchInput;
 PrayLogo;
 
-console.log('main', AureliaFastAdapter);
-
 Aurelia
   .register(AureliaFastAdapter)
   .register(RouterConfiguration)
