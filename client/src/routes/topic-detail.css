@@ -8,6 +8,10 @@
 .topic-detail .head .placeholder {
   width: 100%;
   height: calc(100vw * 1.2);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: rgba(255, 255, 255, 0.5);
 }
 
 .topic-detail .content {

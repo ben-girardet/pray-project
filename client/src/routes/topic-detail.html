@@ -8,7 +8,9 @@
       Edit
       <pray-icon icon="Pencil" weight="2"></pray-icon>
     </span>
-    <div class="placeholder" style="background: ${topic.color | gradient};" if.bind="!topic.image.length"></div>
+    <div class="placeholder" style="background: ${topic.color | gradient};" if.bind="!topic.image.length">
+      <pray-icon style="transform: scale(2);" icon="Sparkles" size="lg"></pray-icon>
+    </div>
     <img src="${topic.image[3].fileId | file}" if.bind="topic.image.length">
   </div>
 

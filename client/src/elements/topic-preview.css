@@ -12,7 +12,14 @@
   width: var(--topic-preview-width);
   height: var(--topic-height);
   flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(255, 255, 255, 0.5);
 }
+/* .topic_preview__img-placeholder .pray-icon {
+  opacity: 0.5;
+} */
 .topic_preview__content {
   box-sizing: border-box;
   width: 100%;

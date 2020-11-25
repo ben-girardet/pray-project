@@ -1,6 +1,8 @@
 <div class="topic-preview">
   <img if.bind="topic.image.length" class="topic_preview__preview" src="${topic.image | file}">
-  <div if.bind="!topic.image.length" class="topic_preview__img-placeholder" style="background: ${gradient(topic.color)}"></div>
+  <div if.bind="!topic.image.length" class="topic_preview__img-placeholder" style="background: ${gradient(topic.color)}">
+    <pray-icon icon="Sparkles" size="lg"></pray-icon>
+  </div>
   <div class="topic_preview__content">
     <div class="topic_preview__author">
       <mini-user user-id="${topic.createdBy.id}" size="small" only-name.bind="false"></mini-user>

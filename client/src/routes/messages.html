@@ -1,24 +1,25 @@
 <div class="topics">
-  <a load="../topic-form" id="add-button">
-    <pray-icon icon="Plus" size="lg" button lightweight></pray-icon>
-  </a>
-  
-  <fast-tabs activeId="active">
-    <fast-tab id="active">Active</fast-tab>
-    <fast-tab id="archived">Archived</fast-tab>
-    
-    <fast-tab-panel id="activePanel">
+  <div class="list-head" style="padding-left: 16px;">
+    <pray-logo size="medium"></pray-logo>
+  </div>
+  <div class="list-content-head">
+    <div style="display: flex; align-items: center; justify-content: space-between;">
+      <fast-tabs change.trigger="tabChanged($event)">
+        <fast-tab id="messages">Messages</fast-tab>
+        <fast-tab-panel id="messagesPanel">
+        </fast-tab-panel>
+      </fast-tabs>
+      <a load="../topic-form" id="add-button">
+        <pray-icon icon="Plus" size="lg" button lightweight></pray-icon>
+      </a>
+    </div>
+  </div>
 
-      <h2 class="fast-tab-panel__title" click.delegate="scrollToTop()">Messages</h2>
+  <div class="list-content">
+    <div class="list-content-list" if.bind="activeTab === 'messages'">
       
-      <pray-search-input placeholder="Search" value.two-way="search"></pray-search-input>
-
-
-    </fast-tab-panel>
-    <fast-tab-panel id="archivedPanel">
-      <h2 class="fast-tab-panel__title" click.delegate="scrollToTop()">Archived Messages</h2>
-    </fast-tab-panel>
-  </fast-tabs>
+    </div>
+  </div>
 
 </div>  
 

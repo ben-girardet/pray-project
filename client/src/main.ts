@@ -8,6 +8,7 @@ import { FileValueConverter } from './resources/file-value-converter';
 import { AvatarSelection } from './elements/avatar-selection';
 import { MiniUser } from './elements/mini-user';
 import { AureliaFastAdapter } from './aurelia-fast-adapter';
+import { TwoWayCe } from './two-way-ce';
 
 import { 
   FASTDesignSystemProvider, 
@@ -60,6 +61,7 @@ PrayLogo;
 
 Aurelia
   .register(AureliaFastAdapter)
+  .register(TwoWayCe)
   .register(RouterConfiguration)
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   .register(LoggerConfiguration.create({$console: console, level: LogLevel.debug, colorOptions: ColorOptions.noColors}))
