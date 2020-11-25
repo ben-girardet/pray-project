@@ -115,7 +115,7 @@ html.detail au-viewport[name=detail] {
 
 .bottom-bar-button.load-active {
   color: var(--accent-color);;
-  border-top: solid 1px var(--accent-color);;
+  border-top: solid 2px var(--accent-color);;
 }
 
 .bottom-bar-button.praying-button img {

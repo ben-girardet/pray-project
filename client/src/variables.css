@@ -1,0 +1,7 @@
+* {
+  --main-content-color: black;
+  --meta-content-color: #666;
+  --separator-color: #efefef;
+  --topic-height: 85px;
+  --topic-preview-width: calc(var(--topic-height) / 1.2);
+}

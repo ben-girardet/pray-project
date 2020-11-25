@@ -3,8 +3,7 @@
   <div if.bind="!topic.image.length" class="topic_preview__img-placeholder" style="background: ${gradient(topic.color)}"></div>
   <div class="topic_preview__content">
     <div class="topic_preview__author">
-      <mini-user user-id="${topic.createdBy.id}" size="small"></mini-user>
-      <span class="topic_preview__separator">·</span>
+      <mini-user user-id="${topic.createdBy.id}" size="small" only-name.bind="false"></mini-user>
       <span class="topic_preview__date">${topic.updatedAt | date:'fromnow'}</span>
     </div>
     <div class="topic_preview__main-content">

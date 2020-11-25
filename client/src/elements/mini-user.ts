@@ -10,6 +10,7 @@ export class MiniUser {
   private firstname: string;
   private lastname: string;
   @bindable private onlyAvatar = false;
+  @bindable private onlyName = false;
   @bindable private size: 'small' | 'medium' | 'large' = 'medium';
 
   public constructor() {

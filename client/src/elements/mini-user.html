@@ -1,5 +1,5 @@
-<div class="mini-user ${onlyAvatar ? 'only-avatar':''} ${size}">
-  <div class="mini-user__avatar">
+<div class="mini-user ${onlyAvatar ? 'only-avatar':''} ${onlyName ? 'only-name':''} ${size}">
+  <div class="mini-user__avatar" if.bind="!onlyName">
     <img src="${picture | file:40}" if.bind="picture.length">
     <img src="images/avatars/liquid1.gif" if.bind="!picture.length">
   </div>
