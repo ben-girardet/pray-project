@@ -10,6 +10,6 @@ export class TopicMessagesResolver /*implements ResolverInterface<Topic>*/ {
     @FieldResolver(() => [Message])
     public async messages(@Root() topic: Topic) {
         const messages = await MessageModel.find({topicId: topic._id});
-        return messages;
+        return messages.map(m => m.toObject());
     }
 }
