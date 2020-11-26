@@ -54,7 +54,7 @@ console.log('DBNAME', process.env.DBNAME);
 console.log('REDIS_HOST', process.env.REDIS_HOST);
 console.log('REDIS_PORT', process.env.REDIS_PORT);
 
-const whitelist = ['http://localhost:9000', 'https://app.deuxoutrois.com'];
+const whitelist = ['http://localhost:9000', 'https://sunago.app', 'https://dev.sunago.app', 'https://www.sunago.app'];
 const corsOptions: CorsOptions = {
     origin: function (origin, callback) {
         if (origin === undefined) {
