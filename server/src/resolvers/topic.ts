@@ -32,7 +32,7 @@ export class TopicResolver {
   }
 
    @Query(() => Topic)
-   public async topic(@Arg("id") id: string, @Ctx() context: Context) {
+   public async topic(@Arg("id") id: string, @Ctx() context: Context, @Arg('withMessages', {nullable: true}) withMessages?: boolean) {
     try {
         const userId = new mongoose.Types.ObjectId(context.user.userId);
         const topicId = new mongoose.Types.ObjectId(id);
