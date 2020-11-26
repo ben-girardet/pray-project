@@ -16,6 +16,10 @@
 
   <p>Share with</p>
   <div class="user-list">
+    <div class="user-list-item">
+      <mini-user user-id.bind="topic.myShare.userId"></mini-user>
+      <fast-checkbox checked disabled></fast-checkbox>
+    </div>
     <div class="user-list-item" repeat.for="friendship of friends">
       <mini-user user-id.bind="friendship.friend.id"></mini-user>
       <fast-checkbox style="${changingUserId[friendship.friend.id] ? 'display:none':''}" checked.to-view="hasShare(friendship.friend.id)" change.trigger="shareChange($event, friendship.friend.id)"></fast-checkbox>

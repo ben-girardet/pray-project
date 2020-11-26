@@ -1,0 +1,13 @@
+<div class="conversation-headview">
+  <fast-button appearance="lightweight" load="../topic-detail(${topic.id})">
+    <pray-icon slot="start" icon="ArrowLeft" weight="2"></pray-icon>
+    Back
+  </fast-button>
+  <span class="conversation-title" if.bind="topic">${topic.name}</span>
+  <fast-button appearance="lightweight">
+    <pray-icon slot="start" icon="Sparkles" weight="2"></pray-icon>
+  </fast-button>
+</div>
+
+<div class="conversation-contentview">
+</div>

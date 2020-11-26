@@ -1,3 +1,3 @@
 export default {
-  apiHost: 'https://api.deuxoutrois.com'
+  apiHost: 'https://api-dev.sunago.app'
 };

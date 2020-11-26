@@ -23,14 +23,11 @@ export class TopicDetail implements IRouteableComponent, IViewModel {
   }
 
   public async binding(): Promise<void> {
-    console.log('topic-detail binding');
     await this.getTopic();
     this.event = this.eventAggregator.subscribe('topic-form-out', async () => {
-      console.log('topic-form-out');
       await this.getTopic();
     });
     this.event = this.eventAggregator.subscribe('sharing-out', async () => {
-      console.log('sharing-out');
        await this.getTopic();
     });
   }
@@ -43,13 +40,10 @@ export class TopicDetail implements IRouteableComponent, IViewModel {
   }
 
   public async getTopic(): Promise<void> {
-    console.log('topic-detail getTopic');
     try {
       const topic = await getTopic(this.topicId);
-      console.log('get topic 1 (name)', JSON.stringify(topic.name));
-      console.log('request decrypting');
       await CryptingService.decryptTopic(topic);
-      console.log('get topic 2 (name)', JSON.stringify(topic.name));
+      console.log('get topic', topic);
       this.topic = topic;
     } catch (error) {
       this.logger.error(error);

@@ -13,9 +13,11 @@ import { TwoWayCe } from './two-way-ce';
 import { 
   FASTDesignSystemProvider, 
   FASTAnchor,
+  FASTBadge,
   FASTCard, 
   FASTButton,
   FASTCheckbox,
+  FASTDivider,
   FASTTextField,
   FASTTextArea,
   FASTDialog,
@@ -32,9 +34,11 @@ import {
  */
 FASTDesignSystemProvider;
 FASTAnchor;
+FASTBadge;
 FASTCard;
 FASTButton;
-FASTCheckbox
+FASTCheckbox;
+FASTDivider;
 FASTTextField;
 FASTTextArea;
 FASTDialog;

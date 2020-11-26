@@ -1,8 +1,3 @@
-* {
-  --body-color: #fff;
-  --accent-color: #3AC3BD;
-}
-
 html {
   background: var(--body-color);
 }
@@ -39,7 +34,7 @@ au-viewport[name=praying] {
   padding: 16px;
   background-color: var(--body-color);
 }
-body.praying au-viewport[name=praying] {
+html.praying au-viewport[name=praying] {
   transform: translateY(0);
 }
 au-viewport[name=bottom] {

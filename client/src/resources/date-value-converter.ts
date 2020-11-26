@@ -15,6 +15,8 @@ export class DateValueConverter {
         return m.calendar();
       } else if (format === 'fromnow') {
         return m.fromNow(true);
+      }  else if (format === 'fromnow+') {
+        return m.fromNow(false);
       } else {
         return m.format(format);
       }

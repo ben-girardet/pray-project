@@ -12,6 +12,7 @@
 <import from="./routes/praying"></import>
 <import from="./routes/topics"></import>
 <import from="./routes/topic"></import>
+<import from="./routes/conversation"></import>
 <import from="./routes/missing"></import>
 <import from="./routes/login"></import>
 <import from="./routes/register"></import>
@@ -30,7 +31,7 @@
     </div>
     <div class="bottom-bar-button praying-button" load="praying"><img src.bind="prayImageSrc"></div>
   </div>
-  <au-viewport name="detail" used-by="topic-detail" no-history></au-viewport>
+  <au-viewport name="detail" used-by="topic-detail,conversation" no-history></au-viewport>
   <au-viewport name="praying" used-by="praying" no-history></au-viewport>
   <au-viewport name="bottom" used-by="topic-form,sharing,friends,add-friend" no-history></au-viewport>
 </fast-design-system-provider>

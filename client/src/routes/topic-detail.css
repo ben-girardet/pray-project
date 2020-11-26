@@ -19,6 +19,11 @@
   /* min-height: 2000px; */
 }
 
+.topic-detail__meta {
+  color: var(--content-meta-color);
+  font-size: 14px;
+}
+
 .topic-detail .content h2,
 .topic-detail .content p {
   text-align: center;

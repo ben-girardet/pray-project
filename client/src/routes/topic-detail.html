@@ -4,7 +4,7 @@
       <pray-icon icon="ArrowLeft" weight="2"></pray-icon>
       Back
     </span>
-    <span class="head__right" load="../topic-form(${topicId})">
+    <span class="head__right" load="../topic-form(${topicId})" if.bind="topic.myShare.role === 'owner'">
       Edit
       <pray-icon icon="Pencil" weight="2"></pray-icon>
     </span>
@@ -16,28 +16,42 @@
 
   <div class="content">
 
-    <div class="button-row__two button-row__two--centered" style="font-size: 10px; color: #888;">
-      <mini-user user-id="${topic.createdBy.id}" size="small"></mini-user>
-      <span>${topic.creationDate | date:'nice'}</span>
+    <div class="topic-detail__meta button-row__two button-row__two--centered">
+      <mini-user user-id="${topic.createdBy.id}" size="medium"></mini-user>
+      <span>${topic.updatedAt | date:'fromnow+'}</span>
     </div>
 
     <h2>${topic.name}</h2>
 
-    <fast-button style="width: 100%;margin-bottom: 8px;">
-      <pray-icon icon="ChatAlt"></pray-icon> Notes & Messages
+    <fast-button class="full-width" load="../conversation(topicId=${topicId})" appearance="neutral" style="margin-bottom: 4px;">
+      <pray-icon slot="start" icon="ChatAlt"></pray-icon>
+      Notes & Messages
+      <fast-badge slot="end" fill="secondary" color="white" circular>3</fast-badge>
     </fast-button>
 
-    <div class="button-row__two" style="margin-bottom: 32px;" if.bind="topic.status === 'active'">
-      <fast-button load="../sharing(${topicId})">Share</fast-button>
-      <fast-button click.trigger="markTopicAs('archived')">Archive</fast-button>
+    <!-- <fast-button class="full-width" appearance="neutral">
+      <pray-icon slot="start" icon="Sparkles"></pray-icon>
+      Prayers
+      <fast-badge slot="end" fill="secondary" color="white" circular>72</fast-badge>
+    </fast-button> -->
+
+    <fast-button class="full-width" load="../sharing(${topicId})" appearance="neutral" style="margin-bottom: 4px;" if.bind="topic.myShare.role === 'owner'">
+      <pray-icon slot="start" icon="UserGroup"></pray-icon>
+      Shares
+      <fast-badge slot="end" fill="secondary" color="white" circular>${topic.shares.length}</fast-badge>
+    </fast-button>
+
+    <div class="button-row__two" style="margin-top: 48px;" if.bind="topic.myShare.role === 'owner'">
+      <fast-button click.trigger="markTopicAs('archived')" appearance="lightweight" if.bind="topic.status === 'active'">
+        <pray-icon slot="start" icon="Archive"></pray-icon>
+        Archive
+      </fast-button>
+      <fast-button click.trigger="markTopicAs('active')" appearance="lightweight" if.bind="topic.status === 'archived'">
+        <pray-icon slot="start" icon="Archive"></pray-icon>
+        Make active
+      </fast-button>
+      <fast-button click.trigger="removeTopic()" appearance="lightweight" style="color: red">Remove Topic</fast-button>
     </div>
-
-    <div class="button-row__two" style="margin-bottom: 32px;" if.bind="topic.status === 'archived'">
-      <fast-button click.trigger="markTopicAs('active')">Make Active</fast-button>
-    </div>
-
-
-    <fast-button click.trigger="removeTopic()" appearance="lightweight" style="color: red">Remove Topic</fast-button>
   </div>
 
 

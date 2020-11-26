@@ -20,6 +20,9 @@ query Topics($sort: SortBy, $status: String) {
       encryptedContentKey,
       encryptedBy
     },
+    shares {
+      userId
+    },
     createdBy {
       id,
       firstname,
@@ -55,7 +58,8 @@ query Topic($topicId: String!) {
     myShare {
       userId,
       encryptedContentKey,
-      encryptedBy
+      encryptedBy,
+      role
     },
     createdBy {
       id,
@@ -67,7 +71,22 @@ query Topic($topicId: String!) {
         height
       }
     },
-    updatedAt
+    updatedAt,
+    messages {
+      id,
+      text,
+      createdBy {
+        id,
+        firstname,
+        lastname,
+        picture {
+          fileId,
+          width,
+          height
+        }
+      },
+      createdAt
+    }
   }
 }`;
 
@@ -169,7 +188,11 @@ export async function getTopics(sort: {field: string, order: -1 | 1}, status?: 
   return result.data.topics;
 }
 
-export async function getTopic(topicId: string): Promise<Topic & WithShares> {
+export async function getTopic(topicId: string, options?: {withMessages?: boolean}): Promise<Topic & WithShares> {
+  // TODO: find a way to make this "withMessages" work
+  // preferable with graphql directive
+  // but could also be by using another query
+  const withMessages = options?.withMessages === true;
   const result = await client.query<{topic: Topic & WithShares}>({query: getTopicQuery, variables: {topicId}, fetchPolicy: 'network-only'});
   return result.data.topic;
 }

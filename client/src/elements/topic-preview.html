@@ -14,12 +14,16 @@
     <div class="topic_preview__footer-actions">
       <div class="topic_preview__footer-actions__item">
         <pray-icon icon="ChatAlt" size="sm"></pray-icon>
-        34 messages
+        34 <!-- messages -->
       </div>
       <!-- <span class="topic_preview__separator">·</span> -->
       <div class="topic_preview__footer-actions__item">
         <pray-icon icon="Sparkles" size="sm"></pray-icon>
-        72 prayers
+        72 <!-- prayers -->
+      </div>
+      <div class="topic_preview__footer-actions__item" if.bind="topic.shares.length > 1">
+        <pray-icon icon="UserGroup" size="sm"></pray-icon>
+        ${topic.shares.length} <!-- prayers -->
       </div>
     </div>
   </div>

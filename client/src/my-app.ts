@@ -72,7 +72,6 @@ export class MyApp implements IViewModel {
     // Add HTML class component HOOK
     this.router.addHook(async (instructions: ViewportInstruction[]) => {
       for (const instruction of instructions) {
-        // console.log('instruction', instruction);
       }
       return true;
     });
@@ -82,10 +81,8 @@ export class MyApp implements IViewModel {
       const prayingInstruction = instructions.find(i => i.viewportName === 'praying');
       const bottomInstruction = instructions.find(i => i.viewportName === 'bottom');
       const detailInstruction = instructions.find(i => i.viewportName === 'detail');
-      this.logger.debug('bottomInstruction', bottomInstruction);
-      this.logger.debug('detailInstruction', detailInstruction);
       const bottomViewport = this.router.getViewport('bottom');
-      this.logger.debug('bottomViewport', bottomViewport);
+      const detailViewport = this.router.getViewport('detail');
       if (prayingInstruction) {
         if (prayingInstruction.componentName === 'praying') {
           document.documentElement.classList.add('praying');
@@ -96,25 +93,24 @@ export class MyApp implements IViewModel {
       if (bottomInstruction) {
         if (bottomInstruction.componentName === '-') {
           document.documentElement.classList.remove('bottom');
-          this.logger.debug('publish:', `${bottomViewport.content.content.componentName}-out`);
           this.eventAggregator.publish(`${bottomViewport.content.content.componentName}-out`);
         } else {
           document.documentElement.classList.add('bottom');
-          this.logger.debug('publish:', `${bottomViewport.content.content.componentName}-in`);
           this.eventAggregator.publish(`${bottomViewport.content.content.componentName}-in`);
         }
       }
       if (detailInstruction) {
-        if (detailInstruction.componentName === 'topic-detail') {
-          document.documentElement.classList.add('detail');
-        } else if (detailInstruction.componentName === '-') {
+        if (detailInstruction.componentName === '-') {
           document.documentElement.classList.remove('detail');
-          this.eventAggregator.publish('topic-detail-out');
+          this.eventAggregator.publish(`${detailViewport.content.content.componentName}-out`);
+        } else {
+          document.documentElement.classList.add('detail');
+          this.eventAggregator.publish(`${detailViewport.content.content.componentName}-in`);
         }
       }
       return true;
     }, {
-      include: ['praying', '-', 'topic-form', 'topic-detail', 'sharing', 'friends']
+      include: ['praying', '-', 'topic-form', 'topic-detail', 'conversation', 'sharing', 'friends']
     });
   }
 

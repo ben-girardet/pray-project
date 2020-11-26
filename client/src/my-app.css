@@ -113,3 +113,30 @@ form label {
   width: 20px;
   height: 20px;
 }
+
+fast-badge {
+  --badge-fill-primary: var(--accent-color);
+  --badge-fill-secondary: var(--meta-content-color);
+  --badge-fill-transparent: transparent;
+  --badge-color-black: #000000;
+  --badge-color-white: #FFFFFF;
+}
+
+/* fix fast-button start/end mis-align */
+fast-button::part(start),
+fast-button::part(end) {
+  width: auto;
+  height: auto;
+}
+/* full-width buttons */
+fast-button.full-width {
+  width: 100%;
+}
+fast-button.full-width::part(control) {
+  width: 100%;
+  justify-content: start;
+}
+fast-button.full-width::part(end) {
+  margin-left: auto;
+  margin-right: 8px;
+}
