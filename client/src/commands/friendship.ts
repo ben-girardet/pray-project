@@ -1,6 +1,5 @@
 import { gql, ApolloQueryResult } from 'apollo-boost';
 import { client } from '../apollo';
-import { Topic } from 'shared/types/topic';
 
 const requestFriendshipMutation = gql`
 mutation RequestFriendship($friendId: String!) {

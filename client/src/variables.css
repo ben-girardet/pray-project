@@ -6,4 +6,6 @@
   --separator-color: #efefef;
   --topic-height: 85px;
   --topic-preview-width: calc(var(--topic-height) / 1.2);
+  --interface-font: 'Montserrat', sans-serif; 
+  --content-font: 'Open Sans', serif;
 }

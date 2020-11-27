@@ -15,8 +15,8 @@
   width: 100%;
   border-radius: 25px;
 }
-.mini-user__name {
-  
+.mini-user.small .mini-user__name {
+  font-size: 12px;
 }
 
 .mini-user.small .mini-user__avatar {

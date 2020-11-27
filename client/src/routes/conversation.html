@@ -1,7 +1,6 @@
-<div class="conversation-headview">
+<div class="conversation-headview" ref="conversationHead">
   <fast-button appearance="lightweight" load="../topic-detail(${topic.id})">
     <pray-icon slot="start" icon="ArrowLeft" weight="2"></pray-icon>
-    Back
   </fast-button>
   <span class="conversation-title" if.bind="topic">${topic.name}</span>
   <fast-button appearance="lightweight">
@@ -9,5 +8,61 @@
   </fast-button>
 </div>
 
-<div class="conversation-contentview">
+<div class="conversation-contentview" ref="conversationContent">
+
+  <div class="group-day" repeat.for="dayGroup of dayGroups">
+    <div class="group-day__date">${dayGroup.date | date:'nice'}</div>
+    <div class="group-person group-person--${identityGroup.who}" repeat.for="identityGroup of dayGroup.identityGroups">
+      <div class="group-person__identity" if.bind="identityGroup.who === 'them'">
+        <mini-user user-id.bind="identityGroup.userId" size="small"></mini-user>
+      </div>
+      <message class="message" repeat.for="message of identityGroup.messages">${message.text}</message>
+      <div class="group-person__time">${identityGroup.messages[identityGroup.messages.length-1].date | date:'nice'}</div>
+    </div>
+  </div>
+
+  <!-- <div class="group-day">
+    <div class="group-day__date">Today</div>
+    <div class="group-person group-person--them">
+      <div class="group-person__identity">
+        <mini-user user-id="5fc02da0d495c0f1bac809dc" size="small"></mini-user>
+      </div>
+      <message class="message">
+        when an unknown printer took a galley of type and scrambled it to make a type specimen book
+      </message>
+      <message class="message">
+        Lorem ipsum
+      </message>
+      <div class="group-person__time">1.40PM</div>
+    </div>
+    <div class="group-person group-person--me">
+      <message class="message">
+        It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout
+      </message>
+      <div class="group-person__time">1.44PM</div>
+    </div>
+  </div>
+  <div class="prayers">
+    3
+  </div>
+  <div class="group-person group-person--me">
+    <message class="message">
+      The standard Lorem Ipsum passage, used since the 1500s
+    </message>
+    <div class="group-person__time">2.32PM</div>
+  </div>
+  <div class="prayers">
+    2
+  </div>
+  <div class="group-person group-person--them">
+    <message class="message">
+      Lorem ipsum
+    </message>
+    <div class="group-person__time">2.38PM</div>
+  </div> -->
+</div>
+
+<div class="conversation-bottomview" ref="conversationBottom">
+  <textarea ref="textarea" value.bind="message" input.delegate="messageChanged()"></textarea>
+  <pray-icon icon="Annotation" class="click" click.delegate="sendMessage()"></pray-icon>
 </div>

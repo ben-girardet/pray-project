@@ -1,15 +1,15 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@100;400;700&family=Open+Sans:wght@300;600&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=GFS+Neohellenic:ital,wght@1,700&display=swap&text=sunago');
 body {
-  font-family: 'Montserrat', sans-serif;
-  --body-font: 'Montserrat', sans-serif;
+  font-family: var(--interface-font);
+  --body-font: var(--interface-font);
   font-weight: 400;
 }
 
 .content {
-  font-family: 'Open Sans', serif;
+  font-family: var(--content-font);
   font-weight: 300;
-  --body-font: 'Open Sans', serif;
+  --body-font: var(--content-font);
 }
 
 .content strong,
