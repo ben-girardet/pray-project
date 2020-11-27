@@ -75,6 +75,12 @@ Login is now pretty well in place. Now is the time to improve the topic experien
 - [ ] Identify issue with Safari and latest update of fast (fast-provider)
 - [ ] Open up an issue if needed, reach for help
 
+
+## 26.11.2020 - Several things
+
+- [x] Migrate to sunago.app
+- [x] Start the conversation page
+- [x] Deploy so we can use it on mobile device
 ## Next 
 
 - [ ] Work on Profile page so we can
@@ -83,4 +89,5 @@ Login is now pretty well in place. Now is the time to improve the topic experien
 - [ ] Praying view
 - [ ] Notes and messages
 - [ ] Mark prayer as answered
-- [ ] Deploy so we can use it on mobile device
+- [ ] Add a cache layer with redis (https://medium.com/@haimrait/how-to-add-a-redis-cache-layer-to-mongoose-in-node-js-a9729181ad69)
+- [ ] Optimize bundles with code splitting (https://webpack.js.org/guides/code-splitting/)
