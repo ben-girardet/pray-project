@@ -25,9 +25,8 @@ export class AuthResolver {
         const refreshTokenData = user.generateRefreshToken();
         await user.save();
         const origin = context.req.get('origin') || '';
-        console.log('origin', origin);
-        console.log('origin.includes(localhost)', origin.includes('localhost'));
-        this.sendRefreshToken(context.res, refreshTokenData, !origin.includes('localhost'));
+        const sameSite = context.req.hostname === 'localhost' || !origin.includes('localhost');
+        this.sendRefreshToken(context.res, refreshTokenData, sameSite);
         const jwtString = jwt.sign({userId: user.id, roles: user.roles}, process.env.JWT_SECRET_OR_KEY as string, { expiresIn: process.env.JWT_TOKEN_EXPIRATION, algorithm: 'HS256' });
         // this.setJWTCookie(context.res, jwtString);
         const login = new Login();
@@ -50,8 +49,8 @@ export class AuthResolver {
         if (!foundUser) throw new Error('Invalid refresh token');
         const refreshTokenData = foundUser.generateRefreshToken();
         await foundUser.save();
-        const origin = context.req.get('origin') || '';
-        this.sendRefreshToken(context.res, refreshTokenData, !origin.includes('localhost'));
+        const sameSite = context.req.hostname === 'localhost' || !origin.includes('localhost');
+        this.sendRefreshToken(context.res, refreshTokenData, sameSite);
         const jwtString = jwt.sign({userId: foundUser.id, roles: foundUser.roles}, process.env.JWT_SECRET_OR_KEY as string, { expiresIn: process.env.JWT_TOKEN_EXPIRATION, algorithm: 'HS256'});
         // this.setJWTCookie(context.res, jwtString);
         const login = new Login();
