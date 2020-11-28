@@ -43,7 +43,6 @@ export class TopicDetail implements IRouteableComponent, IViewModel {
     try {
       const topic = await getTopic(this.topicId);
       await CryptingService.decryptTopic(topic);
-      console.log('get topic', topic);
       this.topic = topic;
     } catch (error) {
       this.logger.error(error);

@@ -22,7 +22,6 @@ export class MiniUser {
   }
 
   public async userIdChanged(): Promise<void> {
-    console.log('mini-user userIdChanged', this.userId);
     if (this.userId) {
       const user = await this.getUser();
       this.firstname = user.firstname;
