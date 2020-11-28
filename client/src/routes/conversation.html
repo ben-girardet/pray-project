@@ -63,6 +63,8 @@
 </div>
 
 <div class="conversation-bottomview" ref="conversationBottom">
-  <textarea ref="textarea" value.bind="message" input.delegate="messageChanged()"></textarea>
-  <pray-icon icon="Annotation" class="click" click.delegate="sendMessage()"></pray-icon>
+  <textarea rows="1" placeholder="Write your message" ref="textarea" value.bind="message" input.delegate="messageChanged()"></textarea>
+  <fast-button appearance="lightweight" disabled.bind="!message" click.delegate="sendMessage()">
+    <pray-icon slot="start" icon="Annotation"></pray-icon>
+  </fast-button>
 </div>
