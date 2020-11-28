@@ -27,6 +27,7 @@
         class="content"
         repeat.for="topic of activeTopics"
         topic.bind="topic"
+        messages.delegate="openMessages(topic)"
         load="../topic-detail(${topic.id})"
         >
       </topic-preview>

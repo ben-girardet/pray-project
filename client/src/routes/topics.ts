@@ -3,7 +3,7 @@ import { AppNotification } from './../components/app-notification';
 import { Topic as ITopic } from 'shared/types/topic';
 import { MyShare } from 'shared/types/share';
 import { IRouteableComponent } from '@aurelia/router';
-import { IViewModel, ILogger, EventAggregator, IDisposable } from 'aurelia';
+import { IViewModel, ILogger, EventAggregator, IDisposable, IRouter } from 'aurelia';
 import easyScroll from 'easy-scroll';
 import { getTopics, getTopicsQuery } from '../commands/topic';
 import { client } from '../apollo';
@@ -18,7 +18,10 @@ export class Topics implements IRouteableComponent, IViewModel {
   private logger: ILogger;
   public activeTab = 'active';
 
-  public constructor(private eventAggregator: EventAggregator, @ILogger iLogger: ILogger) {
+  public constructor(
+    private eventAggregator: EventAggregator, 
+    @ILogger iLogger: ILogger,
+    @IRouter private router: IRouter) {
     this.logger = iLogger.scopeTo('topics-route');
   }
 
@@ -107,6 +110,10 @@ export class Topics implements IRouteableComponent, IViewModel {
 
   public tabChanged(event: Event) {
     this.activeTab = (event as any).detail.id;
+  }
+
+  public openMessages(topic: ITopic) {
+    this.router.load(`../conversation(topicId=${topic.id})`);
   }
 
 }
