@@ -112,7 +112,7 @@ const client = new ApolloClient({
         await refreshToken();
     }
     const token = apolloAuth.getToken();
-    if (token && operation.operationName !== 'RefreshToken') {
+    if (token && operation.operationName !== 'RefreshToken' && operation.operationName !== 'Login') {
       operation.setContext(context => ({
         headers: {
             ...context.headers,
