@@ -5,11 +5,11 @@
       <div style="text-align: center">
         <pray-logo size="large"></pray-logo>
       </div>
-      <form submit.delegate="login()">
-        <fast-text-field placeholder="Email or Mobile" value.two-way="username" autofocus>
+      <form submit.delegate="login($event)">
+        <fast-text-field id="login_username" placeholder="Email or Mobile" value.two-way="username" autofocus>
           <pray-icon icon="User" size="sm" slot="start"></pray-icon>
         </fast-text-field>
-        <fast-text-field type="password" placeholder="Your password" value.two-way="password">
+        <fast-text-field id="login_password" type="password" placeholder="Your password" value.two-way="password">
           <pray-icon icon="Key" size="sm" slot="start"></pray-icon>
         </fast-text-field>
         <div class="button-row__two">

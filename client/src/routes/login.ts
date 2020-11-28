@@ -24,7 +24,32 @@ export class Login implements IRouteableComponent, IViewModel {
     }
   }
 
-  public login(): false {
+  public attached() {
+    // TODO: use the aurelia task thing
+    setTimeout(() => {
+      const username = window.localStorage.getItem('sun_un');
+      if (username) {
+        console.log('username', username);
+        this.username = username;
+        const pwd_el = document.querySelector('#login_password');
+        console.log('pwd_el', pwd_el);
+        if (pwd_el instanceof HTMLElement) {
+          pwd_el.focus();
+        }
+      } else {
+        const un_el = document.querySelector('#login_username');
+        console.log('un_el', un_el);
+        if (un_el instanceof HTMLElement) {
+          un_el.focus();
+        }
+      }
+    }, 100);
+  }
+
+  public login(event: Event): false {
+    if (event) {
+      event.preventDefault();
+    }
     if (!this.username || !this.password) {
       AppNotification.notify('Please fill in your username and password first', 'info');
       return false;
@@ -32,6 +57,7 @@ export class Login implements IRouteableComponent, IViewModel {
     try {
       login(this.username, this.password).then((loginResult) => {
         if (apolloAuth.isTokenValid()) {
+          window.localStorage.setItem('sun_un', this.username);
           this.router.load('topics');
         }
         if (!loginResult) {
