@@ -33,7 +33,8 @@ query Topics($sort: SortBy, $status: String) {
         height
       }
     },
-    updatedAt
+    updatedAt,
+    nbMessages
   }
 }`;
 
