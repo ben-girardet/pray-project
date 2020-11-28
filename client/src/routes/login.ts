@@ -24,22 +24,24 @@ export class Login implements IRouteableComponent, IViewModel {
     }
   }
 
-  public async login(): Promise<void> {
+  public login(): false {
     if (!this.username || !this.password) {
       AppNotification.notify('Please fill in your username and password first', 'info');
-      return;
+      return false;
     }
     try {
-      const loginResult = await login(this.username, this.password);
-      if (apolloAuth.isTokenValid()) {
-        this.router.load('topics');
-      }
-      if (!loginResult) {
-        AppNotification.notify('Authentication failed', 'error');
-      }
+      login(this.username, this.password).then((loginResult) => {
+        if (apolloAuth.isTokenValid()) {
+          this.router.load('topics');
+        }
+        if (!loginResult) {
+          AppNotification.notify('Authentication failed', 'error');
+        }
+      });
     } catch (error) {
       AppNotification.notify(error.message, 'error');
     }
+    return false;
   }
 
 }
