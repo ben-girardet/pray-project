@@ -12,4 +12,10 @@ export class TopicMessagesResolver /*implements ResolverInterface<Topic>*/ {
         const messages = await MessageModel.find({topicId: topic._id});
         return messages.map(m => m.toObject());
     }
+
+    @FieldResolver(() => Number)
+    public async nbMessages(@Root() topic: Topic) {
+        const messages = await MessageModel.find({topicId: topic._id});
+        return messages.length;
+    }
 }
