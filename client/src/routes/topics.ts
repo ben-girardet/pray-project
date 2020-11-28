@@ -116,4 +116,8 @@ export class Topics implements IRouteableComponent, IViewModel {
     this.router.load(`../conversation(topicId=${topic.id})`);
   }
 
+  public openSharing(topic: ITopic) {
+    this.router.load(`../sharing(${topic.id})`);
+  }
+
 }

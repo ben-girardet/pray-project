@@ -28,6 +28,7 @@
         repeat.for="topic of activeTopics"
         topic.bind="topic"
         messages.delegate="openMessages(topic)"
+        sharing.delegate="openSharing(topic)"
         load="../topic-detail(${topic.id})"
         >
       </topic-preview>
@@ -37,6 +38,8 @@
         class="content"
         repeat.for="topic of answeredTopics"
         topic.bind="topic"
+        messages.delegate="openMessages(topic)"
+        sharing.delegate="openSharing(topic)"
         load="../topic-detail(${topic.id})"
         >
       </topic-preview>
@@ -46,6 +49,8 @@
         class="content"
         repeat.for="topic of archivedTopics"
         topic.bind="topic"
+        messages.delegate="openMessages(topic)"
+        sharing.delegate="openSharing(topic)"
         load="../topic-detail(${topic.id})"
         >
       </topic-preview>
