@@ -12,16 +12,16 @@
       <div class="topic_preview__title">${topic.name}</div>
     </div>
     <div class="topic_preview__footer-actions">
-      <div class="topic_preview__footer-actions__item">
+      <div class="topic_preview__footer-actions__item" click.delegate="dispatchEvent('messages')">
         <pray-icon icon="ChatAlt" size="sm"></pray-icon>
-        34 <!-- messages -->
+        ${topic.nbMessages || 0} <!-- messages -->
       </div>
       <!-- <span class="topic_preview__separator">·</span> -->
-      <div class="topic_preview__footer-actions__item">
+      <div class="topic_preview__footer-actions__item" click.delegate="dispatchEvent('prayers')">
         <pray-icon icon="Sparkles" size="sm"></pray-icon>
-        72 <!-- prayers -->
+        0 <!-- prayers -->
       </div>
-      <div class="topic_preview__footer-actions__item" if.bind="topic.shares.length > 1">
+      <div class="topic_preview__footer-actions__item" if.bind="topic.shares.length > 1" click.delegate="dispatchEvent('sharing')">
         <pray-icon icon="UserGroup" size="sm"></pray-icon>
         ${topic.shares.length} <!-- prayers -->
       </div>

@@ -7,6 +7,10 @@ export class TopicPreview {
 
   @bindable topic: Topic;
 
+  constructor(private element: HTMLElement) {
+
+  }
+
 
   public gradient(original: string): string {
     try {
@@ -18,4 +22,9 @@ export class TopicPreview {
       return original;
     }
   }
+
+  public dispatchEvent(event: string) {
+    this.element.dispatchEvent(new CustomEvent(event, {bubbles: true, detail: this.topic}));
+  }
+
 }
