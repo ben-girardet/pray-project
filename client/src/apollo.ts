@@ -1,3 +1,5 @@
+import { ErrorResponse } from 'apollo-link-error';
+import { AppNotification } from './components/app-notification';
 import ApolloClient, { Operation } from 'apollo-boost';
 import gql from 'graphql-tag';
 import { refreshToken } from './commands/login';
@@ -110,7 +112,7 @@ const client = new ApolloClient({
         await refreshToken();
     }
     const token = apolloAuth.getToken();
-    if (token) {
+    if (token && operation.operationName !== 'RefreshToken') {
       operation.setContext(context => ({
         headers: {
             ...context.headers,
@@ -118,6 +120,11 @@ const client = new ApolloClient({
         }
       }));
     }
+  },
+  onError: (error: ErrorResponse) => {
+    console.log('error', error);
+    const messages = error.graphQLErrors.map(e => e.message).concat(error.networkError.message);
+    AppNotification.notify(`Network Error: ${messages.join(', ')}`, 'error');
   }
 });
 
