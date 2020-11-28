@@ -81,13 +81,33 @@ Login is now pretty well in place. Now is the time to improve the topic experien
 - [x] Migrate to sunago.app
 - [x] Start the conversation page
 - [x] Deploy so we can use it on mobile device
+
+## 27.11.2020 - Messages
+
+- [x] Messages view
+
+## 28.11.2020 - Messages
+
+- [x] Fix refreshToken issue (fixed by not sending the jwt with the refreshToken mutation)
+- [x] Fix login button / form / enter (seem ok, to be confirmed)
+- [ ] Check how the "return" button on login form could be called something else (not 100% so far)
+- [x] Make preview work with the right datas (except prayer)
+- [x] Memorize previous username for fast login
+
+## Prayer Model
+
+- [ ] Define prayer model
+- [ ] Display prayers inside conversation
+
+## Praying View (playlist)
+
 ## Next 
 
+- [ ] Ensure a nice register process
+- [ ] Stack AppNotifications (so we can see several)
 - [ ] Work on Profile page so we can
 - [ ] Edit current profile avatar, name
 - [ ] Change password
-- [ ] Praying view
-- [ ] Notes and messages
 - [ ] Mark prayer as answered
 - [ ] Add a cache layer with redis (https://medium.com/@haimrait/how-to-add-a-redis-cache-layer-to-mongoose-in-node-js-a9729181ad69)
 - [ ] Optimize bundles with code splitting (https://webpack.js.org/guides/code-splitting/)
