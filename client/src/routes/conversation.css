@@ -64,6 +64,7 @@
   border: 1px solid #ccc;
   background: white;
   outline: none;
+  -webkit-appearance: none;
   border-radius: 20px;
   color: black;
   padding: 5px 15px;
