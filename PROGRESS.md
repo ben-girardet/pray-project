@@ -101,6 +101,8 @@ Login is now pretty well in place. Now is the time to improve the topic experien
 
 ## Praying View (playlist)
 
+- [ ] Playlist with nice navigation (the cool thing from previous app was that when you mention that you pray you automatically get the next topic)
+- [ ] Mark prayer as answered
 ## Next 
 
 - [ ] Ensure a nice register process
@@ -108,6 +110,5 @@ Login is now pretty well in place. Now is the time to improve the topic experien
 - [ ] Work on Profile page so we can
 - [ ] Edit current profile avatar, name
 - [ ] Change password
-- [ ] Mark prayer as answered
 - [ ] Add a cache layer with redis (https://medium.com/@haimrait/how-to-add-a-redis-cache-layer-to-mongoose-in-node-js-a9729181ad69)
 - [ ] Optimize bundles with code splitting (https://webpack.js.org/guides/code-splitting/)
