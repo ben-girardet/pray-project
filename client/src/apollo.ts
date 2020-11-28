@@ -123,8 +123,16 @@ const client = new ApolloClient({
   },
   onError: (error: ErrorResponse) => {
     console.log('error', error);
-    const messages = error.graphQLErrors.map(e => e.message).concat(error.networkError.message);
-    AppNotification.notify(`Network Error: ${messages.join(', ')}`, 'error');
+    const hiddenMessages = [
+      'Invalid refresh token'
+    ];
+    const messages = (error.graphQLErrors || []).map(e => e.message).filter(m => !hiddenMessages.includes(m));
+    if (error.networkError?.message) {
+      messages.push(error.networkError?.message)
+    }
+    if (messages.length) {
+      AppNotification.notify(`${messages.join('; ')}`, 'error');
+    }
   }
 });
 
