@@ -96,8 +96,9 @@ Login is now pretty well in place. Now is the time to improve the topic experien
 
 ## Prayer Model
 
-- [ ] Define prayer model
+- [x] Define prayer model
 - [ ] Display prayers inside conversation
+- [x] Add tests for prayers
 
 ## Praying View (playlist)
 
@@ -112,3 +113,4 @@ Login is now pretty well in place. Now is the time to improve the topic experien
 - [ ] Change password
 - [ ] Add a cache layer with redis (https://medium.com/@haimrait/how-to-add-a-redis-cache-layer-to-mongoose-in-node-js-a9729181ad69)
 - [ ] Optimize bundles with code splitting (https://webpack.js.org/guides/code-splitting/)
+- [ ] Add a "viewedBy" property to topic, messages and prayers model so we can add personalised notifications based on who viewed what
