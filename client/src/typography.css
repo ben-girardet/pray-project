@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@100;400;700&family=Open+Sans:wght@300;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@100;400;700&family=Open+Sans:wght@400;600&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=GFS+Neohellenic:ital,wght@1,700&display=swap&text=sunago');
 body {
   font-family: var(--interface-font);
@@ -8,7 +8,7 @@ body {
 
 .content {
   font-family: var(--content-font);
-  font-weight: 300;
+  font-weight: 400;
   --body-font: var(--content-font);
 }
 

@@ -2,8 +2,9 @@
   --body-color: #fff;
   --accent-color: #3AC3BD;
   --main-content-color: black;
-  --meta-content-color: #666;
-  --separator-color: #efefef;
+  /* --meta-content-color: #666; */
+  --meta-content-color: #8A8A8E;
+  --separator-color: #C9C9CB;
   --topic-height: 85px;
   --topic-preview-width: calc(var(--topic-height) / 1.2);
   --interface-font: 'Montserrat', sans-serif; 

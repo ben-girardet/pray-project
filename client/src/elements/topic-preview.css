@@ -42,7 +42,7 @@
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  font-family: 'Montserrat', sans-serif;
+  font-family: var(--interface-content);
   width: 100%;
 }
 .topic_preview__author img {
@@ -54,7 +54,7 @@
 .topic_preview__author {
   margin-bottom: 4px;
   font-size: 12px;
-  font-weight: 100;
+  font-weight: 400;
   color: var(--meta-content-color);
 }
 .topic_preview__date {
@@ -65,7 +65,8 @@
   margin-left: auto;
 }
 .topic_preview__title {
-  font-size: 16px;
+  /* font-size: 16px; */
+  font-size: 14px;
   color: var(--main-content-color);
   white-space: nowrap;
   overflow: hidden;
