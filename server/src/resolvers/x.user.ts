@@ -1,6 +1,7 @@
 import { Topic } from '../models/topic';
 import { User, UserModel } from '../models/user';
-import { Message, MessageModel } from '../models/message';
+import { Message } from '../models/message';
+import { Prayer } from '../models/prayer';
 import { Resolver, FieldResolver, ResolverInterface, Root } from 'type-graphql';
 import { Friendship } from '../models/friendship';
 @Resolver(of => Topic)
@@ -34,6 +35,25 @@ export class MessageUserResolver /*implements ResolverInterface<Topic>*/ {
 
     @FieldResolver(() => User)
     public async updatedBy(@Root() instance: Message) {
+        const user = await UserModel.findById(instance.updatedBy);
+        return user?.toObject();
+    }
+}
+
+@Resolver(of => Prayer)
+export class PrayerUserResolver /*implements ResolverInterface<Topic>*/ {
+
+    constructor() {}
+
+    @FieldResolver(() => User)
+    public async createdBy(@Root() instance: Prayer) {
+        console.log('prayer createdBy', instance.createdBy);
+        const user = await UserModel.findById(instance.createdBy);
+        return user?.toObject();
+    }
+
+    @FieldResolver(() => User)
+    public async updatedBy(@Root() instance: Prayer) {
         const user = await UserModel.findById(instance.updatedBy);
         return user?.toObject();
     }

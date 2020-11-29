@@ -7,6 +7,7 @@ import { mongoose } from "@typegoose/typegoose";
 import { MessageModel } from '../models/message';
 import { CreateTopicInput, EditTopicInput, AddShareToTopicInput } from './inputs/topic';
 import { SortBy, SortOrder } from './inputs/sorting';
+import { Prayer, PrayerModel } from "../models/prayer";
 
 @Resolver()
 export class TopicResolver {
@@ -138,6 +139,19 @@ export class TopicResolver {
     await MessageModel.deleteMany({topicId});
     await originalTopic.remove();
     return true;
+  }
+
+  @Authorized(['user'])
+  @Mutation(() => Prayer)
+  public async pray(@Ctx() context: Context, @Arg('topicId') topicId: string) {
+    const user = context.user;
+    const userId = new mongoose.Types.ObjectId(user.userId);
+    const topic = await TopicModel.findOneAndCheckRole(new mongoose.Types.ObjectId(topicId), userId, false);
+    const newPrayer = new PrayerModel();
+    newPrayer.topicId = topic._id;
+    newPrayer.createdBy = new mongoose.Types.ObjectId(context.user.userId);
+    const createdPrayer = await newPrayer.save();
+    return createdPrayer.toObject();
   }
 
 }

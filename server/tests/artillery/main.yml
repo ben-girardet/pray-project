@@ -69,7 +69,7 @@ scenarios:
           query: 'query {users(search: "ben@platform5.ch") {id}}'
           variables: '{}'
         headers:
-          Authorization: "Bearer {{ benToken }}"
+          Authorization: "Bearer {{ thomasToken }}" # the request ignores "me" in the response so I need to use the token from another user
         capture:
           - json: "$"
             as: "response"
@@ -236,7 +236,7 @@ scenarios:
         url: "/graphql"
         json:
             operationName: null
-            query: 'mutation {createTopic(data: {name: "New topic", description: "New description", color: "#ff0000", encryptedContentKey: "key", image: [{fileId: "imageFileId", width: 1200, height: 800}]}) {id, name, description, color, image {fileId, width, height}, shares {userId, encryptedBy, encryptedContentKey}, myShare {userId, encryptedBy, encryptedContentKey}}}'
+            query: 'mutation {createTopic(data: {name: "New topic", color: "#ff0000", encryptedContentKey: "key", image: [{fileId: "imageFileId", width: 1200, height: 800}]}) {id, name, color, image {fileId, width, height}, shares {userId, encryptedBy, encryptedContentKey}, myShare {userId, encryptedBy, encryptedContentKey}}}'
             variables: '{}'
         headers:
             Authorization: "Bearer {{ benToken }}"
@@ -254,9 +254,6 @@ scenarios:
             - equals:
                 - "{{ data.createTopic.name }}"
                 - "New topic"
-            - equals:
-                - "{{ data.createTopic.description }}"
-                - "New description"
             - equals:
                 - "{{ data.createTopic.color }}"
                 - "#ff0000"
@@ -289,7 +286,7 @@ scenarios:
         url: "/graphql"
         json:
             operationName: null
-            query: 'query {topic(id: "{{ createdTopicId }}") {name, description, color, image {fileId, width, height}, shares {userId, encryptedBy, encryptedContentKey}, myShare {userId, encryptedBy, encryptedContentKey}}}'
+            query: 'query {topic(id: "{{ createdTopicId }}") {name, color, image {fileId, width, height}, shares {userId, encryptedBy, encryptedContentKey}, myShare {userId, encryptedBy, encryptedContentKey}}}'
             variables: '{}'
         headers:
             Authorization: "Bearer {{ benToken }}"
@@ -304,9 +301,6 @@ scenarios:
             - equals:
                 - "{{ data.topic.name }}"
                 - "New topic"
-            - equals:
-                - "{{ data.topic.description }}"
-                - "New description"
             - equals:
                 - "{{ data.topic.color }}"
                 - "#ff0000"
@@ -339,7 +333,7 @@ scenarios:
         url: "/graphql"
         json:
             operationName: null
-            query: 'mutation {editTopic(id: "{{ createdTopicId }}", data: {name: "Edited Topic", description: "Edited Description", color: "#00ff00", image: [{fileId: "imageFileId2", width: 800, height: 600}]}) {name, description, color, image {fileId, width, height}, shares {userId, encryptedBy, encryptedContentKey}, myShare {userId, encryptedBy, encryptedContentKey}}}'
+            query: 'mutation {editTopic(id: "{{ createdTopicId }}", data: {name: "Edited Topic", color: "#00ff00", image: [{fileId: "imageFileId2", width: 800, height: 600}]}) {name, color, image {fileId, width, height}, shares {userId, encryptedBy, encryptedContentKey}, myShare {userId, encryptedBy, encryptedContentKey}}}'
             variables: '{}'
         headers:
             Authorization: "Bearer {{ benToken }}"
@@ -354,9 +348,6 @@ scenarios:
             - equals:
                 - "{{ data.editTopic.name }}"
                 - "Edited Topic"
-            - equals:
-                - "{{ data.editTopic.description }}"
-                - "Edited Description"
             - equals:
                 - "{{ data.editTopic.color }}"
                 - "#00ff00"
@@ -570,7 +561,7 @@ scenarios:
         url: "/graphql"
         json:
             operationName: null
-            query: 'mutation {createTopic(data: {name: "Second topic", description: "", color: "#ff0000", encryptedContentKey: "key"}) {id}}'
+            query: 'mutation {createTopic(data: {name: "Second topic", color: "#ff0000", encryptedContentKey: "key"}) {id}}'
             variables: '{}'
         headers:
             Authorization: "Bearer {{ benToken }}"
@@ -663,3 +654,88 @@ scenarios:
             - equals:
                 - "{{ topics.length }}"
                 - 1
+    - post:
+        name: "Ben pray for topic"
+        url: "/graphql"
+        json:
+            operationName: null
+            query: 'mutation {pray(topicId: "{{ firstTopicId }}") {id, topicId, createdBy {id}}}'
+            variables: '{}'
+        headers:
+            Authorization: "Bearer {{ benToken }}"
+        capture:
+            - json: "$.data.pray"
+              as: "pray"
+        expect:
+            - statusCode: 200
+            - hasProperty: "data.pray.id"
+            - equals:
+                - "{{ pray.topicId }}"
+                - "{{ firstTopicId }}"
+            - equals:
+                - "{{ pray.createdBy.id }}"
+                - "{{ benId }}"
+    - post:
+        name: "Chantal pray for topic (must fail)"
+        url: "/graphql"
+        json:
+            operationName: null
+            query: 'mutation {pray(topicId: "{{ firstTopicId }}") {id, topicId, createdBy {id}}}'
+            variables: '{}'
+        headers:
+            Authorization: "Bearer {{ chantalToken }}"
+        expect:
+            - statusCode: 200
+            - hasProperty: "errors.0.message"
+    - post:
+        name: "Add share to recently created topic (Chantal)"
+        url: "/graphql"
+        json:
+            operationName: null
+            query: 'mutation {addShareToTopic(id: "{{ firstTopicId }}", data: {userId: "{{ chantalId }}", encryptedContentKey: "key for Chantal"}) {shares {userId, encryptedBy, encryptedContentKey}}}'
+            variables: '{}'
+        headers:
+            Authorization: "Bearer {{ benToken }}"
+    - post:
+        name: "Chantal pray for topic (must work)"
+        url: "/graphql"
+        json:
+            operationName: null
+            query: 'mutation {pray(topicId: "{{ firstTopicId }}") {id, topicId, createdBy {id}}}'
+            variables: '{}'
+        headers:
+            Authorization: "Bearer {{ chantalToken }}"
+        capture:
+            - json: "$.data.pray"
+              as: "pray"
+        expect:
+            - statusCode: 200
+            - hasProperty: "data.pray.id"
+            - equals:
+                - "{{ pray.topicId }}"
+                - "{{ firstTopicId }}"
+            - equals:
+                - "{{ pray.createdBy.id }}"
+                - "{{ chantalId }}"
+    - post:
+        name: "Get topic with nbMessages and nbPrayers"
+        url: "/graphql"
+        json:
+            operationName: null
+            query: 'query {topic(id: "{{ firstTopicId }}") {id, nbMessages, nbPrayers}}'
+            variables: '{}'
+        headers:
+            Authorization: "Bearer {{ chantalToken }}"
+        capture:
+            - json: "$.data.topic"
+              as: "topic"
+        expect:
+            - statusCode: 200
+            - hasProperty: "data.topic.id"
+            - equals:
+                - "{{ topic.nbMessages }}"
+                - 2
+            - equals:
+                - "{{ topic.nbPrayers }}"
+                - 2
+
