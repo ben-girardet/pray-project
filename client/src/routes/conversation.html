@@ -3,7 +3,7 @@
     <pray-icon slot="start" icon="ArrowLeft" weight="2"></pray-icon>
   </fast-button>
   <span class="conversation-title" if.bind="topic">${topic.name}</span>
-  <fast-button appearance="lightweight">
+  <fast-button appearance="lightweight" load="../praying(${topic.id})" class="praying-button">
     <pray-icon slot="start" icon="Sparkles" weight="2"></pray-icon>
   </fast-button>
 </div>
@@ -12,54 +12,28 @@
 
   <div class="group-day" repeat.for="dayGroup of dayGroups">
     <div class="group-day__date">${dayGroup.date | date:'nice'}</div>
-    <div class="group-person group-person--${identityGroup.who}" repeat.for="identityGroup of dayGroup.identityGroups">
-      <div class="group-person__identity" if.bind="identityGroup.who === 'them'">
-        <mini-user user-id.bind="identityGroup.userId" size="small"></mini-user>
-      </div>
-      <message class="message" repeat.for="message of identityGroup.messages">${message.text}</message>
-      <div class="group-person__time">${identityGroup.messages[identityGroup.messages.length-1].date | date:'nice'}</div>
+    <div class="group-person group-person--${group.who}" repeat.for="group of dayGroup.groups">
+      <template if.bind="group.messages.length > 0">
+        <div class="group-person__identity" if.bind="group.who === 'them'">
+          <mini-user user-id.bind="group.userId" size="small"></mini-user>
+        </div>
+        <message class="message" repeat.for="message of group.messages">${message.text}</message>
+        <div class="group-person__time">${group.messages[group.messages.length-1].date | date:'nice'}</div>
+      </template>
+      <template if.bind="group.prayers.length > 0">
+        <div class="prayers">
+          <pray-icon icon="Sparkles"></pray-icon>
+          <div class="mini-users">
+            <mini-user repeat.for="prayer of group.prayers.slice(0, 5)" user-id.bind="prayer.userId" only-avatar.bind="true" size="medium"></mini-user>
+          </div>
+          <template if.bind="group.prayers.length > 5">
+            +${group.prayers.length - 5}
+          </template>
+        </div>
+      </template>
     </div>
   </div>
 
-  <!-- <div class="group-day">
-    <div class="group-day__date">Today</div>
-    <div class="group-person group-person--them">
-      <div class="group-person__identity">
-        <mini-user user-id="5fc02da0d495c0f1bac809dc" size="small"></mini-user>
-      </div>
-      <message class="message">
-        when an unknown printer took a galley of type and scrambled it to make a type specimen book
-      </message>
-      <message class="message">
-        Lorem ipsum
-      </message>
-      <div class="group-person__time">1.40PM</div>
-    </div>
-    <div class="group-person group-person--me">
-      <message class="message">
-        It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout
-      </message>
-      <div class="group-person__time">1.44PM</div>
-    </div>
-  </div>
-  <div class="prayers">
-    3
-  </div>
-  <div class="group-person group-person--me">
-    <message class="message">
-      The standard Lorem Ipsum passage, used since the 1500s
-    </message>
-    <div class="group-person__time">2.32PM</div>
-  </div>
-  <div class="prayers">
-    2
-  </div>
-  <div class="group-person group-person--them">
-    <message class="message">
-      Lorem ipsum
-    </message>
-    <div class="group-person__time">2.38PM</div>
-  </div> -->
 </div>
 
 <div class="conversation-bottomview" ref="conversationBottom">

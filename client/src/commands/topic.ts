@@ -1,6 +1,7 @@
-import { gql, ApolloQueryResult } from 'apollo-boost';
+import { gql } from 'apollo-boost';
 import { client } from '../apollo';
 import { Topic } from 'shared/types/topic';
+import { Prayer } from 'shared/types/prayer';
 import { WithShares } from 'shared/types/share';
 
 export const getTopicsQuery = gql`
@@ -34,7 +35,8 @@ query Topics($sort: SortBy, $status: String) {
       }
     },
     updatedAt,
-    nbMessages
+    nbMessages,
+    nbPrayers
   }
 }`;
 
@@ -76,6 +78,20 @@ query Topic($topicId: String!) {
     messages {
       id,
       text,
+      createdBy {
+        id,
+        firstname,
+        lastname,
+        picture {
+          fileId,
+          width,
+          height
+        }
+      },
+      createdAt
+    },
+    prayers {
+      id,
       createdBy {
         id,
         firstname,
@@ -184,6 +200,18 @@ mutation RemoveShareToTopicMutation($id: String!, $userId: String!) {
   }
 }`
 
+const prayMutation = gql`
+mutation Pray($topicId: String!) {
+  pray(topicId: $topicId) {
+    id,
+    topicId,
+    createdBy {
+      id
+    }
+  }
+}
+`;
+
 export async function getTopics(sort: {field: string, order: -1 | 1}, status?: string): Promise<(Topic & WithShares)[]> {
   const result = await client.query<{topics: (Topic & WithShares)[]}>({query: getTopicsQuery, variables: {sort, status}, fetchPolicy: 'network-only'});
   return result.data.topics;
@@ -235,4 +263,9 @@ export async function addShareToTopic(id: string, userId: string, encryptedConte
 export async function removeShareToTopic(id: string, userId: string): Promise<{userId: string, encryptedBy: string, encryptedContentKey: string, role: string}[]> {
   const result = await client.mutate<{removeShareToTopic: {shares: {userId: string, encryptedBy: string, encryptedContentKey: string, role: string}[]}}>({mutation: removeShareToTopicMutation, variables: { id, userId }});
   return result.data.removeShareToTopic.shares;
+}
+
+export async function pray(topicId): Promise<Prayer> {
+  const result = await client.mutate<{pray: Prayer}>({mutation: prayMutation, variables: { topicId }});
+  return result.data.pray;
 }

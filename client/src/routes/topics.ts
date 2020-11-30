@@ -5,15 +5,13 @@ import { MyShare } from 'shared/types/share';
 import { IRouteableComponent } from '@aurelia/router';
 import { IViewModel, ILogger, EventAggregator, IDisposable, IRouter } from 'aurelia';
 import easyScroll from 'easy-scroll';
-import { getTopics, getTopicsQuery } from '../commands/topic';
-import { client } from '../apollo';
+import { getTopics } from '../commands/topic';
 
 export class Topics implements IRouteableComponent, IViewModel {
 
   private activeTopics: ITopic[] = [];
   private answeredTopics: ITopic[] = [];
   private archivedTopics: ITopic[] = [];
-  public prayImageSrc = './images/pray-button.png';
   private events: IDisposable[] = [];
   private logger: ILogger;
   public activeTab = 'active';

@@ -1,5 +1,3 @@
-<h1>Praying</h1>
-<ul>
-  <li repeat.for="topic of topics">${topic.title}</li>
-</ul>
-<fast-button load="../-@praying">Close</fast-button>
+<fast-design-system-provider class="praying" background-color="#16615F">
+  <topic-praying if.bind="activeTopics.length > 0" topic-id.bind="activeTopics[currentTopicIndex].id" next.delegate="next()" prayed.delegate="prayed()"></topic-praying>
+</fast-design-system-provider>

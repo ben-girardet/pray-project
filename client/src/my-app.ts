@@ -9,13 +9,6 @@ const accent = '#3AC3BD';
 const neutralPalette = createColorPalette(parseColorWebRGB(neutral));
 const accentPalette = createColorPalette(parseColorString(accent));
 
-// TODO: replace all lifecycle hooks:
-// afterBind: bound
-// afterAttach: attached
-// beforeBind: binding
-// beforeAttach: attaching
-// ...
-
 @inject()
 export class MyApp implements IViewModel {
 

@@ -31,8 +31,8 @@ au-viewport[name=praying] {
   left: 0;
   transform: translateY(150%);
   transition: transform 250ms ease-out;
-  padding: 16px;
-  background-color: var(--body-color);
+  padding: 0px;
+  background-color: var(--praying-body-color);
 }
 html.praying au-viewport[name=praying] {
   transform: translateY(0);
@@ -113,11 +113,12 @@ html.detail au-viewport[name=detail] {
   border-top: solid 2px var(--accent-color);;
 }
 
-.bottom-bar-button.praying-button img {
-  width: 45px;
-  height: 45px;
-  border-radius: calc(var(--corner-radius) * 1px);
-  overflow: hidden;
+.bottom-bar-button .praying-button {
+  color: white;
+  background: var(--accent-color);
+  border-radius: 150px;
+  width: 70px;
+  height: 35px;
 }
 
 .bottom-bar-button mini-user.active .mini-user__avatar {

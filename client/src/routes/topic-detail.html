@@ -26,7 +26,7 @@
     <fast-button class="full-width" load="../conversation(topicId=${topicId})" appearance="neutral" style="margin-bottom: 4px;">
       <pray-icon slot="start" icon="ChatAlt"></pray-icon>
       Notes & Messages
-      <fast-badge slot="end" fill="secondary" color="white" circular>3</fast-badge>
+      <fast-badge if.bind="topic.messages.length" slot="end" fill="secondary" color="white" circular>${topic.messages.length}</fast-badge>
     </fast-button>
 
     <!-- <fast-button class="full-width" appearance="neutral">

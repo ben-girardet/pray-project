@@ -1,11 +1,11 @@
-.topic-detail .head {
+.topic-praying .head {
   height: calc(100vw * 1.2);
   border-bottom-left-radius: calc(var(--corner-radius) * 2px);
   border-bottom-right-radius: calc(var(--corner-radius) * 2px);
 }
 
-.topic-detail .head > img,
-.topic-detail .head .placeholder {
+.topic-praying .head > img,
+.topic-praying .head .placeholder {
   width: 100%;
   height: calc(100vw * 1.2);
   display: flex;
@@ -14,17 +14,27 @@
   color: rgba(255, 255, 255, 0.5);
 }
 
-.topic-detail .content {
+.topic-praying .content {
   padding: 16px;
   /* min-height: 2000px; */
 }
 
-.topic-detail__meta {
+.topic-praying__meta {
   color: var(--content-meta-color);
   font-size: 14px;
 }
 
-.topic-detail .content h2,
-.topic-detail .content p {
+.topic-praying .content h2,
+.topic-praying .content p {
   text-align: center;
+}
+.topic-praying__buttons {
+  display:flex;
+  flex-direction: column;
+  align-items: center;
+  /* --density: 4; */
+}
+.topic-praying__buttons > fast-button {
+  /* --corner-radius: 50; */
+  min-width: 200px;
 }

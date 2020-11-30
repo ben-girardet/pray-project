@@ -12,7 +12,7 @@ export class TopicDetail implements IRouteableComponent, IViewModel {
   public topic: Topic;
 
   private logger: ILogger;
-  private event: IDisposable;
+  private events: IDisposable[] = [];
 
   public constructor(@ILogger iLogger: ILogger, private eventAggregator: EventAggregator, @IRouter private router: IRouter) {
     this.logger = iLogger.scopeTo('topic-detail-route');
@@ -24,19 +24,19 @@ export class TopicDetail implements IRouteableComponent, IViewModel {
 
   public async binding(): Promise<void> {
     await this.getTopic();
-    this.event = this.eventAggregator.subscribe('topic-form-out', async () => {
+    this.events.push(this.eventAggregator.subscribe('topic-form-out', async () => {
       await this.getTopic();
-    });
-    this.event = this.eventAggregator.subscribe('sharing-out', async () => {
+    }));
+    this.events.push(this.eventAggregator.subscribe('sharing-out', async () => {
        await this.getTopic();
-    });
+    }));
   }
 
   public detached(): void {
-    if (this.event) {
-      this.event.dispose();
+    for (const event of this.events) {
+      event.dispose();
     }
-    delete this.event;
+    this.events = [];
   }
 
   public async getTopic(): Promise<void> {

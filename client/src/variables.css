@@ -1,8 +1,13 @@
 * {
   --body-color: #fff;
   --accent-color: #3AC3BD;
+  --praying-body-color: var(--accent-color);
+  --praying-accent-color: #16615F;
+
+  --praying-body-color: #16615F;
+  --praying-accent-color: var(--accent-color);
+
   --main-content-color: black;
-  /* --meta-content-color: #666; */
   --meta-content-color: #8A8A8E;
   --separator-color: #C9C9CB;
   --topic-height: 85px;

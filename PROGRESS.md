@@ -97,7 +97,7 @@ Login is now pretty well in place. Now is the time to improve the topic experien
 ## Prayer Model
 
 - [x] Define prayer model
-- [ ] Display prayers inside conversation
+- [x] Display prayers inside conversation
 - [x] Add tests for prayers
 
 ## Praying View (playlist)

@@ -7,6 +7,7 @@ import { GradientValueConverter } from './resources/gradient-value-converter';
 import { FileValueConverter } from './resources/file-value-converter';
 import { AvatarSelection } from './elements/avatar-selection';
 import { MiniUser } from './elements/mini-user';
+import { TopicPraying } from './elements/topic-praying';
 import { AureliaFastAdapter } from './aurelia-fast-adapter';
 import { TwoWayCe } from './two-way-ce';
 
@@ -78,6 +79,7 @@ Aurelia
   .register(AvatarSelection)
   .register(TopicPreview)
   .register(MiniUser)
+  .register(TopicPraying)
   // To use HTML5 pushState routes, replace previous line with the following
   // customized router config.
   // .register(RouterConfiguration.customize({ useUrlFragmentHash: false }))

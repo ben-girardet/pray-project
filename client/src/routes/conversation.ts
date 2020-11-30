@@ -2,6 +2,7 @@ import { AppNotification } from './../components/app-notification';
 import { CryptingService } from './../services/crypting-service';
 import { Topic } from 'shared/types/topic';
 import { Message } from 'shared/types/message';
+import { Prayer } from 'shared/types/prayer';
 import { IRouteableComponent, IRouter } from '@aurelia/router';
 import { IViewModel, ILogger, EventAggregator, IDisposable } from 'aurelia';
 import { getTopic } from '../commands/topic';
@@ -9,6 +10,9 @@ import { createMessageInTopic } from '../commands/message';
 import moment from 'moment';
 import { apolloAuth } from '../apollo';
 
+interface GroupPrayers {
+  prayers: Array<{userId: string; date: Date}>;
+}
 interface GroupIdentity {
   userId: string;
   who: 'me' | 'them';
@@ -16,7 +20,7 @@ interface GroupIdentity {
 }
 interface GroupDay {
   date: Date;
-  identityGroups: GroupIdentity[];
+  groups: (GroupIdentity | GroupPrayers)[];
 }
 
 export class Conversation implements IRouteableComponent, IViewModel {
@@ -25,7 +29,7 @@ export class Conversation implements IRouteableComponent, IViewModel {
 
   public userId: string;
   public topicId: string;
-  public topic: Topic & {messages?: Partial<Message>[]};
+  public topic: Topic & {messages?: Partial<Message>[]; prayers?: Partial<Prayer>[]};
 
   private logger: ILogger;
   private event: IDisposable;
@@ -80,7 +84,7 @@ export class Conversation implements IRouteableComponent, IViewModel {
       await CryptingService.decryptTopic(topic);
       // this.topic = JSON.parse(JSON.stringify(topic));
       this.topic = topic;
-      this.prepareMessagesInGroups();
+      this.prepareMessagesAndPrayersInGroups();
     } catch (error) {
       this.logger.error(error);
       AppNotification.notify(error.message, 'error');
@@ -127,36 +131,78 @@ export class Conversation implements IRouteableComponent, IViewModel {
     }
   }
 
-  public prepareMessagesInGroups() {
+  public prepareMessagesAndPrayersInGroups() {
     const dayGroups: GroupDay[] = [];
     let currentDay = '';
     let currentDayGroup: GroupDay;
     let currentIdentityGroup: GroupIdentity;
+    let currentPrayersGroup: GroupPrayers;
     let currentUserId: '';
-    for(const message of this.topic.messages) {
-      const messageMoment = moment(message.createdAt);
-      const messageDay = messageMoment.format('DD/MM/YYYY');
-      if (messageDay !== currentDay) {
-        currentDay = messageDay;
+
+    const messagesAndPrayers: Array<(Partial<Message> | Partial<Prayer>) & {type: 'message' | 'prayer'}  > = []
+      .concat(...this.topic.messages.map((message) => {
+        return {...message, ...{type: 'message'}};
+      }))
+      .concat(...this.topic.prayers.map((message) => {
+        return {...message, ...{type: 'prayer'}};
+      }))
+      .sort((a, b) => {
+        const ma = moment(a.createdAt);
+        const mb = moment(b.createdAt);
+        if (ma.isBefore(mb)) {
+          return -1
+        } else if (mb.isBefore(ma)) {
+          return 1;
+        } else {
+          return 0;
+        }
+      });
+
+    for(const item of messagesAndPrayers) {
+      const itemMoment = moment(item.createdAt);
+      const itemDay = itemMoment.format('DD/MM/YYYY');
+      if (itemDay !== currentDay) {
+        currentDay = itemDay;
         currentDayGroup = {
-          date: messageMoment.toDate(),
-          identityGroups: []
+          date: itemMoment.toDate(),
+          groups: []
         };
         currentUserId = '';
+        currentPrayersGroup = undefined;
         dayGroups.push(currentDayGroup);
       }
-      if (message.createdBy.id !== currentUserId) {
-        currentUserId = message.createdBy.id;
-        currentIdentityGroup = {
-          who: message.createdBy.id === apolloAuth.getUserId() ? 'me' : 'them',
-          userId: message.createdBy.id,
-          messages: []
-        };
-        currentDayGroup.identityGroups.push(currentIdentityGroup);
+
+      if (item.type === 'message') {
+        currentPrayersGroup = undefined;
+        const message: Partial<Message> = item;
+        if (message.createdBy.id !== currentUserId) {
+          currentUserId = message.createdBy.id;
+          currentIdentityGroup = {
+            who: message.createdBy.id === apolloAuth.getUserId() ? 'me' : 'them',
+            userId: message.createdBy.id,
+            messages: []
+          };
+          currentDayGroup.groups.push(currentIdentityGroup);
+        }
+        currentIdentityGroup.messages.push({date: moment(message.createdAt).toDate(), text: message.text});
+      } else if (item.type === 'prayer') {
+        currentUserId = '';
+        const prayer: Partial<Prayer> = item;
+        const prayerToAdd = {userId: prayer.createdBy.id, date: moment(prayer.createdAt).toDate()};
+        if (!currentPrayersGroup) {
+          const group: GroupPrayers = {
+            prayers: [prayerToAdd]
+          };
+          currentPrayersGroup = group;
+          currentDayGroup.groups.push(group);
+        } else {
+          currentPrayersGroup.prayers.push(prayerToAdd);
+        }
       }
-      currentIdentityGroup.messages.push({date: moment(message.createdAt).toDate(), text: message.text});
+
     }
     this.dayGroups = dayGroups;
+    console.log('this.dayGroups', this.dayGroups);
   }
 
   
