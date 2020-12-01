@@ -32,7 +32,7 @@ au-viewport[name=praying] {
   transform: translateY(150%);
   transition: transform 250ms ease-out;
   padding: 0px;
-  background-color: var(--praying-body-color);
+  background: rgba(22, 97, 95, 0.3);
 }
 html.praying au-viewport[name=praying] {
   transform: translateY(0);

@@ -3,7 +3,7 @@
     <span class="head__left">
       <mini-user user-id="${topic.createdBy.id}" size="medium"></mini-user>
     </span>
-    <span class="head__right" load="../-@praying">
+    <span class="head__right" click.trigger="dispatchEvent('close')" touchstart.trigger="dispatchEvent('close')" xload="../-@praying">
       <pray-icon icon="X" weight="2"></pray-icon>
     </span>
     <div class="placeholder" style="background: ${topic.color | gradient};" if.bind="!topic.image.length">
@@ -17,11 +17,11 @@
     <h2>${topic.name}</h2>
 
     <div class="topic-praying__buttons">
-    <fast-button appearance="accent" click.delegate="dispatchEvent('prayed')">
+    <fast-button appearance="accent" click.trigger="dispatchEvent('prayed')">
       <pray-icon slot="start" icon="Sparkles"></pray-icon>
       I just prayed
     </fast-button>
-    <fast-button appearance="lightweight" click.delegate="dispatchEvent('next')">
+    <fast-button appearance="lightweight" click.trigger="dispatchEvent('next')">
       Skip this topic
     </fast-button>
     </div>
