@@ -2,6 +2,7 @@
   height: calc(100vw * 1.2);
   border-bottom-left-radius: calc(var(--corner-radius) * 2px);
   border-bottom-right-radius: calc(var(--corner-radius) * 2px);
+  box-shadow: var(--elevation2)
 }
 
 .topic-detail .head > img,

@@ -12,7 +12,21 @@ export class DateValueConverter {
           return m.calendar();
         }
       } else if (format === 'calendar') {
-        return m.calendar();
+        return m.calendar({
+          sameDay: '[Today]',
+          nextDay: '[Tomorrow]',
+          nextWeek: 'dddd',
+          lastDay: '[Yesterday]',
+          lastWeek: '[Last] dddd',
+          sameElse: 'DD/MM/YYYY'
+        });
+      } else if (format === 'nicetime') {
+        const diff = moment().diff(m, 'minutes');
+        if (diff < 45) {
+          return m.fromNow();
+        } else {
+          return m.format('HH:mm');
+        }
       } else if (format === 'fromnow') {
         return m.fromNow(true);
       }  else if (format === 'fromnow+') {

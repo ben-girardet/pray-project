@@ -117,7 +117,7 @@ export class Conversation implements IRouteableComponent, IViewModel {
   }
 
   private setHeights() {
-    this.conversationContent.style.height = `calc(100vh - ${this.conversationHead.offsetHeight}px - ${this.conversationBottom.offsetHeight}px)`;
+    this.conversationContent.style.height = `calc(100% - ${this.conversationHead.offsetHeight}px - ${this.conversationBottom.offsetHeight}px)`;
   }
 
   public async sendMessage(): Promise<void> {

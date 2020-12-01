@@ -1,5 +1,4 @@
-import { IContainer } from 'aurelia';
-import { IAttrSyntaxTransformer, NodeObserverLocator, AppTask } from '@aurelia/runtime-html';
+import { IContainer, IAttrSyntaxTransformer, NodeObserverLocator, AppTask } from 'aurelia';
 
 export class AureliaFastAdapter {
 
@@ -29,8 +28,6 @@ export class AureliaFastAdapter {
         }
       });
       // Teach Aurelia what events to use to observe properties of elements.
-      // Because FAST components all use a single change event to notify,
-      // we can use a single common object
       const valuePropertyConfig = { events: ['input', 'change'] };
       nodeObserverLocator.useConfig({
         'FAST-CHECKBOX': {

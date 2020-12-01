@@ -76,9 +76,10 @@
 
 .group-day__date {
   text-align: center;
-  margin: 8px;
+  margin: 32px 8px 8px;
   color: var(--meta-content-color);
   font-size: 12px;
+  font-weight: bold;
 }
 .group-person {
   margin-top: 16px;
@@ -87,14 +88,19 @@
   margin: 16px 0 4px;
   color: var(--meta-content-color);
 }
-.group-person__time {
+.group-person__time,
+.group-prayer__time {
   text-align: left;
   margin: 4px 0 8px;
   color: var(--meta-content-color);
   font-size: 12px;
+  letter-spacing: 0.5px;
 }
 .group-person--me .group-person__time {
   text-align: right;
+}
+.group-prayer__time {
+  text-align: center;
 }
 .message {
   display: block;
@@ -110,13 +116,13 @@
 
 .group-person--me .message {
   margin-left: auto;
-  background: var(--accent-color);
-  color: white;
+  background: var(--message-me-background-color);
+  /* color: white; */
   border: none;
 }
 
 .prayers {
-  background: var(--praying-body-color);
+  background: var(--accent-color);
   color: white;
   border-radius: 10px;
   padding: 8px;
