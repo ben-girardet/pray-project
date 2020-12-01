@@ -75,7 +75,6 @@ export class Praying implements IRouteableComponent, IViewModel {
       return false;
     };
     this.handleTouchStop = e => {
-      console.log('handleTouchStop');
       this.touching = false;
       if (this.touchAction === 'prayed' && this.deltaY > this.terminateTriggerY) {
         this.terminateAction();
@@ -175,7 +174,6 @@ export class Praying implements IRouteableComponent, IViewModel {
     this.currentTopicElement = this.topic1Element;
     this.topic1Index = 0;
     this.topic2Index = 1;
-    this.playlistContainer.style.opacity = '1';
   }
 
   private deltaChanged() {
@@ -220,7 +218,6 @@ export class Praying implements IRouteableComponent, IViewModel {
   }
 
   private cancelAction() {
-    console.log('cancelAction', this.touchAction);
     let increment = 40;
     requestAnimationFrame(() => {
       if (this.touchAction === 'prayed') {
@@ -254,7 +251,6 @@ export class Praying implements IRouteableComponent, IViewModel {
   }
 
   private terminateAction() {
-    console.log('terminateAction', this.touchAction);
     let increment = 40;
     requestAnimationFrame(() => {
       if (this.touchAction === 'prayed') {
@@ -317,7 +313,6 @@ export class Praying implements IRouteableComponent, IViewModel {
         this.currentTopicTop = 1;
       }
     } else {
-      this.playlistContainer.style.opacity = '0';
       this.close();
       // TODO: log end of playlist
     }

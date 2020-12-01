@@ -1,0 +1,57 @@
+.playlist {
+  position: absolute;
+  background: transparent;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  overflow: hidden;
+}
+
+.playlist .playlist-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  overflow: hidden;
+}
+
+.playlist .playlist-container > .topic-container {
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  overflow: hidden;
+  z-index:2;
+  background-color: var(--praying-body-color);
+}
+
+.playlist .playlist-container > .current-topic {
+  z-index: 3;
+}
+
+.playlist .playlist-container pray-topic {
+ display:block;
+ width: 100%;
+ height: 100%;
+ overflow: hidden;
+}
+
+
+.playlist .action-info {
+  position: absolute;
+  margin-top: constant(safe-area-inset-top); /* iOS 11.0 */
+  margin-top: env(safe-area-inset-top); /* iOS 11.2 */
+  top: 32px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 5;
+  padding: 4px 8px;
+  background: rgba(0, 0, 0, 0.2);
+  color: white;
+  border-radius: 4px;
+}
