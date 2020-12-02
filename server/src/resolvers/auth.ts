@@ -18,7 +18,7 @@ export class AuthResolver {
             .findOne({$or: [
                 {email: username, emailValidated: true},
                 {mobile: username, mobileValidated: true}]})
-            .select('refreshTokens salt hash roles');
+            .select('refreshTokens salt hash roles privateKey');
         if (!user) {
             throw new Error('User not found');
         }
@@ -51,7 +51,7 @@ export class AuthResolver {
 
         const foundUser = await UserModel
             .findOne({refreshTokens: {$elemMatch: {hash: hashRefreshToken, expiry: {$gt: moment().toDate()}}}})
-            .select('refreshTokens salt hash roles');
+            .select('refreshTokens salt hash roles privateKey');
         if (!foundUser) throw new Error('Invalid refresh token');
         const refreshTokenData = foundUser.generateRefreshToken();
         await foundUser.save();
