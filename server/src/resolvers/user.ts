@@ -6,6 +6,9 @@ import mongoose from 'mongoose';
 import { EditMeInput } from './inputs/user';
 import { FriendshipModel } from "../models/friendship";
 
+// TODO: in any edit user resolver
+// we must ensure to del the hash in redis
+
 @Resolver()
 export class UserResolver {
 

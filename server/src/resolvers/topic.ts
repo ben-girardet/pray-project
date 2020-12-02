@@ -8,6 +8,7 @@ import { MessageModel } from '../models/message';
 import { CreateTopicInput, EditTopicInput, AddShareToTopicInput } from './inputs/topic';
 import { SortBy, SortOrder } from './inputs/sorting';
 import { Prayer, PrayerModel } from "../models/prayer";
+import { hsetAsync, hgetAllAsync, client } from '../core/redis';
 
 @Resolver()
 export class TopicResolver {
@@ -25,11 +26,20 @@ export class TopicResolver {
     if (status) {
         query.status = status;
     }
+    const cacheValue = await hgetAllAsync(`topics:${JSON.stringify(query)}:${JSON.stringify(sortBy)}`);
+    if (cacheValue) {
+        return cacheValue;
+    }
     const topics = await TopicModel.find(query, null, {sort: sortBy});
     for (const topic of topics) {
         topic.setMyShare(userId);
     }
-    return topics.map(t => t.toObjectWithMyShare());
+    const value = topics.map(t => t.toObjectWithMyShare());
+    for (const key in value) {
+        await hsetAsync(`topics:${JSON.stringify(query)}:${JSON.stringify(sortBy)}`, key, value[key]);
+        client.expire(`topics:${JSON.stringify(query)}:${JSON.stringify(sortBy)}`, 5);
+    }
+    return value;
   }
 
    @Query(() => Topic)

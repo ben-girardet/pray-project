@@ -11,6 +11,7 @@ const client = redis.createClient({
     host
 });
 
+
 export const getAsync = promisify(client.get).bind(client);
 export const setAsync = promisify(client.set).bind(client);
 export const delAsync = promisify(client.del).bind(client);
@@ -19,3 +20,4 @@ export const hgetAsync = promisify(client.hget).bind(client);
 export const hgetAllAsync = promisify(client.hgetall).bind(client);
 export const hsetAsync = promisify(client.hset).bind(client);
 export const hdelAsync = promisify(client.hdel).bind(client);
+export { client };

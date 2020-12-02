@@ -8,7 +8,7 @@ import moment from 'moment';
 import { Image } from './image';
 import { Context } from '../resolvers/context-interface';
 import { FriendshipModel } from "./friendship";
-import { delAsync, getAsync, setAsync, hgetAsync, hsetAsync, hdelAsync, hgetAllAsync } from '../core/redis';
+import { hsetAsync, hgetAllAsync } from '../core/redis';
 
 export interface RefreshTokenData {
     refreshToken: string;

@@ -1,7 +1,8 @@
 config:
-  plugins:
-    metrics-by-endpoint: {}
   target: 'http://localhost:3000'
+  environments:
+    staging:
+      target: "https://api-dev.sunago.app"
   http:
     timeout: 30
   phases:
