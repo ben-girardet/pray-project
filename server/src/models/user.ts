@@ -1,4 +1,3 @@
-import { Length, IsNotEmpty, validateOrReject, MaxLength } from "class-validator";
 import crypto from 'crypto';
 import { User as IUser } from "shared/types/user";
 import { ObjectType, Field, Authorized, FieldResolver, Ctx, Root } from "type-graphql";
@@ -9,6 +8,7 @@ import moment from 'moment';
 import { Image } from './image';
 import { Context } from '../resolvers/context-interface';
 import { FriendshipModel } from "./friendship";
+import { delAsync, getAsync, setAsync, hgetAsync, hsetAsync, hdelAsync, hgetAllAsync } from '../core/redis';
 
 export interface RefreshTokenData {
     refreshToken: string;
@@ -87,7 +87,7 @@ export class User implements IUser {
     @prop({type: () => [String]})
     public roles: RoleType[];
 
-    @prop({type: () => [RefreshToken], _id: false})
+    @prop({type: () => [RefreshToken], _id: false, select: false})
     public refreshTokens: RefreshToken[];
 
     @Field(() => Date)
@@ -145,12 +145,25 @@ export class User implements IUser {
         return { refreshToken, hash, expiry };
     }
 
-    // TODO: should we do this with mongoose middleware
-    // @BeforeInsert()
-    // @BeforeUpdate()
-    // validate(): Promise<void> {
-    //     return validateOrReject(this);
-    // }
+    public static async findByIdWithCache(id: any) {
+        if (!id) {
+            return null;
+        }
+        const cacheValue = await hgetAllAsync(`user:${id.toString()}`);
+        if (cacheValue) {
+            return cacheValue;
+        }
+        const value = await UserModel.findById(id).select('firstname lastname picture')
+        if (!value) {
+            return value;
+        }
+        const objectValue = value.toObject();
+        for (const key in objectValue) {
+            await hsetAsync(`user:${id.toString()}`, key, objectValue[key]);
+        }
+        return value;
+    }
+
 }
 
 const UserModel = getModelForClass(User, {schemaOptions: {timestamps: true}});

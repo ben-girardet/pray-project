@@ -1,0 +1,42 @@
+config:
+  target: 'http://localhost:3000'
+  http:
+    timeout: 10 # max 10 seconds before considering a request as timed out
+  plugins:
+    expect: {outputFormat: 'pretty'}
+  phases:
+    - duration: 1
+      arrivalCount: 1
+  defaults:
+    headers:
+      Content-Type: "application/json"
+scenarios:
+  - name: "Logins"
+    flow:
+    - post:
+        name: "Login Ben"
+        url: "/graphql"
+        json:
+          operationName: null
+          query: 'mutation {login(username: "ben@platform5.ch", password: "admin") {token, expires, userId}}'
+          variables: '{}'
+        capture:
+          - json: "$"
+            as: "response"
+          - json: "$.data.login.token"
+            as: "benToken"
+        expect:
+          - statusCode: 200
+          - hasProperty: "data.login"
+          - hasProperty: "data.login.token"
+          - hasProperty: "data.login.expires"
+          - hasProperty: "data.login.userId"
+    - post:
+        name: "Get Ben Topics"
+        url: "/graphql"
+        json:
+            operationName: null
+            query: 'query {topics {id, name, image {fileId, width, height}, createdBy {id, firstname, lastname}, shares {userId, encryptedBy, encryptedContentKey}, myShare {userId, encryptedBy, encryptedContentKey}}}'
+            variables: '{}'
+        headers:
+            Authorization: "Bearer {{ benToken }}"

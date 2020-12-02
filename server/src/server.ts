@@ -60,7 +60,6 @@ const whitelist = ['http://localhost:9000', 'https://sunago.app', 'https://dev.s
 const corsOptions: CorsOptions = {
     origin: function (origin, callback) {
         if (origin === undefined) {
-          console.warn('Allowing undefined origin');
           callback(null, true)
         } else if (whitelist.indexOf(origin) !== -1) {
           callback(null, true)

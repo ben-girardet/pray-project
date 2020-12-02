@@ -14,7 +14,11 @@ export class AuthResolver {
 
     @Mutation(() => Login)
     public async login(@Arg('username') username: string, @Arg('password') password: string, @Ctx() context: Context) {
-        const user = await UserModel.findOne({$or: [{email: username, emailValidated: true}, {mobile: username, mobileValidated: true}]});
+        const user = await UserModel
+            .findOne({$or: [
+                {email: username, emailValidated: true},
+                {mobile: username, mobileValidated: true}]})
+            .select('refreshTokens salt hash roles');
         if (!user) {
             throw new Error('User not found');
         }
@@ -45,7 +49,9 @@ export class AuthResolver {
         }
         const hashRefreshToken = crypto.pbkdf2Sync(refreshToken, process.env.JWT_REFRESH_TOKEN_SECRET_OR_KEY as string, 10000, 512, 'sha512').toString('hex');
 
-        const foundUser = await UserModel.findOne({refreshTokens: {$elemMatch: {hash: hashRefreshToken, expiry: {$gt: moment().toDate()}}}});
+        const foundUser = await UserModel
+            .findOne({refreshTokens: {$elemMatch: {hash: hashRefreshToken, expiry: {$gt: moment().toDate()}}}})
+            .select('refreshTokens salt hash roles');
         if (!foundUser) throw new Error('Invalid refresh token');
         const refreshTokenData = foundUser.generateRefreshToken();
         await foundUser.save();
@@ -63,7 +69,6 @@ export class AuthResolver {
     }
 
     private sendRefreshToken(res: Response, refreshTokenData: RefreshTokenData, sameSite = true) {
-        console.log('sameSite', sameSite);
         res.cookie('refreshToken', refreshTokenData.refreshToken, {
             path: '/graphql',
             httpOnly: true,
@@ -81,7 +86,9 @@ export class AuthResolver {
         // delete the refreshToken from db
         if (refreshToken) {
             const hashRefreshToken = crypto.pbkdf2Sync(refreshToken, process.env.JWT_REFRESH_TOKEN_SECRET_OR_KEY as string, 10000, 512, 'sha512').toString('hex');
-            const foundUser = await UserModel.findOne({refreshTokens: {$elemMatch: {hash: hashRefreshToken, expiry: {$gt: moment().toDate()}}}});
+            const foundUser = await UserModel
+                .findOne({refreshTokens: {$elemMatch: {hash: hashRefreshToken, expiry: {$gt: moment().toDate()}}}})
+                .select('refreshTokens');
             if (foundUser) {
                 const rt = foundUser.refreshTokens.find((rf => rf.hash === hashRefreshToken));
                 if (rt) {

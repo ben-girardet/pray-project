@@ -11,14 +11,14 @@ export class TopicUserResolver /*implements ResolverInterface<Topic>*/ {
 
     @FieldResolver(() => User)
     public async createdBy(@Root() instance: Topic) {
-        const user = await UserModel.findById(instance.createdBy);
-        return user?.toObject();
+        const user = await UserModel.findByIdWithCache(instance.createdBy);
+        return user;
     }
 
     @FieldResolver(() => User)
     public async updatedBy(@Root() instance: Topic) {
-        const user = await UserModel.findById(instance.updatedBy);
-        return user?.toObject();
+        const user = await UserModel.findByIdWithCache(instance.updatedBy);
+        return user;
     }
 }
 
@@ -29,14 +29,14 @@ export class MessageUserResolver /*implements ResolverInterface<Topic>*/ {
 
     @FieldResolver(() => User)
     public async createdBy(@Root() instance: Message) {
-        const user = await UserModel.findById(instance.createdBy);
-        return user?.toObject();
+        const user = await UserModel.findByIdWithCache(instance.createdBy);
+        return user;
     }
 
     @FieldResolver(() => User)
     public async updatedBy(@Root() instance: Message) {
-        const user = await UserModel.findById(instance.updatedBy);
-        return user?.toObject();
+        const user = await UserModel.findByIdWithCache(instance.updatedBy);
+        return user;
     }
 }
 
@@ -47,15 +47,14 @@ export class PrayerUserResolver /*implements ResolverInterface<Topic>*/ {
 
     @FieldResolver(() => User)
     public async createdBy(@Root() instance: Prayer) {
-        console.log('prayer createdBy', instance.createdBy);
-        const user = await UserModel.findById(instance.createdBy);
-        return user?.toObject();
+        const user = await UserModel.findByIdWithCache(instance.createdBy);
+        return user;
     }
 
     @FieldResolver(() => User)
     public async updatedBy(@Root() instance: Prayer) {
-        const user = await UserModel.findById(instance.updatedBy);
-        return user?.toObject();
+        const user = await UserModel.findByIdWithCache(instance.updatedBy);
+        return user;
     }
 }
 
@@ -66,19 +65,19 @@ export class FriendshipUserResolver /*implements ResolverInterface<Topic>*/ {
 
     @FieldResolver(() => User)
     public async user1(@Root() instance: Friendship) {
-        const user = await UserModel.findById(instance.user1);
-        return user?.toObject();
+        const user = await UserModel.findByIdWithCache(instance.user1);
+        return user;
     }
 
     @FieldResolver(() => User)
     public async user2(@Root() instance: Friendship) {
-        const user = await UserModel.findById(instance.user2);
-        return user?.toObject();
+        const user = await UserModel.findByIdWithCache(instance.user2);
+        return user;
     }
 
     @FieldResolver(() => User)
     public async requestedBy(@Root() instance: Friendship) {
-        const user = await UserModel.findById(instance.requestedBy);
-        return user?.toObject();
+        const user = await UserModel.findByIdWithCache(instance.requestedBy);
+        return user;
     }
 }
