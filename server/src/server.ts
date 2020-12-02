@@ -12,6 +12,7 @@ import { buildSchema, NonEmptyArray } from 'type-graphql';
 import contextService from 'request-context';
 import jwt from 'express-jwt';
 import cors, { CorsOptions } from 'cors';
+import { apolloPerfPlugin } from './core/perf';
 
 import * as sessionAuth from './middleware/session-auth';
 
@@ -157,6 +158,7 @@ mongoose.connect(
                 };
                 return context;
             },
+            plugins: [apolloPerfPlugin]
         });
     app.use('/graphql', (req: express.Request, res: express.Response, next: express.NextFunction) => {
         if (!req.header('Authorization')) {
