@@ -5,7 +5,7 @@ import { ObjectType, Field, ID } from "type-graphql";
 import { prop, Ref, getModelForClass } from "@typegoose/typegoose";
 import mongoose from 'mongoose';
 import { identity } from './middleware/identity';
-import { lrangeAsync, lpushAsync, client } from './../core/redis';
+import { saveModelItems, getModelItems } from './../core/redis';
 
 @ObjectType()
 export class Prayer implements IPrayer {
@@ -39,20 +39,18 @@ export class Prayer implements IPrayer {
         if (!topicId) {
           return [];
         }
-        const cacheValue = await lrangeAsync(`topic-prayers:${topicId.toString()}`, 0, -1);
-        if (cacheValue && cacheValue.length) {
-          // return cacheValue.map(v => JSON.parse(v));
+        const cacheValues = await getModelItems(`topic-prayers:${topicId.toString()}`);
+        if (cacheValues && cacheValues.length) {
+          return cacheValues.map((p) => {
+              return new PrayerModel(p).toObject();
+          });
         }
         const prayers = await PrayerModel.find({topicId});
         const values = prayers.map(m => m.toObject());
         if (!values.length) {
           return values;
         }
-        for (const value of values) {
-          await lpushAsync(`topic-prayers:${topicId.toString()}`, JSON.stringify(value));
-        }
-        // TODO: del key when creating new topic prayer (or add it to then list)
-        // client.expire(`topic-prayers:${topicId.toString()}`, 5);
+        saveModelItems(`topic-prayers:${topicId.toString()}`, values);
         return values;
       }
 

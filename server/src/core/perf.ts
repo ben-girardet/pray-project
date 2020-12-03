@@ -1,6 +1,9 @@
 import chalk from 'chalk';
 import { GraphQLRequestContext } from 'apollo-server-core';
 
+const enablePerf = true;
+const logPerf = false;
+
 export const apolloPerfPlugin = {
 
   // Fires whenever a GraphQL request is received from a client.
@@ -31,7 +34,9 @@ export const apolloPerfPlugin = {
           } else if (hrend[1] / 1000000 > 300) {
               color = 'blue';
           }
-          console.info(chalk[color](hrend[0], Math.round(hrend[1] / 1000) / 1000), chalk.grey(requestContext.request.query));
+          if (logPerf) {
+              console.info(chalk[color](hrend[0], Math.round(hrend[1] / 1000) / 1000), chalk.grey(requestContext.request.query));
+          }
           // console.info('Execution time (hr): %ds %dms', hrend[0], hrend[1] / 1000000);
         }
       },
@@ -64,11 +69,13 @@ export class Perf {
     } else if (hrenddiff[1] / 1000000 > 300) {
       color = 'blue';
     }
-    console.info(
-      chalk.grey(hrend[0], Math.round(hrend[1] / 1000) / 1000),
-      chalk.grey(this.name),
-      chalk.magenta(step),
-      chalk[color]('+', hrenddiff[0], Math.round(hrenddiff[1] / 1000) / 1000),
-      );
+    if (logPerf) {
+        console.info(
+          chalk.grey(hrend[0], Math.round(hrend[1] / 1000) / 1000),
+          chalk.grey(this.name),
+          chalk.magenta(step),
+          chalk[color]('+', hrenddiff[0], Math.round(hrenddiff[1] / 1000) / 1000),
+          );
+    }
   }
 }

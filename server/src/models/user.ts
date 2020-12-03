@@ -8,7 +8,7 @@ import moment from 'moment';
 import { Image } from './image';
 import { Context } from '../resolvers/context-interface';
 import { FriendshipModel } from "./friendship";
-import { hsetAsync, hgetAllAsync } from '../core/redis';
+import { saveModelItem, getModelItem } from '../core/redis';
 
 export interface RefreshTokenData {
   refreshToken: string;
@@ -149,26 +149,19 @@ export class User implements IUser {
     if (!id) {
       return null;
     }
-    const cacheValue = await hgetAllAsync(`user:${id.toString()}`);
+    const cacheValue = await getModelItem('user', id.toString());
     if (cacheValue) {
-      cacheValue.pictures = cacheValue.pictures?.lenght ? JSON.parse(cacheValue.pictures) : [];
-      // return cacheValue;
+      return new UserModel(cacheValue).toObject();
     }
     const value = await UserModel.findById(id).select('firstname lastname picture')
     if (!value) {
       return value;
     }
+
     const objectValue = value.toObject();
-    for (const key in objectValue) {
-      if (key === '_id') {
-        continue;
-      }
-      if (key === 'picture') {
-        await hsetAsync(`user:${id.toString()}`, key, JSON.stringify(objectValue[key]));
-        continue;
-      }
-      await hsetAsync(`user:${id.toString()}`, key, objectValue[key]);
-    }
+    saveModelItem('user', objectValue);
+    // TODO: remove user from cache (or update)
+    // when editing
     return objectValue;
   }
 

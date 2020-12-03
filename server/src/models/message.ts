@@ -1,4 +1,4 @@
-import { lrangeAsync, lpushAsync, client } from './../core/redis';
+import { saveModelItems, getModelItems } from './../core/redis';
 import { User } from "./user";
 import { Topic } from './topic';
 import { Message as IMessage } from "shared/types/message";
@@ -47,20 +47,18 @@ export class Message implements IMessage {
       if (!topicId) {
         return [];
       }
-      const cacheValue = await lrangeAsync(`topic-messages:${topicId.toString()}`, 0, -1);
-      if (cacheValue && cacheValue.length) {
-        return cacheValue.map(v => JSON.parse(v));
-      }
+      const cacheValues = await getModelItems(`topic-messages:${topicId.toString()}`);
+        if (cacheValues && cacheValues.length) {
+            return cacheValues.map((m) => {
+                return new MessageModel(m).toObject();
+            });
+        }
       const messages = await MessageModel.find({topicId});
       const values = messages.map(m => m.toObject());
       if (!values.length) {
         return values;
       }
-      for (const value of values) {
-        await lpushAsync(`topic-messages:${topicId.toString()}`, JSON.stringify(value));
-      }
-      // TODO: del key when creating new topic messages (or add it to then list)
-      // client.expire(`topic-messages:${topicId.toString()}`, 5);
+      saveModelItems(`topic-messages:${topicId.toString()}`, values);
       return values;
     }
 

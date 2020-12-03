@@ -1,5 +1,8 @@
 config:
   target: 'http://localhost:3000'
+  environments:
+    staging:
+      target: "https://api-dev.sunago.app"
   http:
     timeout: 10 # max 10 seconds before considering a request as timed out
   plugins:

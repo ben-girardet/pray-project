@@ -21,7 +21,7 @@ config:
       Content-Type: "application/json"
   variables:
     # TODO: load a token from a file (build with a processor from prepare-tokens.yml)
-    benToken: ""
+    benToken: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI1ZmM3ZjEzNjVmZTRmODAwOWRiNTJlODAiLCJyb2xlcyI6WyJ1c2VyIiwiYWRtaW4iXSwiaWF0IjoxNjA2OTg5MjQ0LCJleHAiOjE2MDY5OTAxNDR9.ln4NjAi-OItbk25JlSSodkv0I9foAau0IvDrIYxVQto"
 scenarios:
   - name: "Ben creates a topic"
     weigth: 1

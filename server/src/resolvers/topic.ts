@@ -9,7 +9,6 @@ import { MessageModel } from '../models/message';
 import { CreateTopicInput, EditTopicInput, AddShareToTopicInput } from './inputs/topic';
 import { SortBy, SortOrder } from './inputs/sorting';
 import { Prayer, PrayerModel } from "../models/prayer";
-import { hsetAsync, hgetAllAsync, client } from '../core/redis';
 
 @Resolver()
 export class TopicResolver {
