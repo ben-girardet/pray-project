@@ -1,3 +1,4 @@
+import { existsAsync, lpushAsync } from './../core/redis';
 import { Topic, TopicModel } from "../models/topic";
 import { Share } from "../models/share";
 import { Resolver, Query, Arg, Authorized, Ctx, Mutation } from "type-graphql";
@@ -26,19 +27,11 @@ export class TopicResolver {
     if (status) {
         query.status = status;
     }
-    const cacheValue = await hgetAllAsync(`topics:${JSON.stringify(query)}:${JSON.stringify(sortBy)}`);
-    if (cacheValue) {
-        return cacheValue;
-    }
     const topics = await TopicModel.find(query, null, {sort: sortBy});
     for (const topic of topics) {
         topic.setMyShare(userId);
     }
     const value = topics.map(t => t.toObjectWithMyShare());
-    for (const key in value) {
-        await hsetAsync(`topics:${JSON.stringify(query)}:${JSON.stringify(sortBy)}`, key, value[key]);
-        client.expire(`topics:${JSON.stringify(query)}:${JSON.stringify(sortBy)}`, 5);
-    }
     return value;
   }
 
@@ -161,7 +154,12 @@ export class TopicResolver {
     newPrayer.topicId = topic._id;
     newPrayer.createdBy = new mongoose.Types.ObjectId(context.user.userId);
     const createdPrayer = await newPrayer.save();
-    return createdPrayer.toObject();
+    const prayerObject = createdPrayer.toObject();
+    const exists = await existsAsync(`topic-prayers:${topicId.toString()}`)
+    if (exists) {
+        await lpushAsync(`topic-prayers:${topicId.toString()}`, JSON.stringify(prayerObject));
+    }
+    return prayerObject;
   }
 
 }

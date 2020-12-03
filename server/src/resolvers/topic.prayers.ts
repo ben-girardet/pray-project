@@ -9,13 +9,13 @@ export class TopicPrayersResolver /*implements ResolverInterface<Topic>*/ {
 
     @FieldResolver(() => [Prayer])
     public async prayers(@Root() topic: Topic) {
-        const prayers = await PrayerModel.find({topicId: topic._id});
-        return prayers.map(m => m.toObject());
+        const prayers = await PrayerModel.findTopicPrayersWithCache(topic._id);
+        return prayers;
     }
 
     @FieldResolver(() => Number)
     public async nbPrayers(@Root() topic: Topic) {
-        const prayers = await PrayerModel.find({topicId: topic._id});
+        const prayers = await PrayerModel.findTopicPrayersWithCache(topic._id);
         return prayers.length;
     }
 }

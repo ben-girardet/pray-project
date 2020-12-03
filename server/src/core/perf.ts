@@ -39,3 +39,36 @@ export const apolloPerfPlugin = {
     }
   },
 };
+
+
+export class Perf {
+
+  private hrstart: any;
+  private previousstephrstart: any;
+  private name: string;
+
+  constructor(name: string) {
+    this.hrstart = process.hrtime();
+    this.previousstephrstart = process.hrtime();
+    this.name = name;
+  }
+
+  public log(step: string) {
+    const hrend = process.hrtime(this.hrstart);
+    const hrenddiff = process.hrtime(this.previousstephrstart);
+    this.previousstephrstart = process.hrtime();
+
+    let color: 'green' | 'blue' | 'red' = 'green';
+    if (hrenddiff[0] > 0) {
+      color = 'red'
+    } else if (hrenddiff[1] / 1000000 > 300) {
+      color = 'blue';
+    }
+    console.info(
+      chalk.grey(hrend[0], Math.round(hrend[1] / 1000) / 1000),
+      chalk.grey(this.name),
+      chalk.magenta(step),
+      chalk[color]('+', hrenddiff[0], Math.round(hrenddiff[1] / 1000) / 1000),
+      );
+  }
+}

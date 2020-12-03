@@ -1,4 +1,4 @@
-import { Length, IsNotEmpty, validateOrReject, MaxLength } from "class-validator";
+import { lrangeAsync, lpushAsync, client } from './../core/redis';
 import { User } from "./user";
 import { Topic } from './topic';
 import { Message as IMessage } from "shared/types/message";
@@ -26,22 +26,43 @@ export class Message implements IMessage {
     public deleted: boolean = false;
 
     @Field(() => Topic)
-    @prop({ref: () => Topic})
+    @prop({ref: () => Topic, index: true})
     public topicId?: Ref<Topic>;
 
-    @prop({ref: () => User})
+    @prop({ref: () => User, index: true})
     public createdBy?: Ref<User>;
 
     @prop({ref: () => User})
     public updatedBy?: Ref<User>;
 
     @Field(() => Date)
-    @prop()
+    @prop({index: true})
     public createdAt: Date;
 
     @Field(() => Date)
     @prop()
     public updatedAt: Date;
+
+    public static async findTopicMessagesWithCache(topicId: any) {
+      if (!topicId) {
+        return [];
+      }
+      const cacheValue = await lrangeAsync(`topic-messages:${topicId.toString()}`, 0, -1);
+      if (cacheValue && cacheValue.length) {
+        return cacheValue.map(v => JSON.parse(v));
+      }
+      const messages = await MessageModel.find({topicId});
+      const values = messages.map(m => m.toObject());
+      if (!values.length) {
+        return values;
+      }
+      for (const value of values) {
+        await lpushAsync(`topic-messages:${topicId.toString()}`, JSON.stringify(value));
+      }
+      // TODO: del key when creating new topic messages (or add it to then list)
+      // client.expire(`topic-messages:${topicId.toString()}`, 5);
+      return values;
+    }
 
 }
 

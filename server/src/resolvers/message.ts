@@ -1,3 +1,4 @@
+import { existsAsync, lpushAsync, delAsync } from './../core/redis';
 import { CreateMessageInTopicInput, EditMessageInput } from './inputs/message';
 import { Topic, TopicModel } from "../models/topic";
 import { Message, MessageModel } from "../models/message";
@@ -56,7 +57,14 @@ export class MessageResolver {
 
     const createdMessage = await newMessage.save();
     const createdMessageInstance = new MessageModel(createdMessage);
-    return createdMessageInstance.toObject();
+    const messageObject = createdMessageInstance.toObject();
+
+    const exists = await existsAsync(`topic-messages:${topicId.toString()}`)
+    if (exists) {
+        await lpushAsync(`topic-messages:${topicId.toString()}`, JSON.stringify(messageObject));
+    }
+
+    return messageObject;
   }
 
   @Authorized(['user'])
@@ -74,6 +82,12 @@ export class MessageResolver {
 
     const editedMessage = await originalMessage.save();
     const editedMessageInstance = new MessageModel(editedMessage);
+    if (originalMessage.topicId) {
+        const exists = await existsAsync(`topic-messages:${originalMessage.topicId.toString()}`);
+        if (exists) {
+            await delAsync(`topic-messages:${originalMessage.topicId.toString()}`);
+        }
+    }
     return editedMessageInstance.toObject();
   }
 
@@ -91,6 +105,12 @@ export class MessageResolver {
     originalMessage.deleted = true;
     const editedMessage = await originalMessage.save();
     const editedMessageInstance = new MessageModel(editedMessage);
+    if (originalMessage.topicId) {
+        const exists = await existsAsync(`topic-messages:${originalMessage.topicId.toString()}`);
+        if (exists) {
+            await delAsync(`topic-messages:${originalMessage.topicId.toString()}`);
+        }
+    }
     return editedMessageInstance.toObject();
   }
 

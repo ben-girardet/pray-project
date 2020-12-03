@@ -1,11 +1,11 @@
-import { Length, IsNotEmpty, validateOrReject, MaxLength } from "class-validator";
 import { User } from "./user";
 import { Topic } from './topic';
 import { Prayer as IPrayer } from "shared/types/prayer";
 import { ObjectType, Field, ID } from "type-graphql";
-import { prop, Ref, getModelForClass, DocumentType } from "@typegoose/typegoose";
+import { prop, Ref, getModelForClass } from "@typegoose/typegoose";
 import mongoose from 'mongoose';
 import { identity } from './middleware/identity';
+import { lrangeAsync, lpushAsync, client } from './../core/redis';
 
 @ObjectType()
 export class Prayer implements IPrayer {
@@ -18,22 +18,43 @@ export class Prayer implements IPrayer {
     public _id: mongoose.Types.ObjectId;
 
     @Field(() => String)
-    @prop({ref: () => Topic})
+    @prop({ref: () => Topic, index: true})
     public topicId: Ref<Topic>;
 
-    @prop({ref: () => User})
+    @prop({ref: () => User, index: true})
     public createdBy?: Ref<User>;
 
     @prop({ref: () => User})
     public updatedBy?: Ref<User>;
 
     @Field(() => Date)
-    @prop()
+    @prop({index: true})
     public createdAt: Date;
 
     @Field(() => Date)
     @prop()
     public updatedAt: Date;
+
+    public static async findTopicPrayersWithCache(topicId: any) {
+        if (!topicId) {
+          return [];
+        }
+        const cacheValue = await lrangeAsync(`topic-prayers:${topicId.toString()}`, 0, -1);
+        if (cacheValue && cacheValue.length) {
+          // return cacheValue.map(v => JSON.parse(v));
+        }
+        const prayers = await PrayerModel.find({topicId});
+        const values = prayers.map(m => m.toObject());
+        if (!values.length) {
+          return values;
+        }
+        for (const value of values) {
+          await lpushAsync(`topic-prayers:${topicId.toString()}`, JSON.stringify(value));
+        }
+        // TODO: del key when creating new topic prayer (or add it to then list)
+        // client.expire(`topic-prayers:${topicId.toString()}`, 5);
+        return values;
+      }
 
 }
 

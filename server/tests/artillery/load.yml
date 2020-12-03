@@ -19,20 +19,13 @@ config:
   defaults:
     headers:
       Content-Type: "application/json"
+  variables:
+    # TODO: load a token from a file (build with a processor from prepare-tokens.yml)
+    benToken: ""
 scenarios:
   - name: "Ben creates a topic"
     weigth: 1
     flow:
-    - post:
-        name: "Login Ben"
-        url: "/graphql"
-        json:
-          operationName: null
-          query: 'mutation {login(username: "ben@platform5.ch", password: "admin") {token, expires, userId}}'
-          variables: '{}'
-        capture:
-          - json: "$.data.login.token"
-            as: "benToken"
     - post:
         name: "Create a topic"
         url: "/graphql"
@@ -45,16 +38,6 @@ scenarios:
   - name: "Ben requests friendship with Chantal"
     weigth: 1
     flow:
-    - post:
-        name: "Login Ben"
-        url: "/graphql"
-        json:
-          operationName: null
-          query: 'mutation {login(username: "ben@platform5.ch", password: "admin") {token, expires, userId}}'
-          variables: '{}'
-        capture:
-          - json: "$.data.login.token"
-            as: "benToken"
     - post:
         name: "Ben lists his friendships"
         url: "/graphql"
@@ -128,16 +111,6 @@ scenarios:
     weigth: 2
     flow:
     - post:
-        name: "Login Ben"
-        url: "/graphql"
-        json:
-          operationName: null
-          query: 'mutation {login(username: "ben@platform5.ch", password: "admin") {token, expires, userId}}'
-          variables: '{}'
-        capture:
-          - json: "$.data.login.token"
-            as: "benToken"
-    - post:
         name: "Get Ben Active Topics"
         url: "/graphql"
         json:
@@ -168,16 +141,6 @@ scenarios:
     weigth: 1
     flow:
     - post:
-        name: "Login Ben"
-        url: "/graphql"
-        json:
-          operationName: null
-          query: 'mutation {login(username: "ben@platform5.ch", password: "admin") {token, expires, userId}}'
-          variables: '{}'
-        capture:
-          - json: "$.data.login.token"
-            as: "benToken"
-    - post:
         name: "Get Ben Active Topics"
         url: "/graphql"
         json:
@@ -201,16 +164,6 @@ scenarios:
   - name: "Ben gets one and pray several times and get again"
     weigth: 2
     flow:
-    - post:
-        name: "Login Ben"
-        url: "/graphql"
-        json:
-          operationName: null
-          query: 'mutation {login(username: "ben@platform5.ch", password: "admin") {token, expires, userId}}'
-          variables: '{}'
-        capture:
-          - json: "$.data.login.token"
-            as: "benToken"
     - post:
         name: "Get Ben Active Topics"
         url: "/graphql"
@@ -289,16 +242,6 @@ scenarios:
   - name: "Ben gets one and write several messages and get again"
     weigth: 2
     flow:
-    - post:
-        name: "Login Ben"
-        url: "/graphql"
-        json:
-          operationName: null
-          query: 'mutation {login(username: "ben@platform5.ch", password: "admin") {token, expires, userId}}'
-          variables: '{}'
-        capture:
-          - json: "$.data.login.token"
-            as: "benToken"
     - post:
         name: "Get Ben Active Topics"
         url: "/graphql"

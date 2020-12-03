@@ -1,0 +1,68 @@
+config:
+  target: 'http://localhost:3000'
+  http:
+    timeout: 10 # max 10 seconds before considering a request as timed out
+  plugins:
+    expect: {outputFormat: 'pretty'}
+  phases:
+    - duration: 1
+      arrivalCount: 1
+  defaults:
+    headers:
+      Content-Type: "application/json"
+  processor: "./processor.js"
+scenarios:
+  - name: "Logins"
+    flow:
+    - post:
+        name: "Login Ben"
+        url: "/graphql"
+        json:
+          operationName: null
+          query: 'mutation {login(username: "ben@platform5.ch", password: "admin") {token, expires, userId}}'
+          variables: '{}'
+        capture:
+          - json: "$"
+            as: "response"
+          - json: "$.data.login.token"
+            as: "benToken"
+        expect:
+          - statusCode: 200
+          - hasProperty: "data.login"
+          - hasProperty: "data.login.token"
+          - hasProperty: "data.login.expires"
+          - hasProperty: "data.login.userId"
+    - function: "logResponse"
+    - post:
+        name: "Login Chantal"
+        url: "/graphql"
+        json:
+          operationName: null
+          query: 'mutation {login(username: "chantal@girardet.ch", password: "admin") {token, expires, userId}}'
+          variables: '{}'
+        capture:
+          - json: "$"
+            as: "response"
+          - json: "$.data.login.token"
+            as: "chantalToken"
+        expect:
+          - statusCode: 200
+          - hasProperty: "data.login"
+    - function: "logResponse"
+    - post:
+        name: "Login Thomas"
+        url: "/graphql"
+        json:
+          operationName: null
+          query: 'mutation {login(username: "thomas@platform5.ch", password: "admin") {token, expires, userId}}'
+          variables: '{}'
+        capture:
+          - json: "$"
+            as: "response"
+          - json: "$.data.login.token"
+            as: "thomasToken"
+        expect:
+          - statusCode: 200
+          - hasProperty: "data.login"
+    - function: "logResponse"
+    # TODO: save tokens in a file for use in load.yml

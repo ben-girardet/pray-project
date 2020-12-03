@@ -6,7 +6,7 @@ import { ObjectType, Field, InputType } from 'type-graphql';
 export class Image {
 
   @Field(() => String)
-  @prop()
+  @prop({index: true})
   fileId: string;
 
   @Field(() => Number)

@@ -32,11 +32,11 @@ export class Topic implements ITopic {
     color: string;
 
     @Field(() => String, {defaultValue: 'active'})
-    @prop({default: 'active'})
+    @prop({default: 'active', index: true})
     status: 'active' | 'answered' | 'archived' = 'active'
 
     // @Field(() => User)
-    @prop({ref: () => User})
+    @prop({ref: () => User, index: true})
     public createdBy?: Ref<User>;
 
     // @Field(() => User)
@@ -48,11 +48,11 @@ export class Topic implements ITopic {
     public createdAt: Date;
 
     @Field(() => Date)
-    @prop()
+    @prop({index: true})
     public updatedAt: Date;
 
     @Field(type => [Share])
-    @prop({type: () => [Share]})
+    @prop({type: () => [Share], index: true})
     public shares: Share[];
 
     @Field({nullable: true})

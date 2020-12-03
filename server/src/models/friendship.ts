@@ -22,23 +22,23 @@ export class Friendship implements IFriendship {
     public text: string;
 
     // https://typegoose.github.io/typegoose/docs/guides/advanced/reference-other-classes#common-problems
-    @prop({ref: () => 'User'})
+    @prop({ref: () => 'User', index: true})
     public user1: Ref<User>;;
 
     // https://typegoose.github.io/typegoose/docs/guides/advanced/reference-other-classes#common-problems
-    @prop({ref: () => 'User'})
+    @prop({ref: () => 'User', index: true})
     public user2: Ref<User>;;
 
     // https://typegoose.github.io/typegoose/docs/guides/advanced/reference-other-classes#common-problems
-    @prop({ref: () => 'User'})
+    @prop({ref: () => 'User', index: true})
     public requestedBy: Ref<User>;;
 
     @Field()
-    @prop()
+    @prop({index: true})
     status: 'requested' | 'accepted' | 'declined' | 'removed';
 
     @Field(() => Date)
-    @prop()
+    @prop({index: true})
     requestedAt: Date;
 
     @Field(() => Date)

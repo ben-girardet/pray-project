@@ -9,13 +9,13 @@ export class TopicMessagesResolver /*implements ResolverInterface<Topic>*/ {
 
     @FieldResolver(() => [Message])
     public async messages(@Root() topic: Topic) {
-        const messages = await MessageModel.find({topicId: topic._id});
-        return messages.map(m => m.toObject());
+        const messages = await MessageModel.findTopicMessagesWithCache(topic._id);
+        return messages;
     }
 
     @FieldResolver(() => Number)
     public async nbMessages(@Root() topic: Topic) {
-        const messages = await MessageModel.find({topicId: topic._id});
+        const messages = await MessageModel.findTopicMessagesWithCache(topic._id);
         return messages.length;
     }
 }

@@ -11,158 +11,166 @@ import { FriendshipModel } from "./friendship";
 import { hsetAsync, hgetAllAsync } from '../core/redis';
 
 export interface RefreshTokenData {
-    refreshToken: string;
-    hash: string;
-    expiry: Date
+  refreshToken: string;
+  hash: string;
+  expiry: Date
 }
 
 export class RefreshToken {
-    @prop()
-    hash: string;
+  @prop()
+  hash: string;
 
-    @prop()
-    expiry: Date;
+  @prop()
+  expiry: Date;
 }
 
 @ObjectType()
 export class User implements IUser {
 
-    // @prop()
-    public _id: mongoose.Types.ObjectId;
+  // @prop()
+  public _id: mongoose.Types.ObjectId;
 
-    @Field(() => String)
-    public get id(): string {
-        return (this as any)._id ? (this as any)._id.toString() : '';
-    };
+  @Field(() => String)
+  public get id(): string {
+      return (this as any)._id ? (this as any)._id.toString() : '';
+  };
 
-    @Field(() => String)
-    @prop()
-    public firstname: string;
+  @Field(() => String)
+  @prop()
+  public firstname: string;
 
-    @Field(() => String)
-    @prop()
-    public lastname: string;
+  @Field(() => String)
+  @prop()
+  public lastname: string;
 
-    @Authorized(['me'])
-    @Field(() => String)
-    @prop()
-    public email: string;
+  @Authorized(['me'])
+  @Field(() => String)
+  @prop({index: true})
+  public email: string;
 
-    @prop()
-    public emailValidated?: boolean;
+  @prop()
+  public emailValidated?: boolean;
 
-    @Authorized(['me'])
-    @Field(() => String)
-    @prop()
-    public mobile: string;
+  @Authorized(['me'])
+  @Field(() => String)
+  @prop({index: true})
+  public mobile: string;
 
-    @prop()
-    public mobileValidated?: boolean;
+  @prop()
+  public mobileValidated?: boolean;
 
-    @Field(type => [Image], {nullable: true})
-    @prop({type: () => [Image]})
-    public picture?: Image[];
+  @Field(type => [Image], {nullable: true})
+  @prop({type: () => [Image]})
+  public picture?: Image[];
 
-    @prop()
-    public hash: string;
+  @prop()
+  public hash: string;
 
-    @prop()
-    public salt: string;
+  @prop()
+  public salt: string;
 
-    @Field(() => String, {nullable: true})
-    @prop()
-    public publicKey: string;
+  @Field(() => String, {nullable: true})
+  @prop()
+  public publicKey: string;
 
-    @Authorized(['me'])
-    @prop()
-    public privateKey: string;
+  @Authorized(['me'])
+  @prop()
+  public privateKey: string;
 
-    @prop()
-    public facebookId?: string;
+  @prop()
+  public facebookId?: string;
 
-    @prop()
-    public lastLogin?: Date;
+  @prop()
+  public lastLogin?: Date;
 
-    @Field(() => String, {nullable: false})
-    @prop({type: () => [String]})
-    public roles: RoleType[];
+  @Field(() => String, {nullable: false})
+  @prop({type: () => [String]})
+  public roles: RoleType[];
 
-    @prop({type: () => [RefreshToken], _id: false, select: false})
-    public refreshTokens: RefreshToken[];
+  @prop({type: () => [RefreshToken], _id: false, select: false, index: true})
+  public refreshTokens: RefreshToken[];
 
-    @Field(() => Date)
-    @prop()
-    public createdAt: Date;
+  @Field(() => Date)
+  @prop()
+  public createdAt: Date;
 
-    @Field(() => Date)
-    @prop()
-    public updatedAt: Date;
+  @Field(() => Date)
+  @prop()
+  public updatedAt: Date;
 
-    @Field(() => String, {nullable: true})
-    public async friendshipStatus(@Ctx() context: Context) {
-        if (!context.locals.friendships) {
-            context.locals.friendships = {};
-            // fetch friendships and store them in the context
-            const userId = new mongoose.Types.ObjectId(context.user.userId);
-            const friendships = await FriendshipModel.find({$or: [
-                {user1: userId},
-                {user2: userId}
-            ], status: {$in: ['accepted', 'requested']}});
-            for (const friendship of friendships) {
-                if (!friendship.user1 || !friendship.user2) {
-                    continue;
-                }
-                const f1 = friendship.user1 as unknown as mongoose.Types.ObjectId;
-                const f2 = friendship.user2 as unknown as mongoose.Types.ObjectId;
-                if (f1.equals(userId)) {
-                    context.locals.friendships[f2.toString()] = friendship.status;
-                } else {
-                    context.locals.friendships[f1.toString()] = friendship.status;
-                }
-            }
+  @Field(() => String, {nullable: true})
+  public async friendshipStatus(@Ctx() context: Context) {
+    if (!context.locals.friendships) {
+      context.locals.friendships = {};
+      // fetch friendships and store them in the context
+      const userId = new mongoose.Types.ObjectId(context.user.userId);
+      const friendships = await FriendshipModel.find({$or: [
+        {user1: userId},
+        {user2: userId}
+      ], status: {$in: ['accepted', 'requested']}});
+      for (const friendship of friendships) {
+        if (!friendship.user1 || !friendship.user2) {
+          continue;
         }
-        return context.locals.friendships[this.id.toString()];
-    }
-
-    public hashPassword(password: string) {
-        this.salt = crypto.randomBytes(16).toString('hex');
-        this.hash = crypto.pbkdf2Sync(password, this.salt, 10000, 512, 'sha512').toString('hex');
-    }
-
-    public isPasswordValid(password: string): boolean {
-        const hash = crypto.pbkdf2Sync(password, this.salt, 10000, 512, 'sha512').toString('hex');
-        return this.hash === hash;
-    }
-
-    public generateRefreshToken(): RefreshTokenData {
-        const refreshToken = crypto.randomBytes(16).toString('hex');
-        const hash = crypto.pbkdf2Sync(refreshToken, process.env.JWT_REFRESH_TOKEN_SECRET_OR_KEY as string, 10000, 512, 'sha512').toString('hex');
-        const expiry = moment().add(30, 'days').toDate();
-        this.refreshTokens.push({
-            hash,
-            expiry
-        });
-        return { refreshToken, hash, expiry };
-    }
-
-    public static async findByIdWithCache(id: any) {
-        if (!id) {
-            return null;
+        const f1 = friendship.user1 as unknown as mongoose.Types.ObjectId;
+        const f2 = friendship.user2 as unknown as mongoose.Types.ObjectId;
+        if (f1.equals(userId)) {
+          context.locals.friendships[f2.toString()] = friendship.status;
+        } else {
+          context.locals.friendships[f1.toString()] = friendship.status;
         }
-        const cacheValue = await hgetAllAsync(`user:${id.toString()}`);
-        if (cacheValue) {
-            return cacheValue;
-        }
-        const value = await UserModel.findById(id).select('firstname lastname picture')
-        if (!value) {
-            return value;
-        }
-        const objectValue = value.toObject();
-        for (const key in objectValue) {
-            await hsetAsync(`user:${id.toString()}`, key, objectValue[key]);
-        }
-        return value;
+      }
     }
+    return context.locals.friendships[this.id.toString()];
+  }
+
+  public hashPassword(password: string) {
+    this.salt = crypto.randomBytes(16).toString('hex');
+    this.hash = crypto.pbkdf2Sync(password, this.salt, 10000, 512, 'sha512').toString('hex');
+  }
+
+  public isPasswordValid(password: string): boolean {
+    const hash = crypto.pbkdf2Sync(password, this.salt, 10000, 512, 'sha512').toString('hex');
+    return this.hash === hash;
+  }
+
+  public generateRefreshToken(): RefreshTokenData {
+    const refreshToken = crypto.randomBytes(16).toString('hex');
+    const hash = crypto.pbkdf2Sync(refreshToken, process.env.JWT_REFRESH_TOKEN_SECRET_OR_KEY as string, 10000, 512, 'sha512').toString('hex');
+    const expiry = moment().add(30, 'days').toDate();
+    this.refreshTokens.push({
+      hash,
+      expiry
+    });
+    return { refreshToken, hash, expiry };
+  }
+
+  public static async findByIdWithCache(id: any) {
+    if (!id) {
+      return null;
+    }
+    const cacheValue = await hgetAllAsync(`user:${id.toString()}`);
+    if (cacheValue) {
+      cacheValue.pictures = cacheValue.pictures?.lenght ? JSON.parse(cacheValue.pictures) : [];
+      // return cacheValue;
+    }
+    const value = await UserModel.findById(id).select('firstname lastname picture')
+    if (!value) {
+      return value;
+    }
+    const objectValue = value.toObject();
+    for (const key in objectValue) {
+      if (key === '_id') {
+        continue;
+      }
+      if (key === 'picture') {
+        await hsetAsync(`user:${id.toString()}`, key, JSON.stringify(objectValue[key]));
+        continue;
+      }
+      await hsetAsync(`user:${id.toString()}`, key, objectValue[key]);
+    }
+    return objectValue;
+  }
 
 }
 
