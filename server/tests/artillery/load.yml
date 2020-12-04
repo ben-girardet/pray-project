@@ -16,16 +16,23 @@ config:
     - duration: 120
       arrivalRate: 5
       name: "Sustained"
+    - duration: 120
+      arrivalRate: 5
+      rampTo: 20
+      name: "Heavy"
   defaults:
     headers:
       Content-Type: "application/json"
+  processor: "./processor.js"
   variables:
-    # TODO: load a token from a file (build with a processor from prepare-tokens.yml)
-    benToken: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI1ZmM3ZjEzNjVmZTRmODAwOWRiNTJlODAiLCJyb2xlcyI6WyJ1c2VyIiwiYWRtaW4iXSwiaWF0IjoxNjA2OTg5MjQ0LCJleHAiOjE2MDY5OTAxNDR9.ln4NjAi-OItbk25JlSSodkv0I9foAau0IvDrIYxVQto"
+    benToken: ""
+    chantalToken: ""
+    thomasToken: ""
 scenarios:
   - name: "Ben creates a topic"
     weigth: 1
     flow:
+    - function: "getTokens"
     - post:
         name: "Create a topic"
         url: "/graphql"
@@ -38,6 +45,7 @@ scenarios:
   - name: "Ben requests friendship with Chantal"
     weigth: 1
     flow:
+    - function: "getTokens"
     - post:
         name: "Ben lists his friendships"
         url: "/graphql"
@@ -65,21 +73,22 @@ scenarios:
   - name: "Chantal accepts Ben friendship"
     weigth: 1
     flow:
-    - post:
-        name: "Login Chantal"
-        url: "/graphql"
-        json:
-          operationName: null
-          query: 'mutation {login(username: "chantal@girardet.ch", password: "admin") {token, expires, userId}}'
-          variables: '{}'
-        capture:
-          - json: "$"
-            as: "response"
-          - json: "$.data.login.token"
-            as: "chantalToken"
-        expect:
-          - statusCode: 200
-          - hasProperty: "data.login"
+    - function: "getTokens"
+    # - post:
+    #     name: "Login Chantal"
+    #     url: "/graphql"
+    #     json:
+    #       operationName: null
+    #       query: 'mutation {login(username: "chantal@girardet.ch", password: "admin") {token, expires, userId}}'
+    #       variables: '{}'
+    #     capture:
+    #       - json: "$"
+    #         as: "response"
+    #       - json: "$.data.login.token"
+    #         as: "chantalToken"
+    #     expect:
+    #       - statusCode: 200
+    #       - hasProperty: "data.login"
     - post:
         name: "Chantal lists her friendships"
         url: "/graphql"
@@ -110,6 +119,7 @@ scenarios:
   - name: "Ben gets all his topics"
     weigth: 2
     flow:
+    - function: "getTokens"
     - post:
         name: "Get Ben Active Topics"
         url: "/graphql"
@@ -140,6 +150,7 @@ scenarios:
   - name: "Ben archive one topic"
     weigth: 1
     flow:
+    - function: "getTokens"
     - post:
         name: "Get Ben Active Topics"
         url: "/graphql"
@@ -164,6 +175,7 @@ scenarios:
   - name: "Ben gets one and pray several times and get again"
     weigth: 2
     flow:
+    - function: "getTokens"
     - post:
         name: "Get Ben Active Topics"
         url: "/graphql"
@@ -242,6 +254,7 @@ scenarios:
   - name: "Ben gets one and write several messages and get again"
     weigth: 2
     flow:
+    - function: "getTokens"
     - post:
         name: "Get Ben Active Topics"
         url: "/graphql"

@@ -5,6 +5,7 @@ import { FilterQuery } from 'mongoose';
 import { Context } from "./context-interface";
 import { mongoose } from "@typegoose/typegoose";
 import { SortBy, SortOrder } from './inputs/sorting';
+import { getModelItems, saveModelItems, delAsync } from './../core/redis';
 
 @Resolver()
 export class FriendshipResolver {
@@ -48,6 +49,8 @@ export class FriendshipResolver {
 
     const createdFriendship = await newFriendship.save();
     const createdFriendshipInstance = new FriendshipModel(createdFriendship);
+    await this.clearFriendshipsCacheKeyForUser(user._id.toString());
+    await this.clearFriendshipsCacheKeyForUser(friend._id.toString());
     return createdFriendshipInstance.toObject();
   }
 
@@ -76,6 +79,8 @@ export class FriendshipResolver {
 
     const updatedFriendship = await friendship.save();
     const updatedFriendshipInstance = new FriendshipModel(updatedFriendship);
+    await this.clearFriendshipsCacheKeyForUser((friendship.user1 as any).toString());
+    await this.clearFriendshipsCacheKeyForUser((friendship.user2 as any).toString());
     return updatedFriendshipInstance.toObject();
   }
 
@@ -100,6 +105,8 @@ export class FriendshipResolver {
     friendship.removedAt = new Date();
 
     await friendship.save();
+    await this.clearFriendshipsCacheKeyForUser((friendship.user1 as any).toString());
+    await this.clearFriendshipsCacheKeyForUser((friendship.user2 as any).toString());
     return true;
   }
 
@@ -108,7 +115,14 @@ export class FriendshipResolver {
   public async friendships(@Ctx() context: Context, @Arg('sort', {nullable: true}) sort: SortBy, @Arg('status', {nullable: true}) status: 'accepted' | 'requested') {
     const user = context.user;
     const userId = new mongoose.Types.ObjectId(user.userId);
-
+    const cacheKey = `status:${status};sort:${JSON.stringify(sort)}`;
+    const cacheValue = await getModelItems(this.computeFriendshipsCacheKey(userId.toString(), cacheKey));
+    if (cacheValue) {
+        return cacheValue.map((cv) => {
+            const obj = new FriendshipModel(cv);
+            return obj.toObject();
+        });
+    }
     const sortBy = {}
     if (sort) {
         sortBy[sort.field] = sort.order === SortOrder.ASC ? 1 : -1
@@ -120,7 +134,34 @@ export class FriendshipResolver {
         query.status = {$in: ['accepted', 'requested']};
     }
     const friendships = await FriendshipModel.find(query, null, {sort: sortBy});
-    return friendships.map(f => f.toObject());
+    const objects = friendships.map(f => f.toObject());
+    await saveModelItems(this.computeFriendshipsCacheKey(userId.toString(), cacheKey), objects, {time: 60 * 30});
+    await this.registerFriendshipsCacheKeyForUser(userId.toString(), cacheKey);
+    return objects;
   }
+
+  private computeFriendshipsCacheKey(userId: string, cacheKey: string): string {
+    return `friendships:${userId.toString()}:${cacheKey}`;
+  }
+
+  private async registerFriendshipsCacheKeyForUser(userId: string, key: string): Promise<void> {
+    let keys = await getModelItems(`${userId}:friendships:cache-keys`, {primitive: true}) || [];
+    if (keys.includes(key)) {
+        return;
+    }
+    keys = [key];
+    await saveModelItems(`${userId}:friendships:cache-keys`, keys, {primitive: true});
+}
+
+private async clearFriendshipsCacheKeyForUser(userId: string): Promise<void> {
+  const keys = await getModelItems(`${userId}:friendships:cache-keys`, {primitive: true});
+  if (!keys || keys.length === 0) {
+      return;
+  }
+  const topicKeys = keys.map(k => this.computeFriendshipsCacheKey(userId, k));
+  for (const key of keys.concat(...topicKeys)) {
+      await delAsync(key);
+  }
+}
 
 }

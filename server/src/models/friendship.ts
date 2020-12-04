@@ -1,5 +1,3 @@
-import { Length, IsNotEmpty, validateOrReject, MaxLength } from "class-validator";
-import { Topic } from './topic';
 import { Friendship as IFriendship } from "shared/types/friendship";
 import { ObjectType, Field, Ctx } from "type-graphql";
 import { prop, Ref, getModelForClass } from "@typegoose/typegoose";

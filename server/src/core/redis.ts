@@ -5,6 +5,17 @@ import chalk from 'chalk';
 import { mongoose } from '@typegoose/typegoose';
 import { mongo } from 'mongoose';
 
+// TODO: ideas to improve redis cache
+// in the list save, only persist ids
+// when saving a list
+// => send a list with complete objects to cache
+// => only persists the ids (in order) in the list cache
+// => save each item individually in their own cache (saveModelItem)
+// when getting a list
+// => get the ids order from the list cache
+// => re-compute the full list with getModelItem on each element
+// Check with a benchmark if this idea is beneficial or not
+
 const logCache = false;
 
 const host = process.env.REDIS_HOST as string ?? '127.0.0.1';
@@ -39,7 +50,7 @@ export { client };
 
 const objectIdsProperties = ['_id', 'topicId', 'createdBy', 'updatedBy', 'user1', 'user2', 'requestedBy'];
 const dateProperties = ['createdAt', 'updatedAt'];
-const jsonProperties = ['image', 'picture'];
+const jsonProperties = ['image', 'picture', 'shares'];
 
 function prepareForSave(object: {[key: string]: any}): {[key: string]: any} {
     log(chalk.dim('prepareForSave', object.id, Object.keys(object)));
@@ -61,6 +72,7 @@ function prepareForSave(object: {[key: string]: any}): {[key: string]: any} {
 }
 
 function rehydrate(object: {[key: string]: any, id?: string}): {[key: string]: any, _id?: mongoose.Types.ObjectId} {
+  return object;
   log(chalk.dim('rehydrate', object.id, Object.keys(object)));
   for (const prop of objectIdsProperties) {
     if (object[prop]) {
@@ -86,13 +98,14 @@ function rehydrate(object: {[key: string]: any, id?: string}): {[key: string]: a
   return object;
 }
 
-export async function saveModelItem(collection: string, object: {[key: string]: any, _id?: mongoose.Types.ObjectId}) {
+export async function saveModelItem(collection: string, object: {[key: string]: any, _id?: mongoose.Types.ObjectId}, options?: {time?: number}) {
     if (!object._id) {
         throw new Error('Missing object._id property');
     }
     object = prepareForSave(object);
     for (const key in object) {
       await hsetAsync(`${collection}:${object._id}`, key, object[key]);
+      client.expire(`${collection}:${object._id}`, options?.time || 3600 * 12);
     }
   }
 
@@ -104,18 +117,26 @@ export async function getModelItem(collection: string, id: string): Promise<any>
   return object;
 }
 
-export async function saveModelItems(key: string, objects: {[key: string]: any}[]) {
+export async function saveModelItems(key: string, objects: {[key: string]: any}[], options?: {primitive?: boolean, time?: number}) {
   log(chalk.dim('saveModelItems', key, objects.length, 'items'));
   await delAsync(key);
   for (const object of objects) {
-    const preparedObject = prepareForSave(object);
-    await lpushAsync(key, JSON.stringify(preparedObject));
+    if (options?.primitive) {
+        await lpushAsync(key, object);
+    } else {
+        const preparedObject = prepareForSave(object);
+        await lpushAsync(key, JSON.stringify(preparedObject));
+    }
   }
+  client.expire(key, options?.time || 3600 * 12);
 }
 
-export async function getModelItems(key: string) {
+export async function getModelItems(key: string, options?: {primitive: boolean}) {
   log(chalk.dim('getModelItems', key));
   const objects = await lrangeAsync(key, 0, -1);
+  if (options?.primitive) {
+      return objects;
+  }
   if (objects && objects.length) {
     log(chalk.magenta('found', objects.length, 'items'), chalk.dim('getModelItems', key))
     return objects.map((o) => {
