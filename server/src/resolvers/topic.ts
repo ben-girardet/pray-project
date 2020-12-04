@@ -212,7 +212,7 @@ export class TopicResolver {
       if (keys.includes(key)) {
           return;
       }
-      keys = [key];
+      keys.push(key);
       await saveModelItems(`${userId}:topics:cache-keys`, keys, {primitive: true});
   }
 
