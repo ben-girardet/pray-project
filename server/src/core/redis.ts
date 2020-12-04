@@ -40,6 +40,7 @@ export const delAsync = promisify(client.del).bind(client);
 
 export const lrangeAsync = promisify(client.lrange).bind(client);
 export const lpushAsync = promisify(client.lpush).bind(client);
+export const rpushAsync = promisify(client.rpush).bind(client);
 export const lremAsync = promisify(client.lrem).bind(client);
 export const llenAsync = promisify(client.llen).bind(client);
 export const hgetAsync = promisify(client.hget).bind(client);
@@ -72,20 +73,19 @@ function prepareForSave(object: {[key: string]: any}): {[key: string]: any} {
 }
 
 function rehydrate(object: {[key: string]: any, id?: string}): {[key: string]: any, _id?: mongoose.Types.ObjectId} {
-  return object;
   log(chalk.dim('rehydrate', object.id, Object.keys(object)));
-  for (const prop of objectIdsProperties) {
-    if (object[prop]) {
-      object[prop] = new mongoose.Types.ObjectId(object[prop]);
-      log(chalk.magenta(prop, ':', object[prop]));
-    }
-  }
-  for (const prop of dateProperties) {
-    if (object[prop]) {
-      object[prop] = moment(object[prop]).toDate();
-      log(chalk.magenta(prop, ':', object[prop]));
-    }
-  }
+//   for (const prop of objectIdsProperties) {
+//     if (object[prop]) {
+//       object[prop] = new mongoose.Types.ObjectId(object[prop]);
+//       log(chalk.magenta(prop, ':', object[prop]));
+//     }
+//   }
+//   for (const prop of dateProperties) {
+//     if (object[prop]) {
+//       object[prop] = moment(object[prop]).toDate();
+//       log(chalk.magenta(prop, ':', object[prop]));
+//     }
+//   }
   for (const prop of jsonProperties) {
     if (object[prop]) {
       object[prop] = JSON.parse(object[prop]);
@@ -112,7 +112,7 @@ export async function saveModelItem(collection: string, object: {[key: string]: 
 export async function getModelItem(collection: string, id: string): Promise<any> {
   const object = await hgetAllAsync(`${collection}:${id}`);
   if (object) {
-    rehydrate(object);
+    // rehydrate(object);
   }
   return object;
 }
@@ -122,10 +122,10 @@ export async function saveModelItems(key: string, objects: {[key: string]: any}[
   await delAsync(key);
   for (const object of objects) {
     if (options?.primitive) {
-        await lpushAsync(key, object);
+        await rpushAsync(key, object);
     } else {
         const preparedObject = prepareForSave(object);
-        await lpushAsync(key, JSON.stringify(preparedObject));
+        await rpushAsync(key, JSON.stringify(preparedObject));
     }
   }
   client.expire(key, options?.time || 3600 * 12);
