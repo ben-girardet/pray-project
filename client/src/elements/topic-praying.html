@@ -11,20 +11,23 @@
     </div>
     <img src="${topic.image[3].fileId | file}" if.bind="topic.image.length">
   </div>
-
-  <div class="content">
-
-    <h2>${topic.name}</h2>
-
-    <div class="topic-praying__buttons">
-    <fast-button appearance="accent" click.trigger="dispatchEvent('prayed')">
+  
+  <!-- <div class="topic-praying__buttons">
+    <fast-button appearance="accent" touchstart.trigger="dispatchEvent('prayed')" click.trigger="dispatchEvent('prayed')">
       <pray-icon slot="start" icon="Sparkles"></pray-icon>
       I just prayed
     </fast-button>
-    <fast-button appearance="lightweight" click.trigger="dispatchEvent('next')">
-      Skip this topic
+  </div> -->
+
+  <div class="content">
+    <h2>${topic.name}</h2>
+  </div>
+
+  <div class="praying-bottomview" ref="prayingBottom" touchstart.trigger="focusIfNot($event)" touchmove.trigger="stop($event)">
+    <textarea rows="1" placeholder="Write your message" ref="textarea" value.bind="message" input.delegate="messageChanged()"></textarea>
+    <fast-button appearance="lightweight" disabled.bind="!message" click.delegate="sendMessage()" touchstart.trigger="sendMessage()">
+      <pray-icon slot="start" icon="Annotation"></pray-icon>
     </fast-button>
-    </div>
   </div>
 
 

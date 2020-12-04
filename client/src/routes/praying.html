@@ -1,10 +1,10 @@
 <fast-design-system-provider class="praying playlist" background-color="#16615F">
   <div class="playlist-container" ref="playlistContainer" css="width: 100%; height: 100%;">
     <div class="topic-container ${currentTopicTop === 1 ? 'current-topic':''}" ref="topic1Element" if.bind="playlist[topic1Index]">
-      <topic-praying topic-id.bind="playlist[topic1Index].id" next.delegate="next()" prayed.delegate="prayed()" close.trigger="close()"></topic-praying>
+      <topic-praying topic-id.bind="playlist[topic1Index].id" next.delegate="next()" prayed.delegate="prayed(true)" close.trigger="close()"></topic-praying>
     </div>
     <div class="topic-container ${currentTopicTop === 2 ? 'current-topic':''}" ref="topic2Element" if.bind="playlist[topic2Index]">
-      <topic-praying topic-id.bind="playlist[topic2Index].id" next.delegate="next()" prayed.delegate="prayed()" close.trigger="close()"></topic-praying>
+      <topic-praying topic-id.bind="playlist[topic2Index].id" next.delegate="next()" prayed.delegate="prayed(true)" close.trigger="close()"></topic-praying>
     </div>
   </div>
   <!-- <topic-praying if.bind="activeTopics.length > 0" topic-id.bind="activeTopics[currentTopicIndex].id" next.delegate="next()" prayed.delegate="prayed()"></topic-praying> -->

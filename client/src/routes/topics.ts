@@ -32,6 +32,9 @@ export class Topics implements IRouteableComponent, IViewModel {
     this.events.push(this.eventAggregator.subscribe('topic-detail-out', async () => {
       await this.getTopics();
     }));
+    this.events.push(this.eventAggregator.subscribe('praying-out', async () => {
+      await this.getTopics();
+    }));
 
     // trying watch version
     // this.setWatch();

@@ -104,7 +104,6 @@ export class Register implements IRouteableComponent, IViewModel {
         const imageData = await this.avatar.imageService.publish();
         if (imageData !== 'no-change') {
           editUserData.picture = [
-            {fileId: imageData.smallB64, width: 40, height: 40},
             {fileId: imageData.small, width: 40, height: 40},
             {fileId: imageData.medium, width: 100, height: 1000},
             {fileId: imageData.large, width: 1000, height: 1000},

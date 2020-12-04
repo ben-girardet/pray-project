@@ -24,11 +24,11 @@ const styles = css`
     z-index: 10;
   }
   :host(.success) {
-    background: #00FF00;
+    background: var(--accent-color);
     color: #FFFFFF;
   }
   :host(.error) {
-    background: #FF0000;
+    background: #BE2D39;
     color: #FFFFFF;
   }
 `.withBehaviors(neutralFillRestBehavior, neutralForegroundRestBehavior);

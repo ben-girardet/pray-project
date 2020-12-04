@@ -5,11 +5,11 @@ export class FileValueConverter {
     if (!filename || (Array.isArray(filename) && filename.length === 0)) {
       return '';
     }
+    let maxImage = '';
     if (Array.isArray(filename)) {
-      const width = imageWidth ? 10000 : parseInt(imageWidth, 10);
-      const height = imageHeight ? 10000 : parseInt(imageHeight, 10);
+      const width = imageWidth !== '0' ? parseInt(imageWidth, 10) : 10000;
+      const height = imageHeight !== '0' ? parseInt(imageHeight, 10) : 10000;
       let maxWidth = 0;
-      let maxImage = '';
       for (const image of filename) {
         if (image.width >= width && image.height >= height) {
           filename = image.fileId;
@@ -20,12 +20,12 @@ export class FileValueConverter {
           maxImage = image.fileId;
         }
       }
-      if (Array.isArray(filename)) {
-        if (maxImage) {
-          filename = maxImage;
-        } else {
-          return '';
-        }
+    }
+    if (Array.isArray(filename)) {
+      if (maxImage) {
+        filename = maxImage;
+      } else {
+        return '';
       }
     }
     if (typeof filename === 'string' && filename.substr(0, 4) === 'api:') {

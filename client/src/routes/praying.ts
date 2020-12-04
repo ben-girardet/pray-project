@@ -149,18 +149,22 @@ export class Praying implements IRouteableComponent, IViewModel {
     return decryptedTopics;
   }
 
-  public next() {
-    if (this.currentTopicIndex === this.playlist.length - 1) {
-      this.close();
-      return;
-    }
-    this.currentTopicIndex++;
-  }
+  // public next() {
+  //   if (this.currentTopicIndex === this.playlist.length - 1) {
+  //     this.close();
+  //     return;
+  //   }
+  //   this.currentTopicIndex++;
+  // }
 
-  public async prayed(index: number) {
+  public async prayed(fromTerminateAction = true) {
     try {
-      const prayed = await pray(this.playlist[this.currentTopicIndex].id);
-      this.next();
+      const index = Math.min(this.topic1Index, this.topic2Index);
+      const prayed = await pray(this.playlist[index].id);
+      this.touchAction = 'prayed';
+      if (!fromTerminateAction) {
+        this.terminateAction(true);
+      }
     } catch (error) {
       AppNotification.notify(error.message, 'error');
     }
@@ -250,7 +254,7 @@ export class Praying implements IRouteableComponent, IViewModel {
     });
   }
 
-  private terminateAction() {
+  private terminateAction(onlyMovement = false) {
     let increment = 40;
     requestAnimationFrame(() => {
       if (this.touchAction === 'prayed') {
@@ -258,8 +262,10 @@ export class Praying implements IRouteableComponent, IViewModel {
           this.deltaY += increment;
           this.deltaYChanged();
           this.terminateAction();
-        } else {
-          this.confirmAction('Prayed');
+        } else { 
+          if (!onlyMovement) {
+            this.prayed();
+          }
           this.enableNextTopic();
         }
       }
@@ -279,23 +285,15 @@ export class Praying implements IRouteableComponent, IViewModel {
           this.deltaXChanged();
           this.terminateAction();
         } else {
-          this.confirmAction('Skipped');
+          this.skipped();
           this.enableNextTopic();
         }
       }
     });
   }
 
-  private async confirmAction(action: 'Prayed' | 'Skipped') {
-
-    const index = Math.min(this.topic1Index, this.topic2Index);
-    if (action === 'Prayed') {
-      await this.prayed(index);
-      // TODO: add viewedBy from the current user
-      // TODO: log prayed
-    } else {
-      // TODO: log skipped
-    }
+  private skipped() {
+    // TODO: log skipped
   }
 
   private enableNextTopic() {
