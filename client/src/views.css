@@ -190,3 +190,8 @@ html.detail au-viewport[name=detail] {
 .head__right pray-icon {
   margin-left: 8px;
 }
+
+.head fast-button::part(control),
+.bottom-headview fast-button::part(control) {
+  font-size: 16px;
+}
