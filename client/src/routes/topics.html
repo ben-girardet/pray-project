@@ -4,10 +4,10 @@
   </div>
   <div class="list-content-head">
     <div style="display: flex; align-items: center; justify-content: space-between;">
-      <fast-tabs change.trigger="tabChanged($event)">
-        <fast-tab id="active">Active</fast-tab>
-        <fast-tab id="answered" class="${archivedTopics.length > 0 ? '':'disabled'}">Answered</fast-tab>
-        <fast-tab id="archived" class="${archivedTopics.length > 0 ? '':'disabled'}">Archived</fast-tab>
+      <fast-tabs change.trigger="tabChanged($event)" activeid.bind="activeTab">
+        <fast-tab id="active" ref="activeTopicsTabElement">Active</fast-tab>
+        <fast-tab class="${answeredTopics.length > 0 ? '':'disabled'}" id="answered">Answered</fast-tab>
+        <fast-tab class="${archivedTopics.length > 0 ? '':'disabled'}" id="archived">Archived</fast-tab>
         <fast-tab-panel id="activePanel">
         </fast-tab-panel>
         <fast-tab-panel id="answeredPanel">

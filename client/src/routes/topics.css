@@ -29,3 +29,7 @@
 .topics topic-preview:first-of-type {
   border-top: none;
 }
+fast-tab.disabled {
+  pointer-events: none;
+  opacity: 0.5;
+}

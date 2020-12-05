@@ -14,7 +14,8 @@ export class Topics implements IRouteableComponent, IViewModel {
   private archivedTopics: ITopic[] = [];
   private events: IDisposable[] = [];
   private logger: ILogger;
-  public activeTab = 'active';
+  public activeTab: 'active' | 'answered' | 'archived' = 'active';
+  public activeTopicsTabElement: HTMLElement;
 
   public constructor(
     private eventAggregator: EventAggregator, 
@@ -31,6 +32,12 @@ export class Topics implements IRouteableComponent, IViewModel {
     }));
     this.events.push(this.eventAggregator.subscribe('topic-detail-out', async () => {
       await this.getTopics();
+      if (this.activeTab === 'archived' && this.archivedTopics.length === 0) {
+        this.activeTopicsTabElement.click();
+      }
+      if (this.activeTab === 'answered' && this.answeredTopics.length === 0) {
+        this.activeTopicsTabElement.click();
+      }
     }));
     this.events.push(this.eventAggregator.subscribe('praying-out', async () => {
       await this.getTopics();
