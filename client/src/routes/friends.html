@@ -9,6 +9,8 @@
 
 <div class="bottom-contentview">
 
+  <p if.bind="friends.length === 0" style="color: #666; font-size: 18px; margin: 32px;">Click the Add button to search for your friends. Then you'll be able to share your prayer topics with them.</p>
+
   <template if.bind="requests.length">
     <p>Friend Requests</p>
     <div class="user-list">

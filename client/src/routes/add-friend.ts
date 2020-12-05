@@ -9,7 +9,13 @@ import { Friend } from './friends';
 export class AddFriend implements IRouteableComponent, IViewModel {
 
   public found: Friend[] = [];
-  public emailOrMobile: string;
+  public emailOrMobile: string = '';
+
+  public attached() {
+    setTimeout(() => {
+      this.emailOrMobile = '';
+    }, 100)
+  }
 
   public async search(): Promise<Friend[]> {
     const result = await client.query<{users: {id: string, firstname: string, lastname: string, picture: {fileId: string, width: number, height: number}[]}[]}>({query: gql`query {users(search: "${this.emailOrMobile}") {id, firstname, lastname, picture {fileId, width, height}, friendshipStatus}}`, fetchPolicy: 'network-only'});
