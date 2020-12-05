@@ -112,6 +112,7 @@ Login is now pretty well in place. Now is the time to improve the topic experien
 - [x] Upgrade to latest FAST
 - [x] Mark prayer as answered
 - [x] Nicer head buttons
+- [x] Only send "my" topics when fetching archived topics
 - [ ] Nicer topic form
 
 ## Next 
@@ -123,3 +124,4 @@ Login is now pretty well in place. Now is the time to improve the topic experien
 - [ ] Change password
 - [ ] Optimize bundles with code splitting (https://webpack.js.org/guides/code-splitting/)
 - [ ] Add a "viewedBy" property to topic, messages and prayers model so we can add personalised notifications based on who viewed what
+- [ ] Create more realistic tests scenario including user registration and increased users friendships

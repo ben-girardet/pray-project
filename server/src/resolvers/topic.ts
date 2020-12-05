@@ -19,8 +19,9 @@ export class TopicResolver {
   public async topics(@Ctx() context: Context, @Arg('sort', {nullable: true}) sort: SortBy, @Arg('status', {nullable: true}) status: String) {
     // Add a test of what is happening when login fails
     const userId = new mongoose.Types.ObjectId(context.user.userId);
+    const userIdString = userId.toString();
     const cacheKey = `status:${status};sort:${JSON.stringify(sort)}`;
-    const cacheValue = await getModelItems(this.computeTopicsCacheKey(userId.toString(), cacheKey));
+    const cacheValue = await getModelItems(this.computeTopicsCacheKey(userIdString, cacheKey));
     if (cacheValue) {
         return cacheValue.map((cv) => {
             const obj = new TopicModel(cv);
@@ -40,9 +41,17 @@ export class TopicResolver {
     for (const topic of topics) {
         topic.setMyShare(userId);
     }
-    const objects = topics.map(t => t.toObjectWithMyShare());
-    await saveModelItems(this.computeTopicsCacheKey(userId.toString(), cacheKey), objects, {time: 60 * 30});
-    await this.registerTopicsCacheKeyForUser(userId.toString(), cacheKey);
+    const objects = topics.filter((topic) => {
+        // if topic is archived, only keep mine
+        if (topic.status === 'archived') {
+            if (topic.myShare?.userId.toHexString() !== userIdString) {
+                return false;
+            }
+        }
+        return true;
+    }).map(t => t.toObjectWithMyShare());
+    await saveModelItems(this.computeTopicsCacheKey(userIdString, cacheKey), objects, {time: 60 * 30});
+    await this.registerTopicsCacheKeyForUser(userIdString, cacheKey);
     return objects;
   }
 
