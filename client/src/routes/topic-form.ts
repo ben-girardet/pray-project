@@ -33,6 +33,7 @@ export class TopicForm implements IRouteableComponent, IViewModel {
   public originalImageUrl: string;
   public croppie: Croppie;
   public illustrateWith: 'color' | 'picture' = 'color';
+  public status: 'active' | 'answered' | 'archived' = 'active';
   public nameElement: HTMLElement;
 
   public constructor(@IRouter private router: IRouter, private imageService: ImageService) {
@@ -60,6 +61,7 @@ export class TopicForm implements IRouteableComponent, IViewModel {
         this.illustrateWith = 'picture';
       }
       this.myShare = topic.myShare;
+      this.status = topic.status;
       setTimeout(() => {
         this.name = topic.name;
       }, 300);
@@ -83,7 +85,7 @@ export class TopicForm implements IRouteableComponent, IViewModel {
       const topic: Topic = {
         name: this.name,
         color: this.color,
-        status: 'active'
+        status: this.status
       };
       if (this.topicId) topic.id = this.topicId;
       if (this.illustrateWith === 'picture') {
