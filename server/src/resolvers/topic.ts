@@ -42,9 +42,9 @@ export class TopicResolver {
         topic.setMyShare(userId);
     }
     const objects = topics.filter((topic) => {
-        // if topic is archived, only keep mine
+        // if topic is archived, only keep those where I'm owner
         if (topic.status === 'archived') {
-            if (topic.myShare?.userId.toHexString() !== userIdString) {
+            if (topic.myShare?.role !== 'owner') {
                 return false;
             }
         }

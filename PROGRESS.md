@@ -112,7 +112,8 @@ Login is now pretty well in place. Now is the time to improve the topic experien
 - [x] Upgrade to latest FAST
 - [x] Mark prayer as answered
 - [x] Nicer head buttons
-- [x] Only send "my" topics when fetching archived topics
+- [x] If topic is archived, only keep those where I'm owner
+- [ ] Create a nice flag for answered topics (so they can be clearly identified)
 - [ ] Nicer topic form
 
 ## Next 
