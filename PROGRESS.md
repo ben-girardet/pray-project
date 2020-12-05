@@ -110,7 +110,9 @@ Login is now pretty well in place. Now is the time to improve the topic experien
 ## 05.12.2020 
 
 - [x] Upgrade to latest FAST
-- [ ] Mark prayer as answered
+- [x] Mark prayer as answered
+- [x] Nicer head buttons
+- [ ] Nicer topic form
 
 ## Next 
 
