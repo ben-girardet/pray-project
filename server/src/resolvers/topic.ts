@@ -125,6 +125,14 @@ export class TopicResolver {
     originalTopic.color = data.color !== undefined ? data.color : originalTopic.color;
     originalTopic.status = data.status !== undefined ? data.status : originalTopic.status;
 
+    if (data.status === 'answered') {
+        originalTopic.answeredAt = new Date();
+    } else if (data.status === 'active' || data.status === 'archived') {
+        originalTopic.answeredAt = undefined;
+    }
+
+
+
     const updatedTopic = await originalTopic.save();
     const updatedTopicInstance = new TopicModel(updatedTopic);
     await saveModelItem('topic', updatedTopicInstance.toObject());

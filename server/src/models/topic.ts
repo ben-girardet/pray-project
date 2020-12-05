@@ -32,7 +32,11 @@ export class Topic implements ITopic {
 
     @Field(() => String, {defaultValue: 'active'})
     @prop({default: 'active', index: true})
-    status: 'active' | 'answered' | 'archived' = 'active'
+    status: 'active' | 'answered' | 'archived' = 'active';
+
+    @Field(() => Date)
+    @prop()
+    public answeredAt?: Date;
 
     // @Field(() => User)
     @prop({ref: () => User, index: true})
