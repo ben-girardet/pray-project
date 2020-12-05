@@ -29,16 +29,13 @@ export class Login implements IRouteableComponent, IViewModel {
     setTimeout(() => {
       const username = window.localStorage.getItem('sun_un');
       if (username) {
-        console.log('username', username);
         this.username = username;
         const pwd_el = document.querySelector('#login_password');
-        console.log('pwd_el', pwd_el);
         if (pwd_el instanceof HTMLElement) {
           pwd_el.focus();
         }
       } else {
         const un_el = document.querySelector('#login_username');
-        console.log('un_el', un_el);
         if (un_el instanceof HTMLElement) {
           un_el.focus();
         }

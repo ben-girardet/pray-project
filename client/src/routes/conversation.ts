@@ -202,7 +202,6 @@ export class Conversation implements IRouteableComponent, IViewModel {
 
     }
     this.dayGroups = dayGroups;
-    console.log('this.dayGroups', this.dayGroups);
   }
 
   
