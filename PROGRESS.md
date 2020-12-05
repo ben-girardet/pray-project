@@ -72,9 +72,8 @@ Login is now pretty well in place. Now is the time to improve the topic experien
 
 - [x] Identify issue with dirty-checker when updating to latest Aurelia
 - [x] Open up an issue if needed, reach for help
-- [ ] Identify issue with Safari and latest update of fast (fast-provider)
-- [ ] Open up an issue if needed, reach for help
-
+- [x] Identify issue with Safari and latest update of fast (fast-provider)
+- [x] Open up an issue if needed, reach for help
 
 ## 26.11.2020 - Several things
 
@@ -94,16 +93,25 @@ Login is now pretty well in place. Now is the time to improve the topic experien
 - [x] Make preview work with the right datas (except prayer)
 - [x] Memorize previous username for fast login
 
-## Prayer Model
+## 29.11.2020 Prayer Model
 
 - [x] Define prayer model
 - [x] Display prayers inside conversation
 - [x] Add tests for prayers
 
-## Praying View (playlist)
+## 01.12.2020 Praying View (playlist)
 
-- [ ] Playlist with nice navigation (the cool thing from previous app was that when you mention that you pray you automatically get the next topic)
+- [x] Playlist with nice navigation (the cool thing from previous app was that when you mention that you pray you automatically get the next topic)
+
+## 02.12.2020 Server cache with Redis
+
+- [x] Add a cache layer with redis (https://medium.com/@haimrait/how-to-add-a-redis-cache-layer-to-mongoose-in-node-js-a9729181ad69)
+
+## 05.12.2020 
+
+- [x] Upgrade to latest FAST
 - [ ] Mark prayer as answered
+
 ## Next 
 
 - [ ] Ensure a nice register process
@@ -111,6 +119,5 @@ Login is now pretty well in place. Now is the time to improve the topic experien
 - [ ] Work on Profile page so we can
 - [ ] Edit current profile avatar, name
 - [ ] Change password
-- [ ] Add a cache layer with redis (https://medium.com/@haimrait/how-to-add-a-redis-cache-layer-to-mongoose-in-node-js-a9729181ad69)
 - [ ] Optimize bundles with code splitting (https://webpack.js.org/guides/code-splitting/)
 - [ ] Add a "viewedBy" property to topic, messages and prayers model so we can add personalised notifications based on who viewed what
