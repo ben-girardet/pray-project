@@ -23,6 +23,9 @@
     </div>
 
     <h2>${topic.name}</h2>
+    <p class="answered-at" if.bind="topic.status === 'answered'">
+      <pray-icon icon="CheckCircle" size="sm"></pray-icon>Answered ${topic.answeredAt | date:'nice'}
+    </p>
 
     <fast-button class="full-width" load="../conversation(topicId=${topicId})" appearance="neutral" style="margin-bottom: 4px;">
       <pray-icon slot="start" icon="ChatAlt"></pray-icon>

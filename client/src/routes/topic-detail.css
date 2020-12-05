@@ -29,3 +29,15 @@
 .topic-detail .content p {
   text-align: center;
 }
+.answered-at {
+  font-size: 12px;
+  color: var(--accent-color);
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  width: 100%;
+  justify-content: center;
+}
+.answered-at > pray-icon {
+  margin-right: 4px;
+}
