@@ -2,6 +2,26 @@
   display: flex;
   flex-direction: row;
 }
+.topic-form-name {
+  display: flex;
+  width: 100%;
+}
+.topic-form-name mini-user {
+  flex-shrink: 0;
+  margin: 8px
+}
+.topic-form-name textarea {
+  width: 100%;
+  min-height: 200px;
+  border: none;
+  outline: none;
+  background: var(--body-color);
+  color: var(--main-content-color);
+  font-family: var(--content-font);
+  font-size: 18px;
+  padding: 12px 8px;
+  -webkit-appearance: none;
+}
 .topic-form__image-preview {
   width: 100px;
   height: 120px;

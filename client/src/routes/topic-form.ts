@@ -62,9 +62,7 @@ export class TopicForm implements IRouteableComponent, IViewModel {
       }
       this.myShare = topic.myShare;
       this.status = topic.status;
-      setTimeout(() => {
-        this.name = topic.name;
-      }, 300);
+      this.name = topic.name;
     }
   }
 

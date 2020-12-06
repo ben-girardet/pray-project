@@ -113,11 +113,12 @@ Login is now pretty well in place. Now is the time to improve the topic experien
 - [x] Mark prayer as answered
 - [x] Nicer head buttons
 - [x] If topic is archived, only keep those where I'm owner
-- [ ] Create a nice flag for answered topics (so they can be clearly identified)
-- [ ] Nicer topic form
+- [x] Create a nice flag for answered topics (so they can be clearly identified)
+- [x] Nicer topic form
 
 ## Next 
 
+- [ ] Import data from previous app
 - [ ] Ensure a nice register process
 - [ ] Stack AppNotifications (so we can see several)
 - [ ] Work on Profile page so we can
