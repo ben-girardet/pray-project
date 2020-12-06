@@ -115,18 +115,17 @@ Login is now pretty well in place. Now is the time to improve the topic experien
 - [x] If topic is archived, only keep those where I'm owner
 - [x] Create a nice flag for answered topics (so they can be clearly identified)
 - [x] Nicer topic form
+- [x] Work on Profile page so we can edit current profile avatar, name
 
 ## Next 
 
 - [ ] Work on apollo cache, basically use it more and remove cached elements on edit. Must also set some expire so we make sure we give the data a chance to be updated
 - [ ] Work on the TODO's
 - [ ] Import data from previous app
-- [ ] Ensure a nice register process
-- [ ] Stack AppNotifications (so we can see several)
-- [ ] Work on Profile page so we can
-- [ ] Edit current profile avatar, name
-- [ ] Change password
-- [ ] Optimize bundles with code splitting (https://webpack.js.org/guides/code-splitting/)
+- [ ] Work on Profile page so we can edit current profile avatar, nameEnsure a nice register process
+- [ ] Work on Profile page so we can edit current profile avatar, nameStack AppNotifications (so we can see several)
+- [ ] Work on Profile page so we can edit current profile avatar, nameChange password
+- [ ] Optimize bundles with code splitting (https://webpack.js.org/guides/code-splitting/)
 - [ ] Add a "viewedBy" property to topic, messages and prayers model so we can add personalised notifications based on who viewed what
 - [ ] Create more realistic tests scenario including user registration and increased users friendships
 - [ ] Help tooltips
