@@ -5,6 +5,7 @@ import { ImageService } from '../services/internals';
 export class AvatarSelection {
 
   @bindable({mode: BindingMode.twoWay}) public profilePic: string;
+  @bindable public original: string = '';
 
   public avatar = 'liquid1';
 
@@ -21,6 +22,12 @@ export class AvatarSelection {
     };
     this.imageService.onSelect = () => {
       this.selectAvatar('image');
+    }
+  }
+
+  public bound(): void {
+    if (this.original) {
+      this.avatar = 'original';
     }
   }
 

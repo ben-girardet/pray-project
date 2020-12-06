@@ -103,7 +103,7 @@ export class MyApp implements IViewModel {
       }
       return true;
     }, {
-      include: ['praying', '-', 'topic-form', 'topic-detail', 'conversation', 'sharing', 'friends']
+      include: ['praying', '-', 'topic-form', 'topic-detail', 'conversation', 'sharing', 'friends', 'edit-profile']
     });
   }
 

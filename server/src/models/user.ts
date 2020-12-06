@@ -7,7 +7,7 @@ import { config, RoleType } from '../core/config';
 import moment from 'moment';
 import { Image } from './image';
 import { Context } from '../resolvers/context-interface';
-import { FriendshipModel } from "./friendship";
+import { FriendshipModel, Friendship } from "./friendship";
 import { saveModelItem, getModelItem } from '../core/redis';
 
 export interface RefreshTokenData {
@@ -98,8 +98,32 @@ export class User implements IUser {
   @prop()
   public updatedAt: Date;
 
+  @Field(() => [Friendship])
+  public async friendships(@Ctx() context: Context) {
+    // TODO: add cache
+    const userId = new mongoose.Types.ObjectId(context.user.userId);
+    const friendships = await FriendshipModel.find({$or: [
+        {user1: userId},
+        {user2: userId}
+    ]});
+    const objects = friendships.map(f => f.toObject());
+    return objects;
+  }
+
+  @Field(() => Number)
+  public async nbFriends(@Ctx() context: Context) {
+    // TODO: add cache
+    const userId = new mongoose.Types.ObjectId(context.user.userId);
+    const nbFriends = await FriendshipModel.find({$or: [
+        {user1: userId},
+        {user2: userId}
+    ]}).count()
+    return nbFriends;
+  }
+
   @Field(() => String, {nullable: true})
   public async friendshipStatus(@Ctx() context: Context) {
+    // TODO: add cache
     if (!context.locals.friendships) {
       context.locals.friendships = {};
       // fetch friendships and store them in the context

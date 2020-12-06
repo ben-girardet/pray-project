@@ -5,6 +5,7 @@ import { Context } from './context-interface';
 import mongoose from 'mongoose';
 import { EditMeInput } from './inputs/user';
 import { FriendshipModel } from "../models/friendship";
+import { removeModelItem } from "../core/redis";
 
 // TODO: in any edit user resolver
 // we must ensure to del the hash in redis
@@ -101,6 +102,7 @@ export class UserResolver {
       user.picture = data.picture;
     }
 
+    removeModelItem('user', user._id.toString());
     const updatedUser = await user.save();
     const updatedUserInstance = new UserModel(updatedUser);
     return updatedUserInstance.toObject();

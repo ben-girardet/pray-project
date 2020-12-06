@@ -118,6 +118,8 @@ Login is now pretty well in place. Now is the time to improve the topic experien
 
 ## Next 
 
+- [ ] Work on apollo cache, basically use it more and remove cached elements on edit. Must also set some expire so we make sure we give the data a chance to be updated
+- [ ] Work on the TODO's
 - [ ] Import data from previous app
 - [ ] Ensure a nice register process
 - [ ] Stack AppNotifications (so we can see several)
@@ -127,3 +129,5 @@ Login is now pretty well in place. Now is the time to improve the topic experien
 - [ ] Optimize bundles with code splitting (https://webpack.js.org/guides/code-splitting/)
 - [ ] Add a "viewedBy" property to topic, messages and prayers model so we can add personalised notifications based on who viewed what
 - [ ] Create more realistic tests scenario including user registration and increased users friendships
+- [ ] Help tooltips
+- [ ] Allow owner to give "owner" role on their topics

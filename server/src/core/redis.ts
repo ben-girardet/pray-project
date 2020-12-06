@@ -117,6 +117,10 @@ export async function getModelItem(collection: string, id: string): Promise<any>
   return object;
 }
 
+export async function removeModelItem(collection: string, id: string): Promise<any> {
+    await delAsync(`${collection}:${id}`);
+}
+
 export async function saveModelItems(key: string, objects: {[key: string]: any}[], options?: {primitive?: boolean, time?: number}) {
   log(chalk.dim('saveModelItems', key, objects.length, 'items'));
   await delAsync(key);

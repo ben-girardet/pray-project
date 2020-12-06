@@ -1,6 +1,7 @@
 <import from="../cropping.css"></import>
 
 <div class="avatar-selection">
+  <img class="${avatar === 'original' ? 'selected':''}" src="${original | file}" if.bind="original" click.delegate="selectAvatar('original')" />
   <div class="placeholder" if.bind="!imageService.mediumB64" click.delegate="selectImage()">
     <pray-icon icon="Plus" size="sm"></pray-icon>
   </div>
@@ -12,7 +13,7 @@
 
 <div class="input-file-container" ref="inputFileContainer"></div>
 
-<div class="topic-image-cropping ${imageService.cropping ? '' : 'hidden'}" ref="croppieElement">
+<div class="image-cropping ${imageService.cropping ? '' : 'hidden'}" ref="croppieElement">
   <div class="head on-image">
     <span class="head__left" click.delegate="imageService.cancelImage()">
       <pray-icon icon="ArrowLeft" weight="2"></pray-icon>

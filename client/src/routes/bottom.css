@@ -37,3 +37,6 @@
   overflow-y: auto;
   padding: 16px;
 }
+.bottom-contentview.full-height {
+  top: 0;
+}

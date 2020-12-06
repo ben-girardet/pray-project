@@ -5,33 +5,17 @@
     <img src="images/avatars/liquid1.gif" if.bind="!user.picture.length">
     <div>
       <div class="name">${user.firstname} ${user.lastname}</div>
-      <div class="details">
-        <div class="detail">
-          <div>14</div>
-          <div>Topics</div>
-        </div>
-        <div class="detail">
-          <div>25</div>
-          <div>Messages</div>
-        </div>
-        <div class="detail" load="../friends">
-          <div>6</div>
-          <div>Friends</div>
-        </div>
-      </div>
+      <fast-button appearance="lightweight" load="../edit-profile">Edit Profile</fast-button>
     </div>
   </div>
 
   <fast-divider style="margin: 32px 0;"></fast-divider>
 
   <fast-menu>
-    <fast-menu-item>
-      <pray-icon icon="User" slot="start"></pray-icon>
-      My Account
-    </fast-menu-item>
     <fast-menu-item load="../friends">
       <pray-icon icon="Users" slot="start"></pray-icon>
       Friends
+      <fast-badge slot="end" fill="secondary" color="white" circular if.bind="user.nbFriends > 0">${user.nbFriends}</fast-badge>
     </fast-menu-item>
     <fast-menu-item>
       <pray-icon icon="TrendingUp" slot="start"></pray-icon>

@@ -15,6 +15,8 @@ export class TopicPrayersResolver /*implements ResolverInterface<Topic>*/ {
 
     @FieldResolver(() => Number)
     public async nbPrayers(@Root() topic: Topic) {
+        // TODO: improve by only fetching the number and not all the prayers
+        // of course caching the number in a different redis key
         const prayers = await PrayerModel.findTopicPrayersWithCache(topic._id);
         return prayers.length;
     }

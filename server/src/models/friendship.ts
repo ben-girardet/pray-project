@@ -49,6 +49,7 @@ export class Friendship implements IFriendship {
 
     @Field(() => User, {nullable: true})
     public async friend(@Ctx() context: Context) {
+        // TODO: add cache
         const user1String = this.user1?.toString();
         let user: any;
         if (user1String === context.user.userId) {

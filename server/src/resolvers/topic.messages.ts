@@ -15,6 +15,8 @@ export class TopicMessagesResolver /*implements ResolverInterface<Topic>*/ {
 
     @FieldResolver(() => Number)
     public async nbMessages(@Root() topic: Topic) {
+        // TODO: improve by only fetching the number and not all the messages
+        // of course caching the number in a different redis key
         const messages = await MessageModel.findTopicMessagesWithCache(topic._id);
         return messages.length;
     }
