@@ -16,6 +16,7 @@ import { mongo } from 'mongoose';
 // => re-compute the full list with getModelItem on each element
 // Check with a benchmark if this idea is beneficial or not
 
+const enableCache = true;
 const logCache = false;
 
 const host = process.env.REDIS_HOST as string ?? '127.0.0.1';
@@ -99,6 +100,9 @@ function rehydrate(object: {[key: string]: any, id?: string}): {[key: string]: a
 }
 
 export async function saveModelItem(collection: string, object: {[key: string]: any, _id?: mongoose.Types.ObjectId}, options?: {time?: number}) {
+    if (!enableCache) {
+        return;
+    }
     if (!object._id) {
         throw new Error('Missing object._id property');
     }
@@ -110,18 +114,27 @@ export async function saveModelItem(collection: string, object: {[key: string]: 
   }
 
 export async function getModelItem(collection: string, id: string): Promise<any> {
+    if (!enableCache) {
+        return null;
+    }
   const object = await hgetAllAsync(`${collection}:${id}`);
   if (object) {
-    // rehydrate(object);
+    rehydrate(object);
   }
   return object;
 }
 
 export async function removeModelItem(collection: string, id: string): Promise<any> {
+    if (!enableCache) {
+        return;
+    }
     await delAsync(`${collection}:${id}`);
 }
 
 export async function saveModelItems(key: string, objects: {[key: string]: any}[], options?: {primitive?: boolean, time?: number}) {
+    if (!enableCache) {
+        return;
+    }
   log(chalk.dim('saveModelItems', key, objects.length, 'items'));
   await delAsync(key);
   for (const object of objects) {
@@ -136,6 +149,9 @@ export async function saveModelItems(key: string, objects: {[key: string]: any}[
 }
 
 export async function getModelItems(key: string, options?: {primitive: boolean}) {
+    if (!enableCache) {
+        return null;
+    }
   log(chalk.dim('getModelItems', key));
   const objects = await lrangeAsync(key, 0, -1);
   if (options?.primitive) {

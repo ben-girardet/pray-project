@@ -1,8 +1,9 @@
 // TODO: fix missing User model
 import { gql } from 'apollo-boost';
-import { bindable, IDisposable, EventAggregator } from 'aurelia';
+import { bindable, IDisposable, EventAggregator,  ILogger } from 'aurelia';
 import { client } from '../apollo';
 import { User } from 'shared/types/user';
+
 export class MiniUser {
   @bindable userId: string;
 
@@ -14,9 +15,13 @@ export class MiniUser {
   @bindable private size: 'small' | 'medium' | 'large' = 'medium';
 
   private events: IDisposable[] = [];
+  private log: ILogger;
 
-  public constructor(private eventAggregator: EventAggregator) {
+  public static index = 0;
 
+  public constructor(private eventAggregator: EventAggregator, @ILogger logger: ILogger) {
+    MiniUser.index++; 
+    this.log = logger.scopeTo(`mini-user-${MiniUser.index}`);
   }
 
   public attached(): void {
