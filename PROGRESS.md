@@ -117,6 +117,12 @@ Login is now pretty well in place. Now is the time to improve the topic experien
 - [x] Nicer topic form
 - [x] Work on Profile page so we can edit current profile avatar, name
 
+
+## 07.12.2020 - Apollo Cache improvements
+
+- [ ] Do some research on possible cache patterns
+- [ ] Save edited topic when submitting updates
+
 ## Next 
 
 - [ ] Work on apollo cache, basically use it more and remove cached elements on edit. Must also set some expire so we make sure we give the data a chance to be updated
@@ -130,3 +136,4 @@ Login is now pretty well in place. Now is the time to improve the topic experien
 - [ ] Create more realistic tests scenario including user registration and increased users friendships
 - [ ] Help tooltips
 - [ ] Allow owner to give "owner" role on their topics
+- [ ] Cache images
