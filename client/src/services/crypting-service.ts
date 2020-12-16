@@ -48,6 +48,11 @@ query UserPubKey($id: String!) {
     const publicKey = user.data.user.publicKey;
     const contentKey = await apolloAuth.decrypt(topic.myShare.encryptedContentKey, publicKey);
     CryptingService.decryptObject(topic, ['name'], contentKey);
+    if (topic.messages) {
+      for (const message of topic.messages) {
+        CryptingService.decryptObject(message, ['text'], contentKey);
+      }
+    }
     Reflect.defineMetadata('decrypted', true, topic);
   }
 
@@ -80,6 +85,22 @@ query UserPubKey($id: String!) {
     topic.encryptedContentKey = await apolloAuth.encrypt(contentKey, publicKey);
     CryptingService.encryptObject(topic, ['name'], contentKey);
     return topic as {[key: string]: any, encryptedContentKey: string};
+  }
+
+  public static async encryptNewMessage(topic: {[key: string]: any}, message: string): Promise<string> {
+    const user = await client.query<{user: {publicKey: string}}>({query: gql`
+query UserPubKey($id: String!) {
+  user(id: $id) {
+    id,
+    publicKey
+  }
+}
+    `, variables: {id: topic.myShare.encryptedBy}});
+    const publicKey = user.data.user.publicKey;
+    const contentKey = await apolloAuth.decrypt(topic.myShare.encryptedContentKey, publicKey);
+    const messageObject = {text: message};
+    CryptingService.encryptObject(messageObject, ['text'], contentKey);
+    return messageObject.text;
   }
 
   public static async recryptContentKeyFor(myShare: {encryptedContentKey?: string, encryptedBy?: string}, userId: string) {

@@ -9,9 +9,9 @@ import { getTopics } from '../commands/topic';
 
 export class Topics implements IRouteableComponent, IViewModel {
 
-  private activeTopics: ITopic[] = [];
-  private answeredTopics: ITopic[] = [];
-  private archivedTopics: ITopic[] = [];
+  public activeTopics: ITopic[] = [];
+  public answeredTopics: ITopic[] = [];
+  public archivedTopics: ITopic[] = [];
   private events: IDisposable[] = [];
   private logger: ILogger;
   public activeTab: 'active' | 'answered' | 'archived' = 'active';
@@ -42,49 +42,39 @@ export class Topics implements IRouteableComponent, IViewModel {
     this.events.push(this.eventAggregator.subscribe('praying-out', async () => {
       await this.getTopics();
     }));
-
-    // trying watch version
-    // this.setWatch();
+    await this.tryToFetchTopics();
   }
-
-  // public loading = false;
-  // private sub: ZenObservable.Subscription;
-  // private async setWatch() {
-  //   this.unsetWatch();
-  //   const observer = await client.watchQuery({query: getTopicsQuery, variables: {sort: {field: 'lastUpdateDate', order: -1}}});
-  //   const sub = observer.subscribe((xx) => {
-  //     console.log('result from subscribe', xx)
-  //     this.loading = xx.loading;
-  //     this.activeTopics = xx.data.topics;
-  //   });
-  //   this.sub = sub;
-  // }
-
-  // private unsetWatch() {
-  //   if (this.sub) {
-  //     this.sub.unsubscribe();
-  //     delete this.sub;
-  //   }
-  // }
 
   public detaching(): void {
     for (const event of this.events) {
       event.dispose();
     }
     this.events = [];
-    // this.unsetWatch();
   }
 
   public async getTopics(): Promise<void> {
     try {
       const activeTopics = await getTopics({field: 'updatedAt', order: -1}, 'active');
-      const answeredTopics = await getTopics({field: 'updatedAt', order: -1}, 'answered');
-      const archivedTopics = await getTopics({field: 'updatedAt', order: -1}, 'archived');
       this.activeTopics = await this.decryptTopics(activeTopics);
+      const answeredTopics = await getTopics({field: 'updatedAt', order: -1}, 'answered');
       this.answeredTopics = await this.decryptTopics(answeredTopics);
+      const archivedTopics = await getTopics({field: 'updatedAt', order: -1}, 'archived');
       this.archivedTopics = await this.decryptTopics(archivedTopics);
     } catch (error) {
       this.logger.error(error);
+    }
+  }
+
+  public async tryToFetchTopics(): Promise<void> {
+    try {
+      const activeTopics = await getTopics({field: 'updatedAt', order: -1}, 'active', 'network-only');
+      this.activeTopics = await this.decryptTopics(activeTopics);
+      const answeredTopics = await getTopics({field: 'updatedAt', order: -1}, 'answered', 'network-only');
+      this.answeredTopics = await this.decryptTopics(answeredTopics);
+      const archivedTopics = await getTopics({field: 'updatedAt', order: -1}, 'archived', 'network-only');
+      this.archivedTopics = await this.decryptTopics(archivedTopics);
+    } catch (error) {
+      // if error, do nothing
     }
   }
 

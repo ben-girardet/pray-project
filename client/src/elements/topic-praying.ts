@@ -83,6 +83,7 @@ export class TopicPraying implements IViewModel {
       return;
     }
     try {
+      await CryptingService.encryptNewMessage(this.topic, this.message);
       await createMessageInTopic(this.topicId, this.message);
       this.message = '';
       document.body.focus();

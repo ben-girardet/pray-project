@@ -5,10 +5,7 @@ import { IRouteableComponent, IRouter } from '@aurelia/router';
 import { IViewModel, inject } from 'aurelia';
 import { Topic } from 'shared/types/topic'
 import { getTopic, addShareToTopic, removeShareToTopic } from '../commands/topic';
-
-import { User } from 'shared/types/user';
-import { Friendship } from 'shared/types/friendship';
-import { apolloAuth, client } from '../apollo';
+import { client } from '../apollo';
 import { gql } from 'apollo-boost';
 import { ExtendedFriendship } from './friends';
 import { wait } from '../util';

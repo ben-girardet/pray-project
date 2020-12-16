@@ -120,20 +120,27 @@ Login is now pretty well in place. Now is the time to improve the topic experien
 
 ## 07.12.2020 - Apollo Cache improvements
 
-- [ ] Do some research on possible cache patterns
+- [x] Do some research on possible cache patterns
 - [ ] Save edited topic when submitting updates
+
+## 16.12.2020 - Go for an app ready to be tried
+
+- [x] Crypt messages
+- [x] Import data
+- [x] Import images
 
 ## Next 
 
 - [ ] Work on apollo cache, basically use it more and remove cached elements on edit. Must also set some expire so we make sure we give the data a chance to be updated
 - [ ] Work on the TODO's
-- [ ] Import data from previous app
-- [ ] Work on Profile page so we can edit current profile avatar, nameEnsure a nice register process
-- [ ] Work on Profile page so we can edit current profile avatar, nameStack AppNotifications (so we can see several)
-- [ ] Work on Profile page so we can edit current profile avatar, nameChange password
+- [ ] Work on Profile page so we can edit current profile avatar, name
+- [ ] Ensure a nice register process
+- [ ] Stack AppNotifications (so we can see several)
+- [ ] Change password
 - [ ] Optimize bundles with code splitting (https://webpack.js.org/guides/code-splitting/)
 - [ ] Add a "viewedBy" property to topic, messages and prayers model so we can add personalised notifications based on who viewed what
 - [ ] Create more realistic tests scenario including user registration and increased users friendships
 - [ ] Help tooltips
 - [ ] Allow owner to give "owner" role on their topics
 - [ ] Cache images
+- [ ] Fix class-validator warning, check if I need it for the project

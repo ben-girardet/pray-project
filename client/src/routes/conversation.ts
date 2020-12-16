@@ -122,6 +122,7 @@ export class Conversation implements IRouteableComponent, IViewModel {
 
   public async sendMessage(): Promise<void> {
     try {
+      await CryptingService.encryptNewMessage(this.topic, this.message);
       await createMessageInTopic(this.topicId, this.message);
       this.message = '';
       // TODO: optimize this thing when a conversation has lots of messages

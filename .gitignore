@@ -104,3 +104,4 @@ dist
 .tern-port
 server/uploads/
 server/tests/artillery/_data/tokens.txt
+server/src/seeds/images/

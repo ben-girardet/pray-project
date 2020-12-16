@@ -16,6 +16,7 @@
     "seed": "ts-node src/seeds/seed-data.ts",
     "unseed": "ts-node src/seeds/clear-seed.ts",
     "reseed": "npm-run-all unseed seed",
+    "import": "ts-node src/seeds/import-data.ts",
     "test": "npm run-script test"
   },
   "author": "Dwayne Charrington",
@@ -26,6 +27,7 @@
     "@types/express-jwt": "0.0.42",
     "@types/mongoose": "^5.7.36",
     "@types/multer": "^1.4.4",
+    "@types/sharp": "^0.26.1",
     "@types/sjcl": "^1.0.29",
     "apollo-server-express": "^2.18.2",
     "axios": "^0.20.0",
@@ -36,6 +38,7 @@
     "express": "^4.17.1",
     "express-jwt": "^6.0.0",
     "express-session": "^1.17.1",
+    "file-type": "^16.0.1",
     "gun": "^0.2020.520",
     "helmet": "^4.1.1",
     "http-status-codes": "^2.1.4",
@@ -53,6 +56,7 @@
     "redis": "^3.0.2",
     "reflect-metadata": "^0.1.13",
     "request-context": "^2.0.0",
+    "sharp": "^0.26.3",
     "sjcl": "^1.0.8",
     "socket.io": "^2.3.0",
     "type-graphql": "^1.0.0"

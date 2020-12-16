@@ -9,9 +9,7 @@ import ImageBlobReduce from 'image-blob-reduce';
 import Croppie from 'croppie';
 import { parseColorString } from "@microsoft/fast-components";
 import { ColorRGBA64, ColorHSL, rgbToHSL, hslToRGB } from "@microsoft/fast-colors";
-import { apolloAuth, client } from './../apollo';
-import { ApolloQueryResult, gql } from 'apollo-boost';
-import { createTopic, getTopic, editTopic } from '../commands/topic';
+import { createTopic, getTopic, editTopic } from '../commands/topic';
 const reducer = ImageBlobReduce();
 
 @inject()

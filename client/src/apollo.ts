@@ -125,7 +125,8 @@ const client = new ApolloClient({
     console.log('error', error);
     const hiddenMessages = [
       'Invalid refresh token',
-      'No refresh token'
+      'No refresh token',
+      'Failed to fetch'
     ];
     const messages = (error.graphQLErrors || []).map(e => e.message).filter(m => !hiddenMessages.includes(m));
     if (error.networkError?.message) {

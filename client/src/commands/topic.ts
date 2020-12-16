@@ -1,4 +1,4 @@
-import { gql } from 'apollo-boost';
+import { gql, FetchPolicy } from 'apollo-boost';
 import { client } from '../apollo';
 import { Topic } from 'shared/types/topic';
 import { Prayer } from 'shared/types/prayer';
@@ -212,27 +212,48 @@ mutation Pray($topicId: String!) {
 }
 `;
 
-export async function getTopics(sort: {field: string, order: -1 | 1}, status?: string): Promise<(Topic & WithShares)[]> {
-  const result = await client.query<{topics: (Topic & WithShares)[]}>({query: getTopicsQuery, variables: {sort, status}, fetchPolicy: 'network-only'});
+export async function getTopics(
+  sort: {field: string, order: -1 | 1}, 
+  status?: string,
+  fetchPolicy: FetchPolicy = 'cache-first'): Promise<(Topic & WithShares)[]> {
+  interface Res {
+    topics: (Topic & WithShares)[]
+  }
+  const result = await client.query<Res>({
+    query: getTopicsQuery, 
+    variables: {sort, status}, 
+    fetchPolicy});
   return result.data.topics;
 }
 
-export async function getTopic(topicId: string, options?: {withMessages?: boolean}): Promise<Topic & WithShares> {
+export async function getTopic(topicId: string, options?: {withMessages?: boolean}, fetchPolicy: FetchPolicy = 'cache-first'): Promise<Topic & WithShares> {
   // TODO: find a way to make this "withMessages" work
   // preferable with graphql directive
   // but could also be by using another query
   const withMessages = options?.withMessages === true;
-  const result = await client.query<{topic: Topic & WithShares}>({query: getTopicQuery, variables: {topicId}, fetchPolicy: 'network-only'});
+  interface Res {
+    topic: Topic & WithShares
+  }
+  const result = await client.query<Res>({
+    query: getTopicQuery, 
+    variables: {topicId}, 
+    fetchPolicy});
   return result.data.topic;
 }
 
 export async function createTopic(name: string, color: string, image: {fileId: string, width: number, height: number}[], encryptedContentKey: string): Promise<Topic & WithShares> {
-  const result = await client.mutate<{createTopic: Topic & WithShares}>({mutation: createTopicMutation, variables: {
-    name,
-    color,
-    image,
-    encryptedContentKey
-  }});
+  interface Res {
+    createTopic: Topic & WithShares
+  }
+  const result = await client.mutate<Res>({
+    mutation: createTopicMutation, 
+    variables: {
+      name,
+      color,
+      image,
+      encryptedContentKey
+    }
+  });
   return result.data.createTopic;
 }
 
@@ -243,29 +264,67 @@ export async function editTopic(id: string,
     status?: string;
     image?: {fileId: string, width: number, height: number}[];
   }): Promise<Topic> {
-  const result = await client.mutate<{editTopic: Topic}>({mutation: editTopicMutation, variables: {
-    id,
-    data
-  }});
+  interface Res {
+    editTopic: Topic
+  }
+  const result = await client.mutate<Res>({
+    mutation: editTopicMutation, 
+    variables: {
+      id,
+      data
+    }
+  });
   return result.data.editTopic;
 }
 
 export async function removeTopic(id: string): Promise<boolean> {
-  const result = await client.mutate<{removeTopic: boolean}>({mutation: removeTopicMutation, variables: { id }});
+  const result = await client.mutate<{removeTopic: boolean}>({
+    mutation: removeTopicMutation, 
+    variables: { id }
+  });
   return result.data.removeTopic;
 }
 
 export async function addShareToTopic(id: string, userId: string, encryptedContentKey: string): Promise<{userId: string, encryptedBy: string, encryptedContentKey: string, role: string}[]> {
-  const result = await client.mutate<{addShareToTopic: {shares: {userId: string, encryptedBy: string, encryptedContentKey: string, role: string}[]}}>({mutation: addShareToTopicMutation, variables: { id, userId, encryptedContentKey }});
+  interface Res {
+    addShareToTopic: {
+      shares: {
+        userId: string, 
+        encryptedBy: string, 
+        encryptedContentKey: string, 
+        role: string
+      }[]
+    }
+  }
+  const result = await client.mutate<Res>({
+    mutation: addShareToTopicMutation, 
+    variables: { id, userId, encryptedContentKey }
+  });
   return result.data.addShareToTopic.shares;
 }
 
 export async function removeShareToTopic(id: string, userId: string): Promise<{userId: string, encryptedBy: string, encryptedContentKey: string, role: string}[]> {
-  const result = await client.mutate<{removeShareToTopic: {shares: {userId: string, encryptedBy: string, encryptedContentKey: string, role: string}[]}}>({mutation: removeShareToTopicMutation, variables: { id, userId }});
+  interface Res {
+    removeShareToTopic: {
+      shares: {
+        userId: string, 
+        encryptedBy: string, 
+        encryptedContentKey: string, 
+        role: string
+      }[]
+    }
+  }
+  const result = await client.mutate<Res>({
+    mutation: removeShareToTopicMutation,
+    variables: { id, userId }
+  });
   return result.data.removeShareToTopic.shares;
 }
 
 export async function pray(topicId): Promise<Prayer> {
-  const result = await client.mutate<{pray: Prayer}>({mutation: prayMutation, variables: { topicId }});
+  const result = await client.mutate<{pray: Prayer}>({
+    mutation: prayMutation, 
+    variables: { topicId }
+  });
   return result.data.pray;
 }
