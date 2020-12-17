@@ -139,7 +139,7 @@ export async function importer(users: any[], topics: any[], messages: any[], pra
 }
 
 async function prepareImages(filepath: string): Promise<{fileId: string, width: number, height: number}[]> {
-    if (!filepath && typeof filepath !== 'string') {
+    if (!filepath || typeof filepath !== 'string') {
         return [];
     }
     const sizes = [40, 100, 1000];
