@@ -29,7 +29,8 @@ if (logCache) {
 
 const client = redis.createClient({
     port,
-    host
+    host,
+    password: process.env.REDIS_PASSWORD || ''
 });
 
 
