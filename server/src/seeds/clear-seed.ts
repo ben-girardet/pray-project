@@ -13,7 +13,9 @@ mongoose.connect(
     {
         useNewUrlParser: true,
         useUnifiedTopology: true,
-        dbName: process.env.DBNAME
+        dbName: process.env.DBNAME,
+        user: process.env.MONGOUSER,
+        pass: process.env.MONGOPASSWORD,
     }).then(async () => {
         try {
             await mongoose.connection.dropDatabase();

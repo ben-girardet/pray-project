@@ -29,7 +29,9 @@ export async function importer(users: any[], topics: any[], messages: any[], pra
         {
             useNewUrlParser: true,
             useUnifiedTopology: true,
-            dbName: process.env.DBNAME
+            dbName: process.env.DBNAME,
+            user: process.env.MONGOUSER,
+            pass: process.env.MONGOPASSWORD,
         });
     console.log(chalk.dim('Connected to database'));
     const topicsByName: {[key: string]: DocumentType<Topic>} = {};
