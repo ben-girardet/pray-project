@@ -33,11 +33,9 @@ export class RegistrationResolver {
         if (!data.mobile && !data.email) {
             throw new Error('Either email or mobile must be provided');
         }
-        console.log('SMSAPI AUTH', process.env.SMSAPI_TOKEN);
         const smsapi = new SMSAPI({ oauth: {
             accessToken: process.env.SMSAPI_TOKEN
         }});
-        console.log('auth OK');
         const existingUser = await UserModel.findOne({$or: [{email: data.email, emailValidated: true}, {mobile: data.mobile, mobileValidated: true}]});
         if (existingUser) {
             if (existingUser.email === data.email) {
