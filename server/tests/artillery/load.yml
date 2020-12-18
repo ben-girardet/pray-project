@@ -3,6 +3,8 @@ config:
   environments:
     staging:
       target: "https://api-dev.sunago.app"
+    prod:
+      target: "http://node50571-env-6259510.jcloud-ver-jpc.ik-server.com:11128"
   http:
     timeout: 30
   phases:
