@@ -2,6 +2,16 @@ import { User, UserModel } from "../models/user";
 import { Token, TokenModel } from "../models/token";
 import { Resolver, Mutation, Query, Arg } from "type-graphql";
 import { RegisterInput, ValidateRegistrationInput } from './inputs/registration';
+import SMSAPI from 'smsapicom';
+import Gun from 'gun';
+import 'gun/sea';
+
+export interface SeaPair {
+    priv: string;
+    pub: string;
+    epriv: string;
+    epub: string;
+}
 
 @Resolver()
 export class RegistrationResolver {
@@ -14,9 +24,20 @@ export class RegistrationResolver {
 
     @Mutation(() => Token)
     public async register(@Arg('data') data: RegisterInput) {
+        if (!data.mobile) {
+            throw new Error('Registration requires a mobile');
+        }
+        if (data.mobile.substr(0, 1) !== '+') {
+            throw new Error('Mobile must be sent in internation format starting with a plus sign');
+        }
         if (!data.mobile && !data.email) {
             throw new Error('Either email or mobile must be provided');
         }
+        console.log('SMSAPI AUTH', process.env.SMSAPI_TOKEN);
+        const smsapi = new SMSAPI({ oauth: {
+            accessToken: process.env.SMSAPI_TOKEN
+        }});
+        console.log('auth OK');
         const existingUser = await UserModel.findOne({$or: [{email: data.email, emailValidated: true}, {mobile: data.mobile, mobileValidated: true}]});
         if (existingUser) {
             if (existingUser.email === data.email) {
@@ -30,6 +51,13 @@ export class RegistrationResolver {
         token.setToken();
         token.data = data;
         const response = await token.save();
+        await smsapi.message
+            .sms()
+            //.from(app.name)
+            .from('Info')
+            .to(data.mobile)
+            .message('Sunago registration code: ' + token.code)
+            .execute(); // return Promise
         return response.toObject();
     }
 
@@ -61,6 +89,9 @@ export class RegistrationResolver {
         newUser.mobile = token.data.mobile;
         newUser.roles = ['user'];
         newUser.hashPassword(data.password);
+        const pair = await this.generatePair();
+        newUser.privateKey = pair.epriv;
+        newUser.publicKey = pair.epub;
         if (data.type === 'email') {
             newUser.emailValidated = true;
         }
@@ -107,6 +138,15 @@ export class RegistrationResolver {
         user.hashPassword(password);
         const response = await user.save();
         return response.toObject();
+    }
+
+    private async generatePair(): Promise<SeaPair> {
+        const SEA = Gun.SEA;
+        return new Promise((resolve) => {
+        SEA.pair((pair) => {
+            resolve(pair as unknown as SeaPair);
+        });
+        });
     }
 
 }
