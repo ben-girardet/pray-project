@@ -30,7 +30,7 @@ if (logCache) {
 const client = redis.createClient({
     port,
     host,
-    password: process.env.REDIS_PASSWORD || ''
+    password: process.env.REDIS_PASSWORD || undefined
 });
 
 

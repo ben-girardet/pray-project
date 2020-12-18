@@ -16,22 +16,22 @@ const nanoid = customAlphabet('0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklm
 dotenv.config();
 
 export async function importer(users: any[], topics: any[], messages: any[], prayers: any[]): Promise<void> {
-    console.log('MONGOHOST', process.env.MONGOHOST);
-    console.log('MONGOPORT', process.env.MONGOPORT);
-    console.log('DBNAME', process.env.DBNAME);
+    console.log('MONGO_HOST', process.env.MONGO_HOST);
+    console.log('MONGO_PORT', process.env.MONGO_PORT);
+    console.log('MONGO_DB', process.env.MONGO_DB);
     console.log('Running importer with');
     console.log(chalk.magenta(users.length), 'users');
     console.log(chalk.magenta(topics.length), 'topics');
     console.log(chalk.magenta(messages.length), 'messages');
     console.log(chalk.magenta(prayers.length), 'prayers');
     await mongoose.connect(
-        `mongodb://${process.env.MONGOHOST}:${process.env.MONGOPORT}/`,
+        `mongodb://${process.env.MONGO_HOST}:${process.env.MONGO_PORT}/`,
         {
             useNewUrlParser: true,
             useUnifiedTopology: true,
-            dbName: process.env.DBNAME,
-            user: process.env.MONGOUSER,
-            pass: process.env.MONGOPASSWORD,
+            dbName: process.env.MONGO_DB,
+            user: process.env.MONGO_USER,
+            pass: process.env.MONGO_PASSWORD,
         });
     console.log(chalk.dim('Connected to database'));
     const topicsByName: {[key: string]: DocumentType<Topic>} = {};

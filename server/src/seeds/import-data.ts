@@ -11,7 +11,7 @@ import fileType from 'file-type';
 dotenv.config();
 
 mongoose.connect(
-    `mongodb://${process.env.MONGOHOST}:${process.env.MONGOPORT}/`, {
+    `mongodb://${process.env.MONGO_HOST}:${process.env.MONGO_PORT}/`, {
         useNewUrlParser: true,
         useUnifiedTopology: true,
         dbName: 'sdio'

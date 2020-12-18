@@ -10,7 +10,7 @@ export const config = {
         'user'
     ],
     DEFAULT_ROLE: 'user',
-    TEST_MODE: true
+    TEST_MODE: process.env.NODE_ENV === 'development'
 };
 
 export type RoleType = 'admin' | 'user';

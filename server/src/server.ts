@@ -51,9 +51,9 @@ const resolvers: NonEmptyArray<Function> | NonEmptyArray<string> =
 dotenv.config();
 
 console.log('ENV preview');
-console.log('MONGOHOST', process.env.MONGOHOST);
-console.log('MONGOPORT', process.env.MONGOPORT);
-console.log('DBNAME', process.env.DBNAME);
+console.log('MONGO_HOST', process.env.MONGO_HOST);
+console.log('MONGO_PORT', process.env.MONGO_PORT);
+console.log('MONGO_DB', process.env.MONGO_DB);
 console.log('REDIS_HOST', process.env.REDIS_HOST);
 console.log('REDIS_PORT', process.env.REDIS_PORT);
 
@@ -93,13 +93,13 @@ LocalStrategy.register(passport);
 // Connect to the database and then start Express
 // TODO: fix this connection (using mongoose)
 mongoose.connect(
-    `mongodb://${process.env.MONGOHOST}:${process.env.MONGOPORT}/`,
+    `mongodb://${process.env.MONGO_HOST}:${process.env.MONGO_PORT}/`,
     {
         useNewUrlParser: true,
         useUnifiedTopology: true,
-        dbName: process.env.DBNAME,
-        user: process.env.MONGOUSER,
-        pass: process.env.MONGOPASSWORD,
+        dbName: process.env.MONGO_DB,
+        user: process.env.MONGO_USER,
+        pass: process.env.MONGO_PASSWORD,
     }).then(async () => {
     const app = express();
     const server = http.createServer(app);

@@ -9,13 +9,13 @@ import moment from 'moment';
 dotenv.config();
 
 mongoose.connect(
-    `mongodb://${process.env.MONGOHOST}:${process.env.MONGOPORT}/`,
+    `mongodb://${process.env.MONGO_HOST}:${process.env.MONGO_PORT}/`,
     {
         useNewUrlParser: true,
         useUnifiedTopology: true,
-        dbName: process.env.DBNAME,
-        user: process.env.MONGOUSER,
-        pass: process.env.MONGOPASSWORD,
+        dbName: process.env.MONGO_DB,
+        user: process.env.MONGO_USER,
+        pass: process.env.MONGO_PASSWORD,
     }).then(async () => {
         try {
             await mongoose.connection.dropDatabase();
