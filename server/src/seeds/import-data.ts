@@ -14,7 +14,9 @@ mongoose.connect(
     `mongodb://${process.env.MONGO_HOST}:${process.env.MONGO_PORT}/`, {
         useNewUrlParser: true,
         useUnifiedTopology: true,
-        dbName: 'sdio'
+        dbName: 'sdio',
+        user: process.env.MONGO_USER,
+        pass: process.env.MONGO_PASSWORD,
     }).then(async () => {
     try {
         // here we must import data from swissdata.io
