@@ -3,11 +3,13 @@ import { IRouteableComponent } from '@aurelia/router';
 import { IViewModel, IRouter, ILogger } from 'aurelia';
 import { AppNotification } from '../components/app-notification';
 import { login } from '../commands/login';
+import PhoneNumber from 'awesome-phonenumber';
 
 export class Login implements IRouteableComponent, IViewModel {
 
   public username = '';
   public password = '';
+  public countryCode = 'CH';
 
   private logger: ILogger;
   // private apolloAuth = apolloAuth;
@@ -52,10 +54,19 @@ export class Login implements IRouteableComponent, IViewModel {
       return false;
     }
     try {
-      login(this.username, this.password).then((loginResult) => {
+      const username = this.parseUsername();
+      login(username, this.password).then((loginResult) => {
         if (apolloAuth.isTokenValid()) {
           window.localStorage.setItem('sun_un', this.username);
-          this.router.load('topics');
+          const state = apolloAuth.getState();
+          console.log('state', state);
+          if (state === 1) {
+            // active
+            this.router.load('topics');
+          } else if (state === 0) {
+            // need to complete identity
+            this.router.load('register(identity)');
+          }
         }
         if (!loginResult) {
           AppNotification.notify('Authentication failed', 'error');
@@ -65,6 +76,25 @@ export class Login implements IRouteableComponent, IViewModel {
       AppNotification.notify(error.message, 'error');
     }
     return false;
+  }
+
+  // TODO: this method is identical with parseUsername()
+  // from register.ts => should be merged
+  public parseUsername(): string {
+    const isEmail = this.username.indexOf('@') !== -1;
+    if (isEmail) {
+      const re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+      if(!re.test(this.username)) {
+        throw new Error('Please enter a valid email address or mobile number');
+      }
+      return this.username;
+    } else {
+      const phoneNumber = new PhoneNumber( this.username, this.countryCode.toLowerCase() );
+      if (!phoneNumber.isValid()) {
+        throw new Error('Please enter a valid email address or mobile number');
+      }
+      return phoneNumber.getNumber();
+    }
   }
 
 }

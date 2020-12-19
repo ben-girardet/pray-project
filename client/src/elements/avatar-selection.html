@@ -1,14 +1,46 @@
 <import from="../cropping.css"></import>
 
+<div class="avatar-selection__buttons">
+  <!-- <fast-button>
+    <pray-icon appearance="accent" icon="Camera" size="lg"></pray-icon>
+  </fast-button> -->
+  <fast-button  click.delegate="selectImage()">
+    <pray-icon appearance="accent" icon="Photograph" size="lg" slot="start"></pray-icon>
+    Select an image
+  </fast-button>
+  <label>Or pick one below</label>
+</div>
+
 <div class="avatar-selection">
-  <img class="${avatar === 'original' ? 'selected':''}" src="${original | file}" if.bind="original" click.delegate="selectAvatar('original')" />
-  <div class="placeholder" if.bind="!imageService.mediumB64" click.delegate="selectImage()">
-    <pray-icon icon="Plus" size="sm"></pray-icon>
-  </div>
-  <img class="${avatar === 'image' ? 'selected':''}" src.bind="imageService.mediumB64" if.bind="imageService.mediumB64" click.delegate="selectAvatar('image')">
-  <img class="${avatar === 'liquid1' ? 'selected':''}" src="images/avatars/liquid1.gif" click.delegate="selectAvatar('liquid1')">
-  <img class="${avatar === 'liquid2' ? 'selected':''}" src="images/avatars/liquid2.gif" click.delegate="selectAvatar('liquid2')">
-  <img class="${avatar === 'liquid3' ? 'selected':''}" src="images/avatars/liquid3.gif" click.delegate="selectAvatar('liquid3')">
+  <span class="${avatar === 'original' ? 'selected':''}" if.bind="original">
+    <img src="${original | file}" click.delegate="selectAvatar('original')" />
+  </span>
+  <span class="${avatar === 'image' ? 'selected':''}" if.bind="imageService.mediumB64">
+    <img src.bind="imageService.mediumB64" click.delegate="selectAvatar('image')">
+  </span>
+  <span class="${avatar === 'liquid1' ? 'selected':''}">
+    <img src="images/avatars/liquid1.gif" click.delegate="selectAvatar('liquid1')">
+  </span>
+  <span class="${avatar === 'liquid2' ? 'selected':''}">
+    <img src="images/avatars/liquid2.gif" click.delegate="selectAvatar('liquid2')">
+  </span>
+  <span class="${avatar === 'liquid3' ? 'selected':''}">
+    <img src="images/avatars/liquid3.gif" click.delegate="selectAvatar('liquid3')">
+  </span>
+  <span class="${avatar === 'shape1' ? 'selected':''}">
+    <img src="images/avatars/shape1.gif" click.delegate="selectAvatar('shape1')">
+  </span>
+  <span class="${avatar === 'shape2' ? 'selected':''}">
+    <img src="images/avatars/shape2.gif" click.delegate="selectAvatar('shape2')">
+  </span>
+  </span>
+  <span class="${avatar === 'shape3' ? 'selected':''}">
+    <img src="images/avatars/shape3.gif" click.delegate="selectAvatar('shape3')">
+  </span>
+  </span>
+  <span class="${avatar === 'shape4' ? 'selected':''}">
+    <img src="images/avatars/shape4.gif" click.delegate="selectAvatar('shape4')">
+  </span>
 </div>
 
 <div class="input-file-container" ref="inputFileContainer"></div>

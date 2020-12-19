@@ -2,26 +2,37 @@
 <div class="register welcome">
 
     <div class="welcome__container">
+      <div style="text-align: center">
+        <pray-logo size="large"></pray-logo>
+      </div>
       <form submit.delegate="requestUsername()" style="display: ${step === 'username' ? 'grid':'none'}">
-        <h2>Register</h2>
-        <p>Please choose an email or mobile as username and set your password for your account.</p>
-        <fast-text-field placeholder="Email or mobile" value.two-way="username" autofocus>
-          <!-- <pray-icon icon="User" size="sm" slot="start"></pray-icon> -->
-        </fast-text-field>
+        <div>
+          <h4>Register</h4>
+          <p>First enter your mobile number as username</p>
+          <fast-text-field placeholder="Mobile" value.two-way="username" autofocus>
+            <!-- TODO: the icon below should now be available in update from heroicons -->
+            <!-- <pray-icon icon="DeviceMobile" size="sm" slot="start"></pray-icon> -->
+          </fast-text-field>
+        </div>
         <div class="button-row__two">
           <fast-button appearance="lightweight" load="../login">Back to login</fast-button>
           <fast-button appearance="accent" click.trigger="requestUsername()">Next</fast-button>
         </div>
       </form>
       <form submit.delegate="validate()" style="display: ${step === 'validate' ? 'grid':'none'}">
-        <h2>Validate your ${type}</h2>
-        <p>We sent you a code to ${username} that you can enter here.</p>
-        <fast-text-field placeholder="Enter your 6 digit code" value.two-way="code">
-          <!-- <pray-icon icon="User" size="sm" slot="start"></pray-icon> -->
-        </fast-text-field>
-        <fast-text-field type="password" placeholder="Password" value.two-way="password">
-          <!-- <pray-icon icon="Key" size="sm" slot="start"></pray-icon> -->
-        </fast-text-field>
+        <div>
+          <h4>Validate your ${type}</h4>
+          <p>We sent you a code to ${username} that you can enter here.</p>
+          <fast-text-field placeholder="Enter your 6 digit code" value.two-way="code">
+            <!-- <pray-icon icon="User" size="sm" slot="start"></pray-icon> -->
+          </fast-text-field>
+        </div>
+        <div>
+          <p>Choose a password for your account</p>
+          <fast-text-field type="password" placeholder="Password" value.two-way="password">
+            <!-- <pray-icon icon="Key" size="sm" slot="start"></pray-icon> -->
+          </fast-text-field>
+        </div>
         <!-- TODO: active the resend code button -->
         <!-- <div style="text-align:center">
           <fast-button appearance="lightweight" click.trigger="resendCode()">Send the code again</fast-button>

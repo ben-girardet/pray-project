@@ -22,7 +22,7 @@
 <!-- <import from="./routes/test"></import> -->
 <fast-design-system-provider use-defaults background-color="#FFFFFF" type-ramp-base-font-size="16px" class="dw">
   <au-viewport default="topics" fallback="missing" name="main"></au-viewport>
-  <div class="bottom-bar" if.bind="apolloAuth.authenticated">
+  <div class="bottom-bar" if.bind="apolloAuth.authenticated && apolloAuth.state === 1">
     <div class="bottom-bar-button" load="topics">
       <pray-icon icon="Collection" type="${topicsActive(router.activeComponents, router.activeComponents.length) ? 'solid' : 'outline'}"></pray-icon>
     </div>

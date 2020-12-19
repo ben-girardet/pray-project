@@ -43,13 +43,15 @@ form {
   gap: 20px;
 }
 form label {
-  color: var(--accent-fill-rest);
+  color: var(--neutral-foreground-rest);
+  text-transform: uppercase;
   font-family: 'Montserrat', sans-serif;
   --body-font: 'Montserrat', sans-serif;
   display: block;
   cursor: pointer;
-  font-size: var(--type-ramp-base-font-size);
-  line-height: var(--type-ramp-base-line-height);
+  font-size: var(--type-ramp-minus-1-font-size);
+  line-height: var(--type-ramp-minus-1-line-height);
+  letter-spacing: 0.8px;
   margin-bottom: 4px;
 }
 .button-row__two {

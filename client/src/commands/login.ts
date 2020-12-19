@@ -9,7 +9,8 @@ mutation Login($username: String!, $password: String!) {
     token,
     userId,
     expires,
-    privateKey
+    privateKey,
+    state
   }
 }`;
 
@@ -19,6 +20,7 @@ mutation RefreshToken($withPrivateKey: Boolean!) {
     token,
     userId,
     expires,
+    state,
     privateKey @include(if: $withPrivateKey)
   }
 }`;
@@ -38,7 +40,8 @@ export async function login(username: string, password: string) {
       token: result.data.login.token,
       userId: result.data.login.userId, 
       expires: result.data.login.expires,
-      privateKey: result.data.login.privateKey
+      privateKey: result.data.login.privateKey,
+      state: result.data.login.state
     });
   }
   return result.data.login;
@@ -57,7 +60,8 @@ export async function refreshToken(withPrivateKey = false) {
       token: result.data.refreshToken.token,
       userId: result.data.refreshToken.userId, 
       expires: result.data.refreshToken.expires,
-      privateKey: result.data.refreshToken.privateKey
+      privateKey: result.data.refreshToken.privateKey,
+      state: result.data.refreshToken.state
     });
   }
   return result.data.refreshToken;

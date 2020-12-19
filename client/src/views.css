@@ -134,7 +134,7 @@ html.detail au-viewport[name=detail] {
   padding-top: calc(0px + env(safe-area-inset-top)); */
 }
 .list-content {
-  min-height: 2000px;
+  min-height: 200px;
   background: var(--body-color);
 }
 .list-content-head {

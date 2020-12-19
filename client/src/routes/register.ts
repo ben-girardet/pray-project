@@ -14,10 +14,10 @@ import { Image } from '../../../server/src/models/image';
 
 export class Register implements IRouteableComponent, IViewModel {
 
-  public firstname = 'Ben';
-  public lastname = 'Girardet';
-  public username = 'ben@platform5.ch';
-  public password = '0123';
+  public firstname = '';
+  public lastname = '';
+  public username = '';
+  public password = '';
   public countryCode = 'CH';
 
   private logger: ILogger;
@@ -25,7 +25,7 @@ export class Register implements IRouteableComponent, IViewModel {
   public step: 'username' | 'validate' | 'identity' = 'username';
   private type: 'email' | 'mobile';
   private token: Token;
-  private code = '001122';
+  private code = '';
   private userId: string;
 
   private avatar: AvatarSelection;
@@ -41,6 +41,12 @@ export class Register implements IRouteableComponent, IViewModel {
   public async beforeBind(): Promise<void> {
     if (apolloAuth.authenticated) {
       this.router.load('topics');
+    }
+  }
+
+  public load(parameters: any): void {
+    if (parameters[0] === 'identity') {
+      this.step = 'identity';
     }
   }
 
@@ -62,8 +68,8 @@ export class Register implements IRouteableComponent, IViewModel {
       if (exists.data.exists) {
         throw new Error(`Sorry, this ${this.type} is already taken`);
       }
-      const mobile = this.type === 'mobile' ? this.username : undefined;
-      const email = this.type === 'email' ? this.username : undefined;
+      const mobile = this.type === 'mobile' ? username : undefined;
+      const email = this.type === 'email' ? username : undefined;
       this.token = await register(mobile, email, this.type);
       this.step = 'validate';
     } catch (error) {
@@ -96,29 +102,30 @@ export class Register implements IRouteableComponent, IViewModel {
   }
 
   public async setIdentity(): Promise<void> {
-    const editUserData: {firstname?: string, lastname?: string, picture?: Image[]} = {};
-    editUserData.firstname = this.firstname;
-    editUserData.lastname = this.lastname;
-    if (this.avatar) {
-      if (this.avatar.avatar === 'image') {
-        const imageData = await this.avatar.imageService.publish();
-        if (imageData !== 'no-change') {
-          editUserData.picture = [
-            {fileId: imageData.small, width: 40, height: 40},
-            {fileId: imageData.medium, width: 100, height: 1000},
-            {fileId: imageData.large, width: 1000, height: 1000},
-          ]
-        }
-      } else {
-        editUserData.picture = [
-          {fileId: `static:${this.avatar.avatar}.gif`, width: 40, height: 40},
-          {fileId: `static:${this.avatar.avatar}.gif`, width: 100, height: 100},
-          {fileId: `static:${this.avatar.avatar}.gif`, width: 1000, height: 1000},
-        ];
-      }
-    }
     try {
+      const editUserData: {firstname?: string, lastname?: string, picture?: Image[]} = {};
+      editUserData.firstname = this.firstname;
+      editUserData.lastname = this.lastname;
+      if (this.avatar) {
+        if (this.avatar.avatar === 'image') {
+          const imageData = await this.avatar.imageService.publish();
+          if (imageData !== 'no-change') {
+            editUserData.picture = [
+              {fileId: imageData.small, width: 40, height: 40},
+              {fileId: imageData.medium, width: 100, height: 1000},
+              {fileId: imageData.large, width: 1000, height: 1000},
+            ]
+          }
+        } else {
+          editUserData.picture = [
+            {fileId: `static:${this.avatar.avatar}.gif`, width: 40, height: 40},
+            {fileId: `static:${this.avatar.avatar}.gif`, width: 100, height: 100},
+            {fileId: `static:${this.avatar.avatar}.gif`, width: 1000, height: 1000},
+          ];
+        }
+      }
       await editMe(editUserData.firstname, editUserData.lastname, editUserData.picture);
+      this.router.load('topics');
     } catch (error) {
       AppNotification.notify(error.message, 'info');
     }

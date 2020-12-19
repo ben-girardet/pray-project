@@ -15,23 +15,34 @@ class ApolloAuth {
     public authenticated: boolean = false;
     private jwt: string;
     private privateKey: string;
+    private state: number;
     
-    public setLogin(login: {token: string, userId: string, expires: string, privateKey: string}) {
+    public setLogin(login: {token: string, userId: string, expires: string, privateKey: string, state: number}) {
       if (typeof login.expires === 'string') {
         const expDate = moment(login.expires);
         this.expires = expDate;
         this.authenticated = true;
         this.jwt = login.token;
         this.privateKey = login.privateKey;
+        this.state = login.state;
       } else {
         this.expires = undefined;
         this.userId = undefined;
         this.authenticated = false;
         this.jwt = '';
         this.privateKey = '';
+        this.state = -1;
         throw new Error('Invalid login');
       }
       this.userId = login.userId;
+    }
+
+    public setState(state: number) {
+      this.state = state;
+    }
+
+    public getState(): number {
+      return this.state;
     }
 
     public isTokenValid() {

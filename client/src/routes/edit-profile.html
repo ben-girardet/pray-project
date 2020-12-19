@@ -2,7 +2,7 @@
 <import from="../cropping.css"></import>
 
 <div class="bottom-headview">
-  <fast-button appearance="lightweight" click.trigger="cancel()">Annuler</fast-button>
+  <fast-button appearance="lightweight" click.trigger="cancel()">Cancel</fast-button>
   <span>Edit Profile</span>
   <fast-button appearance="lightweight" click.trigger="save()">Save</fast-button>
 </div>
@@ -15,7 +15,7 @@
     <fast-text-field placeholder="Lastname" value.two-way="lastname">
     </fast-text-field>
   
-    <label style="text-align: center;">Add a profile picture</label>
+    <label style="text-align: center;">Change profile picture</label>
     <avatar-selection value.bind="profilePic" original.bind="preview" view-model.ref="avatar"></avatar-selection>
     
   </form>

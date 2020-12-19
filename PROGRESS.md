@@ -129,11 +129,19 @@ Login is now pretty well in place. Now is the time to improve the topic experien
 - [x] Import data
 - [x] Import images
 
+## 17.12.2020 - Prepare for production
+
+- [x] Test Jelastic deployment
+- [x] Send code by SMS for registration
+- [ ] Script to start node automatically in NodeJS container
+- [x] Import data in production
+
 ## Next 
 
+
+- [ ] Ensure the screen looks amazing even without content (after first registration)
 - [ ] Work on apollo cache, basically use it more and remove cached elements on edit. Must also set some expire so we make sure we give the data a chance to be updated
 - [ ] Work on the TODO's
-- [ ] Work on Profile page so we can edit current profile avatar, name
 - [ ] Ensure a nice register process
 - [ ] Stack AppNotifications (so we can see several)
 - [ ] Change password
