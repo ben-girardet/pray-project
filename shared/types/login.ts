@@ -3,4 +3,5 @@ export interface Login {
   expires: Date | string;
   userId: string;
   privateKey: string;
+  state: number;
 }
