@@ -10,6 +10,12 @@ import fileType from 'file-type';
 
 dotenv.config();
 
+console.log('MONGO_HOST', process.env.MONGO_HOST);
+console.log('MONGO_PORT', process.env.MONGO_PORT);
+console.log('MONGO_USER', process.env.MONGO_USER);
+console.log('MONGO_PASSWORD', process.env.MONGO_PASSWORD);
+console.log('DB', 'sdio');
+
 mongoose.connect(
     `mongodb://${process.env.MONGO_HOST}:${process.env.MONGO_PORT}/`, {
         useNewUrlParser: true,
