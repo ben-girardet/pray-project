@@ -11,8 +11,8 @@ dotenv.config();
 console.log('MONGO_HOST', process.env.MONGO_HOST);
 console.log('MONGO_PORT', process.env.MONGO_PORT);
 console.log('MONGO_DB', process.env.MONGO_DB);
-console.log('MONGO_DB', process.env.MONGO_USER);
-console.log('MONGO_DB', process.env.MONGO_PASSWORD);
+console.log('MONGO_USER', process.env.MONGO_USER);
+console.log('MONGO_PASSWORD', process.env.MONGO_PASSWORD);
 
 mongoose.connect(
     `mongodb://${process.env.MONGO_HOST}:${process.env.MONGO_PORT}/`,
@@ -24,7 +24,8 @@ mongoose.connect(
         pass: process.env.MONGO_PASSWORD,
     }).then(async () => {
         try {
-            await mongoose.connection.dropDatabase();
+            const result = await mongoose.connection.dropDatabase();
+            console.log('DROP DATABASE result', result);
         } catch (error) {
             console.error(error);
             throw error;
