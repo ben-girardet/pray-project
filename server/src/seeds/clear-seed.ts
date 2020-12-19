@@ -8,6 +8,12 @@ import moment from 'moment';
 
 dotenv.config();
 
+console.log('MONGO_HOST', process.env.MONGO_HOST);
+console.log('MONGO_PORT', process.env.MONGO_PORT);
+console.log('MONGO_DB', process.env.MONGO_DB);
+console.log('MONGO_DB', process.env.MONGO_USER);
+console.log('MONGO_DB', process.env.MONGO_PASSWORD);
+
 mongoose.connect(
     `mongodb://${process.env.MONGO_HOST}:${process.env.MONGO_PORT}/`,
     {
