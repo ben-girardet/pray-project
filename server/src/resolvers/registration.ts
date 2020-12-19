@@ -90,6 +90,7 @@ export class RegistrationResolver {
         const pair = await this.generatePair();
         newUser.privateKey = pair.epriv;
         newUser.publicKey = pair.epub;
+        newUser.state = 0;
         if (data.type === 'email') {
             newUser.emailValidated = true;
         }

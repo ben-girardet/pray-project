@@ -53,6 +53,7 @@ export async function importer(users: any[], topics: any[], messages: any[], pra
             const pair = await Encrypt.generatePair();
             newUser.privateKey = pair.epriv;
             newUser.publicKey = pair.epub;
+            newUser.state = 1;
             const createdUser = await newUser.save();
         }
     }

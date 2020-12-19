@@ -44,7 +44,7 @@ export class User implements IUser {
   public lastname: string;
 
   @Authorized(['me'])
-  @Field(() => String)
+  @Field(() => String, {nullable: true})
   @prop({index: true})
   public email: string;
 
@@ -89,6 +89,14 @@ export class User implements IUser {
 
   @prop({type: () => [RefreshToken], _id: false, select: false, index: true})
   public refreshTokens: RefreshToken[];
+
+  // 0 = need to set identity
+  // 1 = identity set and active
+  // -1 inactive user
+  @Authorized(['me'])
+  @Field(() => Number)
+  @prop()
+  public state = 0;
 
   @Field(() => Date)
   @prop()

@@ -102,6 +102,10 @@ export class UserResolver {
       user.picture = data.picture;
     }
 
+    if (user.firstname && user.lastname && user.picture !== undefined) {
+        user.state = 1;
+    }
+
     removeModelItem('user', user._id.toString());
     const updatedUser = await user.save();
     const updatedUserInstance = new UserModel(updatedUser);

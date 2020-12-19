@@ -16,5 +16,11 @@ export class Login implements ILogin {
     @Field(() => String)
     public privateKey: string;
 
+    // 0 = need to set identity
+    // 1 = identity set and active
+    // -1 inactive user
+    @Field(() => Number)
+    public state: number;
+
 
 }

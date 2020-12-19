@@ -18,7 +18,7 @@ export class AuthResolver {
             .findOne({$or: [
                 {email: username, emailValidated: true},
                 {mobile: username, mobileValidated: true}]})
-            .select('refreshTokens salt hash roles privateKey');
+            .select('refreshTokens salt hash roles privateKey state');
         if (!user) {
             throw new Error('User not found');
         }
@@ -38,6 +38,8 @@ export class AuthResolver {
         login.expires = moment().add(15, 'minutes').toDate(); // TODO: fix this by using the env variable
         login.userId = user._id.toString();
         login.privateKey = user.privateKey;
+        login.state = user.state;
+        console.log('login', login);
         return login;
     }
 
@@ -51,7 +53,7 @@ export class AuthResolver {
 
         const foundUser = await UserModel
             .findOne({refreshTokens: {$elemMatch: {hash: hashRefreshToken, expiry: {$gt: moment().toDate()}}}})
-            .select('refreshTokens salt hash roles privateKey');
+            .select('refreshTokens salt hash roles privateKey state');
         if (!foundUser) throw new Error('Invalid refresh token');
         const refreshTokenData = foundUser.generateRefreshToken();
         await foundUser.save();
@@ -65,6 +67,7 @@ export class AuthResolver {
         login.expires = moment().add(15, 'minutes').toDate(); // TODO: fix this by using the env variable
         login.userId = foundUser._id.toString();
         login.privateKey = foundUser.privateKey;
+        login.state = foundUser.state;
         return login;
     }
 
