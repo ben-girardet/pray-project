@@ -21,6 +21,7 @@
     "graphql": "^15.3.0",
     "gun": "^0.2020.520",
     "heroicons": "^0.4.2",
+    "http-server": "^0.12.3",
     "image-blob-reduce": "^2.0.0",
     "lodash-es": "^4.17.15",
     "moment": "^2.29.1",

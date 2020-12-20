@@ -1,2 +1,3 @@
 kill $(lsof -t -i:3000)
-npx nodemon build/server/src/server.js
+# npx nodemon build/server/src/server.js
+pm2 --name api build/server/src/server.js
