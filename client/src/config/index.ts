@@ -1,4 +1,6 @@
-// import env from './prod';
-// import env from './dev';
-import env from './jelastic';
+// import env from "./environment.json";
+const env = require("./environment.json");
+
+console.log('env', env);
+
 export default env;

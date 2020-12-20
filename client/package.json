@@ -12,6 +12,7 @@
     "@microsoft/fast-components": "^1.13.0",
     "@microsoft/fast-element": "^0.21.0",
     "apollo-boost": "^0.4.9",
+    "app-settings-loader": "^1.0.6",
     "aurelia": "dev",
     "awesome-phonenumber": "^2.40.0",
     "copy-webpack-plugin": "^6.2.1",
@@ -55,8 +56,12 @@
     "lint:js": "eslint src test --ext .js,.ts",
     "lint:html": "htmlhint -c .htmlhintrc src",
     "lint": "npm run lint:js && npm run lint:html",
-    "start": "webpack-dev-server",
-    "build": "rimraf dist && webpack --env production",
+    "start": "webpack-dev-server --env.WEB_ENV=local",
+    "start:stage": "webpack-dev-server --env.WEB_ENV=stage",
+    "start:prod": "webpack-dev-server",
+    "build": "rimraf dist && webpack --env.WEB_ENV=local --env production",
+    "build:stage": "rimraf dist && webpack --env.WEB_ENV=stage --env production",
+    "build:prod": "rimraf dist && webpack --env production",
     "analyze": "rimraf dist && webpack --env production --analyze"
   }
 }
