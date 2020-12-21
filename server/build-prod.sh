@@ -1,5 +1,5 @@
 rm -rf node_modules
-npm ci
+npm ci --also=dev
 npm run build
 rm -rf build
 cp -R dist build
