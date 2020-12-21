@@ -128,7 +128,7 @@ mongoose.connect(
     app.use(contextService.middleware('request'));
 
     app.get('/', (req, res) => {
-        res.send('It works!!');
+        res.send('It works!!!');
     });
 
     app.use(express.static(path.join(__dirname, './public')));
