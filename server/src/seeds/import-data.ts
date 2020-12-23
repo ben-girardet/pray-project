@@ -36,6 +36,10 @@ mongoose.connect(
             'Ben Girardet': 'benjamin@girardet.ch',
             'Chantal Girardet': 'chantal@girardet.ch'
         };
+        const importMobiles = {
+            'Ben Girardet': '+41792567760',
+            'Chantal Girardet': '+41797325550'
+        }
         const userEmailFromId: {
             [key: string]: string
         } = {};
@@ -84,7 +88,7 @@ mongoose.connect(
             }
             importedUsers.push({
                 email: importUsers[user.firstname + ' ' + user.lastname],
-                mobile: '',
+                mobile: importMobiles[user.firstname + ' ' + user.lastname],
                 password: 'admin',
                 firstname: user.firstname,
                 lastname: user.lastname,
