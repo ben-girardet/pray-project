@@ -141,6 +141,10 @@ Login is now pretty well in place. Now is the time to improve the topic experien
 - [x] Try to fetch topics again when back to foreground
 - [x] Improve webpack config for better caching and PWA update
 
+## 26.12.2020 -
+- [ ] Update prod scripts for Jelastic
+- [ ] Restore the storage container in Jelastic env
+
 ## Next 
 
 - [ ] Add a "viewedBy" property to topic, messages and prayers model so we can add personalised notifications based on who viewed what
