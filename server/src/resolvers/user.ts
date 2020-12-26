@@ -185,9 +185,9 @@ export class UnviewedTopic {
     @Field()
     public isViewed: boolean;
 
-    @Field()
+    @Field(() => [String])
     public messages: string[];
 
-    @Field()
+    @Field(() => [String])
     public prayers: string[];
 }
