@@ -1,1 +1,1 @@
-pm2 restart api
+pm2 start --name api build/server/src/server.js
