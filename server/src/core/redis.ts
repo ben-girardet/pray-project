@@ -53,7 +53,7 @@ export { client };
 
 const objectIdsProperties = ['_id', 'topicId', 'createdBy', 'updatedBy', 'user1', 'user2', 'requestedBy'];
 const dateProperties = ['createdAt', 'updatedAt'];
-const jsonProperties = ['image', 'picture', 'shares'];
+const jsonProperties = ['image', 'picture', 'shares', 'viewedBy'];
 
 function prepareForSave(object: {[key: string]: any}): {[key: string]: any} {
     log(chalk.dim('prepareForSave', object.id, Object.keys(object)));
