@@ -7,9 +7,9 @@ import mongoose from 'mongoose';
 import { EditMeInput } from './inputs/user';
 import { FriendshipModel } from "../models/friendship";
 import { removeModelItem } from "../core/redis";
-import { TopicModel } from "src/models/topic";
-import { MessageModel } from "src/models/message";
-import { PrayerModel } from "src/models/prayer";
+import { TopicModel } from "../models/topic";
+import { MessageModel } from "../models/message";
+import { PrayerModel } from "../models/prayer";
 
 // TODO: in any edit user resolver
 // we must ensure to del the hash in redis
