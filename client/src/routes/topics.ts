@@ -1,3 +1,4 @@
+import { PageVisibility } from './../helpers/page-visibility';
 import { CryptingService } from './../services/crypting-service';
 import { AppNotification } from './../components/app-notification';
 import { Topic as ITopic } from 'shared/types/topic';
@@ -20,7 +21,8 @@ export class Topics implements IRouteableComponent, IViewModel {
   public constructor(
     private eventAggregator: EventAggregator, 
     @ILogger iLogger: ILogger,
-    @IRouter private router: IRouter) {
+    @IRouter private router: IRouter,
+    private pageVisibility: PageVisibility) {
     this.logger = iLogger.scopeTo('topics-route');
   }
 
@@ -28,10 +30,10 @@ export class Topics implements IRouteableComponent, IViewModel {
     // version with a query get topics
     await this.getTopics();
     this.events.push(this.eventAggregator.subscribe('topic-form-out', async () => {
-      await this.getTopics();
+      await this.tryToFetchTopics();
     }));
     this.events.push(this.eventAggregator.subscribe('topic-detail-out', async () => {
-      await this.getTopics();
+      await this.tryToFetchTopics();
       if (this.activeTab === 'archived' && this.archivedTopics.length === 0) {
         this.activeTopicsTabElement.click();
       }
@@ -40,7 +42,10 @@ export class Topics implements IRouteableComponent, IViewModel {
       }
     }));
     this.events.push(this.eventAggregator.subscribe('praying-out', async () => {
-      await this.getTopics();
+      await this.tryToFetchTopics();
+    }));
+    this.events.push(this.eventAggregator.subscribe('page:foreground', async () => {
+      await this.tryToFetchTopics();
     }));
     await this.tryToFetchTopics();
   }

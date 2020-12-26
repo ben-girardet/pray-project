@@ -1,7 +1,8 @@
-import { IRouter, IViewModel, ViewportInstruction, inject, ILogger, EventAggregator } from 'aurelia';
+import { IRouter, IViewModel, ViewportInstruction, inject, ILogger, EventAggregator, IDisposable } from 'aurelia';
 import { parseColorWebRGB } from "@microsoft/fast-colors";
 import { createColorPalette, parseColorString } from "@microsoft/fast-components";
 import { apolloAuth } from './apollo';
+import { PageVisibility } from './helpers/page-visibility';
 
 const neutral = 'rgb(200, 200, 200)'; // 'rgb(70,51,175)';
 // const accent = 'rgb(0,201,219)';
@@ -15,13 +16,15 @@ export class MyApp implements IViewModel {
   private logger: ILogger;
   public apolloAuth = apolloAuth;
 
-  public prayImageSrc = './images/pray-button.png';
+  public subscriptions: IDisposable[] = [];
 
   constructor(
     @IRouter private router: IRouter, 
     @ILogger private iLogger: ILogger,
-    private eventAggregator: EventAggregator) {
+    private eventAggregator: EventAggregator,
+    private pageVisibility: PageVisibility) {
     this.logger = iLogger.scopeTo('app');
+    this.pageVisibility.listen();
   }
 
   public attached(): void {
@@ -47,6 +50,19 @@ export class MyApp implements IViewModel {
   public async binding(): Promise<void> {
     // TODO: if not authenticated, here is a good
     // place to start authentication (silent try)
+    this.subscriptions.push(this.eventAggregator.subscribe('page:foreground', () => {
+      this.loginIfNotAuthenticated();
+    }));
+  }
+
+  public async loginIfNotAuthenticated() {
+    const vp = this.router.getViewport('main');
+    const componentName = vp.content.content.componentName;
+    if ((!apolloAuth.authenticated || !apolloAuth.isTokenValid()) && !(await apolloAuth.refresh())) {
+      if (!['login', 'register'].includes(componentName)) {
+        return [this.router.createViewportInstruction('login', vp)];
+      }
+    }
   }
 
   public async bound(): Promise<void> {
@@ -105,6 +121,13 @@ export class MyApp implements IViewModel {
     }, {
       include: ['praying', '-', 'topic-form', 'topic-detail', 'conversation', 'sharing', 'friends', 'edit-profile']
     });
+  }
+
+  public unbind() {
+    for (const sub of this.subscriptions) {
+      sub.dispose();   
+    }
+    this.subscriptions = [];
   }
 
   public topicsActive(activeComponents: ViewportInstruction[]): boolean {
