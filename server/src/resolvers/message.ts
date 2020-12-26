@@ -8,6 +8,7 @@ import { Resolver, Query, Arg, Authorized, Ctx, Mutation } from "type-graphql";
 import { FilterQuery } from 'mongoose';
 import { Context } from "./context-interface";
 import { mongoose } from "@typegoose/typegoose";
+import { TopicResolver } from './topic';
 
 @Resolver()
 export class MessageResolver {
@@ -53,7 +54,7 @@ export class MessageResolver {
     newMessage.updatedBy = userId;
     newMessage.text = data.text;
     newMessage.topicId = topicId;
-
+    newMessage.viewedBy = [userId.toString()];
 
     const createdMessage = await newMessage.save();
     const createdMessageInstance = new MessageModel(createdMessage);
@@ -62,6 +63,12 @@ export class MessageResolver {
     const exists = await existsAsync(`topic-messages:${topicId.toString()}`)
     if (exists) {
         await lpushAsync(`topic-messages:${topicId.toString()}`, JSON.stringify(messageObject));
+    }
+    for (const share of topic.shares) {
+        await TopicResolver.clearTopicsCacheKeyForUser(share.userId.toString());
+        // clear `unviewed:_____` REDIS cache of all users
+        // who have access to this topic
+        await delAsync(`unviewed:${share.userId.toString()}`);
     }
 
     return messageObject;

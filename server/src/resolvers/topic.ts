@@ -9,7 +9,7 @@ import { MessageModel } from '../models/message';
 import { CreateTopicInput, EditTopicInput, AddShareToTopicInput } from './inputs/topic';
 import { SortBy, SortOrder } from './inputs/sorting';
 import { Prayer, PrayerModel } from "../models/prayer";
-import chalk from 'chalk';
+import moment from 'moment';
 
 @Resolver()
 export class TopicResolver {
@@ -21,7 +21,7 @@ export class TopicResolver {
     const userId = new mongoose.Types.ObjectId(context.user.userId);
     const userIdString = userId.toString();
     const cacheKey = `status:${status};sort:${JSON.stringify(sort)}`;
-    const cacheValue = await getModelItems(this.computeTopicsCacheKey(userIdString, cacheKey));
+    const cacheValue = await getModelItems(TopicResolver.computeTopicsCacheKey(userIdString, cacheKey));
     if (cacheValue) {
         return cacheValue.map((cv) => {
             const obj = new TopicModel(cv);
@@ -50,8 +50,8 @@ export class TopicResolver {
         }
         return true;
     }).map(t => t.toObjectWithMyShare());
-    await saveModelItems(this.computeTopicsCacheKey(userIdString, cacheKey), objects, {time: 60 * 30});
-    await this.registerTopicsCacheKeyForUser(userIdString, cacheKey);
+    await saveModelItems(TopicResolver.computeTopicsCacheKey(userIdString, cacheKey), objects, {time: 60 * 30});
+    await TopicResolver.registerTopicsCacheKeyForUser(userIdString, cacheKey);
     return objects;
   }
 
@@ -103,11 +103,12 @@ export class TopicResolver {
     share.encryptedContentKey = data.encryptedContentKey;
     share.role = 'owner';
     newTopic.shares.push(share);
+    newTopic.viewedBy = [userId.toString()];
     const createdTopic = await newTopic.save();
     const createdTopicInstance = new TopicModel(createdTopic);
     await saveModelItem('topic', createdTopicInstance.toObject());
     createdTopicInstance.setMyShare(userId);
-    await this.clearTopicsCacheKeyForUser(userId.toString());
+    await TopicResolver.clearTopicsCacheKeyForUser(userId.toString());
     return createdTopicInstance.toObjectWithMyShare();
   }
 
@@ -131,14 +132,12 @@ export class TopicResolver {
         originalTopic.answeredAt = undefined;
     }
 
-
-
     const updatedTopic = await originalTopic.save();
     const updatedTopicInstance = new TopicModel(updatedTopic);
     await saveModelItem('topic', updatedTopicInstance.toObject());
     updatedTopicInstance.setMyShare(userId);
     for (const share of updatedTopicInstance.shares) {
-        await this.clearTopicsCacheKeyForUser(share.userId.toString());
+        await TopicResolver.clearTopicsCacheKeyForUser(share.userId.toString());
     }
     return updatedTopicInstance.toObjectWithMyShare();
   }
@@ -158,8 +157,11 @@ export class TopicResolver {
     await saveModelItem('topic', updatedTopicInstance.toObject());
     updatedTopicInstance.setMyShare(loggedInUserId);
     for (const share of updatedTopicInstance.shares) {
-        await this.clearTopicsCacheKeyForUser(share.userId.toString());
+        await TopicResolver.clearTopicsCacheKeyForUser(share.userId.toString());
     }
+    // clear `unviewed:_____` REDIS cache of the use who
+    // now have access to this topic
+    await delAsync(`unviewed:${data.userId}`);
     return updatedTopicInstance.toObjectWithMyShare();
   }
 
@@ -176,10 +178,17 @@ export class TopicResolver {
     const updatedTopic = await originalTopic.save();
     const updatedTopicInstance = new TopicModel(updatedTopic);
     await saveModelItem('topic', updatedTopicInstance.toObject());
+    // we decide not to update REDIS cache for this updates below
+    // as it does not interfere witch anything special, it's more a cleaning purpose
+    await MessageModel.updateMany({topicId}, {$pull: {viewedBy: userId.toString()}});
+    await PrayerModel.updateMany({topicId}, {$pull: {viewedBy: userId.toString()}});
     updatedTopicInstance.setMyShare(loggedInUserId);
     for (const share of updatedTopicInstance.shares) {
-        await this.clearTopicsCacheKeyForUser(share.userId.toString());
+        await TopicResolver.clearTopicsCacheKeyForUser(share.userId.toString());
     }
+    // clear `unviewed:_____` REDIS cache of the use who
+    // now have access to this topic
+    await delAsync(`unviewed:${userId}`);
     return updatedTopicInstance.toObjectWithMyShare();
   }
 
@@ -191,9 +200,13 @@ export class TopicResolver {
     const topicId = new mongoose.Types.ObjectId(id);
     const originalTopic = await TopicModel.findOneAndCheckRole(topicId, userId, true);
     await MessageModel.deleteMany({topicId});
+    await PrayerModel.deleteMany({topicId});
     await originalTopic.remove();
     for (const share of originalTopic.shares) {
-        await this.clearTopicsCacheKeyForUser(share.userId.toString());
+        await TopicResolver.clearTopicsCacheKeyForUser(share.userId.toString());
+        // clear `unviewed:_____` REDIS cache of all users
+        // who used to have access to this topic
+        await delAsync(`unviewed:${share.userId.toString()}`);
     }
     await delAsync(`topic:${originalTopic._id}`)
     return true;
@@ -208,6 +221,7 @@ export class TopicResolver {
     const newPrayer = new PrayerModel();
     newPrayer.topicId = topic._id;
     newPrayer.createdBy = new mongoose.Types.ObjectId(context.user.userId);
+    newPrayer.viewedBy = [userId.toString()];
     const createdPrayer = await newPrayer.save();
     const prayerObject = createdPrayer.toObject();
     const exists = await existsAsync(`topic-prayers:${topicId.toString()}`)
@@ -215,16 +229,49 @@ export class TopicResolver {
         await lpushAsync(`topic-prayers:${topicId.toString()}`, JSON.stringify(prayerObject));
     }
     for (const share of topic.shares) {
-        await this.clearTopicsCacheKeyForUser(share.userId.toString());
+        await TopicResolver.clearTopicsCacheKeyForUser(share.userId.toString());
+        // clear `unviewed:_____` REDIS cache of all users
+        // who have access to this topic
+        await delAsync(`unviewed:${share.userId.toString()}`);
     }
+
     return prayerObject;
   }
 
-  private computeTopicsCacheKey(userId: string, cacheKey: string): string {
+  @Authorized(['user'])
+  @Mutation(() => Boolean)
+  public async viewed(@Ctx() ctx: Context, @Arg('date') date: string, @Arg('context') context: string, @Arg('topicId', {nullable: true}) topicId: string) {
+    const user = ctx.user;
+    const userId = new mongoose.Types.ObjectId(user.userId);
+    const dateMoment = moment(date);
+    if (!dateMoment.isValid()) {
+        throw new Error('Invalid date');
+    }
+    if (context === 'topic') {
+        await TopicModel.updateMany({
+            updatedAt: {$lte: dateMoment.toDate()}
+        }, {$addToSet: {viewedBy: userId.toString()}});
+    } else if (context === 'messages') {
+        if (!topicId) {
+            throw new Error('Missing topicId');
+        }
+        await MessageModel.updateMany({
+            updatedAt: {$lte: dateMoment.toDate()},
+            topicId: new mongoose.Types.ObjectId(topicId)
+        }, {$addToSet: {viewedBy: userId.toString()}});
+        await PrayerModel.updateMany({
+            updatedAt: {$lte: dateMoment.toDate()},
+            topicId: new mongoose.Types.ObjectId(topicId)
+        }, {$addToSet: {viewedBy: userId.toString()}});
+    }
+    return true;
+  }
+
+  private static computeTopicsCacheKey(userId: string, cacheKey: string): string {
     return `topics:${userId.toString()}:${cacheKey}`;
   }
 
-  private async registerTopicsCacheKeyForUser(userId: string, key: string): Promise<void> {
+  private static async registerTopicsCacheKeyForUser(userId: string, key: string): Promise<void> {
       let keys = await getModelItems(`${userId}:topics:cache-keys`, {primitive: true}) || [];
       if (keys.includes(key)) {
           return;
@@ -233,12 +280,12 @@ export class TopicResolver {
       await saveModelItems(`${userId}:topics:cache-keys`, keys, {primitive: true});
   }
 
-  private async clearTopicsCacheKeyForUser(userId: string): Promise<void> {
+  public static async clearTopicsCacheKeyForUser(userId: string): Promise<void> {
     const keys = await getModelItems(`${userId}:topics:cache-keys`, {primitive: true});
     if (!keys || keys.length === 0) {
         return;
     }
-    const topicKeys = keys.map(k => this.computeTopicsCacheKey(userId, k));
+    const topicKeys = keys.map(k => TopicResolver.computeTopicsCacheKey(userId, k));
     for (const key of keys.concat(...topicKeys)) {
         await delAsync(key);
     }

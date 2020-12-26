@@ -133,12 +133,17 @@ Login is now pretty well in place. Now is the time to improve the topic experien
 
 - [x] Test Jelastic deployment
 - [x] Send code by SMS for registration
-- [ ] Script to start node automatically in NodeJS container
+- [x] Script to start node automatically in NodeJS container
 - [x] Import data in production
+
+## 25.12.2020 - Use Page Visibility API
+- [x] Check login state when back to foreground
+- [x] Try to fetch topics again when back to foreground
+- [x] Improve webpack config for better caching and PWA update
 
 ## Next 
 
-
+- [ ] Add a "viewedBy" property to topic, messages and prayers model so we can add personalised notifications based on who viewed what
 - [ ] Ensure the screen looks amazing even without content (after first registration)
 - [ ] Work on apollo cache, basically use it more and remove cached elements on edit. Must also set some expire so we make sure we give the data a chance to be updated
 - [ ] Work on the TODO's
@@ -146,9 +151,9 @@ Login is now pretty well in place. Now is the time to improve the topic experien
 - [ ] Stack AppNotifications (so we can see several)
 - [ ] Change password
 - [ ] Optimize bundles with code splitting (https://webpack.js.org/guides/code-splitting/)
-- [ ] Add a "viewedBy" property to topic, messages and prayers model so we can add personalised notifications based on who viewed what
 - [ ] Create more realistic tests scenario including user registration and increased users friendships
 - [ ] Help tooltips
 - [ ] Allow owner to give "owner" role on their topics
 - [ ] Cache images
 - [ ] Fix class-validator warning, check if I need it for the project
+- [ ] Cordova App

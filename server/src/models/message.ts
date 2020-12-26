@@ -43,6 +43,9 @@ export class Message implements IMessage {
     @prop()
     public updatedAt: Date;
 
+    @prop()
+    public viewedBy?: string[] = [];
+
     public static async findTopicMessagesWithCache(topicId: any) {
       if (!topicId) {
         return [];

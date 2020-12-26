@@ -61,6 +61,9 @@ export class Topic implements ITopic {
     @Field({nullable: true})
     public myShare?: Share;
 
+    @prop()
+    public viewedBy?: string[] = [];
+
     public setMyShare(userId: mongoose.Types.ObjectId) {
         this.myShare = undefined;
         for (const share of this.shares) {
@@ -115,6 +118,10 @@ export class Topic implements ITopic {
                 this.shares.splice(index, 1);
                 return;
             }
+        }
+        const indexOfViewedBy = (this.viewedBy || []).indexOf(userId.toString());
+        if (indexOfViewedBy !== -1) {
+            this.viewedBy = this.viewedBy?.splice(indexOfViewedBy, 1);
         }
         return;
     }

@@ -1,11 +1,15 @@
+import { setAsync, client } from './../core/redis';
 import { User, UserModel } from "../models/user";
-import { Resolver, Query, Arg, Ctx, Mutation, Authorized } from "type-graphql";
+import { Resolver, Query, Arg, Ctx, Mutation, Authorized, ObjectType, Field } from "type-graphql";
 import { FilterQuery } from 'mongoose';
 import { Context } from './context-interface';
 import mongoose from 'mongoose';
 import { EditMeInput } from './inputs/user';
 import { FriendshipModel } from "../models/friendship";
 import { removeModelItem } from "../core/redis";
+import { TopicModel } from "src/models/topic";
+import { MessageModel } from "src/models/message";
+import { PrayerModel } from "src/models/prayer";
 
 // TODO: in any edit user resolver
 // we must ensure to del the hash in redis
@@ -74,6 +78,7 @@ export class UserResolver {
     return user.toObject();
   }
 
+  @Authorized(['user'])
   @Query(() => User)
   public async me(@Ctx() context: Context) {
     const userId = new mongoose.Types.ObjectId(context.user.userId);
@@ -84,6 +89,7 @@ export class UserResolver {
     return user.toObject();
   }
 
+  @Authorized(['user'])
   @Mutation(() => User)
   public async editMe(@Ctx() context: Context, @Arg('data') data: EditMeInput) {
     const userId = new mongoose.Types.ObjectId(context.user.userId);
@@ -111,4 +117,77 @@ export class UserResolver {
     const updatedUserInstance = new UserModel(updatedUser);
     return updatedUserInstance.toObject();
   }
+
+  @Authorized(['user'])
+  @Query(() => [UnviewedTopic])
+  public async unviewed(@Ctx() context: Context) {
+    const userIdString = context.user.userId;
+    const userId = new mongoose.Types.ObjectId(context.user.userId);
+
+    // fetch all topics so that
+    // - we can identify those unviewed
+    // - AND we can fetch messages and prayers related to "my" topis
+    const topics = await TopicModel.find({"shares.userId": userId}).select('_id viewedBy');
+    const unviewedTopics = topics.filter(t => !(t.viewedBy || []).includes(userIdString));
+    const topicsIds = topics.map(t => t._id);
+    const unviewedMessages = await MessageModel.find({"topicId": {$in: topicsIds}, viewedBy: {$nin: [userIdString]}}).select('_id topicId');
+    const unviewedPrayers = await PrayerModel.find({"topicId": {$in: topicsIds}, viewedBy: {$nin: [userIdString]}}).select('_id topicId');
+
+    // build the output for "unviewed"
+    const result: UnviewedTopic[] = [];
+    const unviewedMessagesByTopic: {[key: string]: string[]} = {};
+    const unviewedPrayersByTopic: {[key: string]: string[]} = {};
+    for (const unviewedMessage of unviewedMessages) {
+        if (!unviewedMessage.topicId) {
+            continue;
+        }
+        const topicIdString = unviewedMessage.topicId.toString();
+        if (!Array.isArray(unviewedMessagesByTopic[topicIdString])) {
+            unviewedMessagesByTopic[topicIdString] = [];
+        }
+        unviewedMessagesByTopic[topicIdString].push(unviewedMessage._id.toString());
+    }
+    for (const unviewedPrayer of unviewedPrayers) {
+        if (!unviewedPrayer.topicId) {
+            continue;
+        }
+        const topicIdString = unviewedPrayer.topicId.toString();
+        if (!Array.isArray(unviewedPrayersByTopic[topicIdString])) {
+            unviewedPrayersByTopic[topicIdString] = [];
+        }
+        unviewedPrayersByTopic[topicIdString].push(unviewedPrayer._id.toString());
+    }
+    for (const topic of topics) {
+        const unviewedTopic = new UnviewedTopic();
+        const topicIdString =
+        unviewedTopic.id = topic._id.toString();
+        unviewedTopic.isViewed = (topic.viewedBy || []).includes(userIdString);
+        unviewedTopic.messages = unviewedMessagesByTopic[topicIdString] || [];
+        unviewedTopic.prayers = unviewedPrayersByTopic[topicIdString] || [];
+        if (!unviewedTopic.isViewed || unviewedTopic.messages.length > 0 || unviewedTopic.prayers.length > 0) {
+            result.push(unviewedTopic);
+        }
+    }
+
+    // cache the result
+    await setAsync(`unviewed:${userIdString}`, JSON.stringify(result));
+    client.expire(`unviewed:${userIdString}`, 3600 * 12);
+
+    return result;
+  }
+}
+@ObjectType()
+export class UnviewedTopic {
+
+    @Field()
+    public id: string;
+
+    @Field()
+    public isViewed: boolean;
+
+    @Field()
+    public messages: string[];
+
+    @Field()
+    public prayers: string[];
 }
