@@ -30,7 +30,7 @@ module.exports = function(env, { analyze }) {
     entry: './src/main.ts',
     output: {
       path: path.resolve(__dirname, 'dist'),
-      filename: 'entry-bundle.js'
+      filename: '[name].[contenthash].js'
     },
     resolve: {
       extensions: ['.ts', '.js'],
