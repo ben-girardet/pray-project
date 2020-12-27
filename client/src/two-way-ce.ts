@@ -1,5 +1,4 @@
-import { IContainer } from 'aurelia';
-import { IAttrSyntaxTransformer, NodeObserverLocator, AppTask } from '@aurelia/runtime-html';
+import { IContainer, IAttrSyntaxTransformer, NodeObserverLocator, AppTask } from 'aurelia';
 
 export class TwoWayCe {
 

@@ -1,9 +1,9 @@
-import Aurelia, { RouterConfiguration, LoggerConfiguration, LogLevel, ColorOptions, IContainer } from 'aurelia';
-import { IAttrSyntaxTransformer, NodeObserverLocator, AppTask } from '@aurelia/runtime-html';
+import Aurelia, { RouterConfiguration, LoggerConfiguration, LogLevel, ColorOptions } from 'aurelia';
 import { TopicPreview } from './elements/topic-preview';
 import { MyApp } from './my-app';
 import { DateValueConverter } from './resources/date-value-converter';
 import { GradientValueConverter } from './resources/gradient-value-converter';
+import { Nl2brValueConverter } from './resources/nl2br-value-converter';
 import { FileValueConverter } from './resources/file-value-converter';
 import { AvatarSelection } from './elements/avatar-selection';
 import { MiniUser } from './elements/mini-user';
@@ -76,6 +76,7 @@ Aurelia
   .register(DateValueConverter)
   .register(FileValueConverter)
   .register(GradientValueConverter)
+  .register(Nl2brValueConverter)
   .register(AvatarSelection)
   .register(TopicPreview)
   .register(MiniUser)

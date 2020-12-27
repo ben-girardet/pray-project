@@ -3,7 +3,7 @@ import { apolloAuth, client } from './../apollo';
 import { ApolloQueryResult, gql } from 'apollo-boost';
 import { AvatarSelection } from './../elements/avatar-selection';
 import { IRouteableComponent } from '@aurelia/router';
-import { IViewModel, IRouter, ILogger } from 'aurelia';
+import { ICustomElementViewModel, IRouter, ILogger } from 'aurelia';
 import { AppNotification } from '../components/app-notification';
 import PhoneNumber from 'awesome-phonenumber';
 import { register, validateRegistration } from '../commands/register';
@@ -11,8 +11,9 @@ import { login } from '../commands/login';
 import { editMe } from '../commands/user';
 // TODO: remove all instances of /server/ in shared or client
 import { Image } from '../../../server/src/models/image';
+import { Global } from '../global';
 
-export class Register implements IRouteableComponent, IViewModel {
+export class Register implements IRouteableComponent, ICustomElementViewModel {
 
   public firstname = '';
   public lastname = '';
@@ -33,7 +34,8 @@ export class Register implements IRouteableComponent, IViewModel {
 
   public constructor(
     @IRouter private router: IRouter, 
-    @ILogger iLogger: ILogger, 
+    @ILogger iLogger: ILogger,
+    private global: Global
     ) {
     this.logger = iLogger.scopeTo('register route');
   }

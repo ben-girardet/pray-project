@@ -1,8 +1,9 @@
-import { IRouter, IViewModel, ViewportInstruction, inject, ILogger, EventAggregator, IDisposable } from 'aurelia';
+import { IRouter, ICustomElementViewModel, ViewportInstruction, inject, ILogger, EventAggregator, IDisposable } from 'aurelia';
 import { parseColorWebRGB } from "@microsoft/fast-colors";
 import { createColorPalette, parseColorString } from "@microsoft/fast-components";
 import { apolloAuth } from './apollo';
 import { PageVisibility } from './helpers/page-visibility';
+import { Global } from './global';
 
 const neutral = 'rgb(200, 200, 200)'; // 'rgb(70,51,175)';
 // const accent = 'rgb(0,201,219)';
@@ -11,18 +12,21 @@ const neutralPalette = createColorPalette(parseColorWebRGB(neutral));
 const accentPalette = createColorPalette(parseColorString(accent));
 
 @inject()
-export class MyApp implements IViewModel {
+export class MyApp implements ICustomElementViewModel {
 
   private logger: ILogger;
   public apolloAuth = apolloAuth;
 
   public subscriptions: IDisposable[] = [];
 
+  
+
   constructor(
     @IRouter private router: IRouter, 
     @ILogger private iLogger: ILogger,
     private eventAggregator: EventAggregator,
-    private pageVisibility: PageVisibility) {
+    private pageVisibility: PageVisibility,
+    private global: Global) {
     this.logger = iLogger.scopeTo('app');
     this.pageVisibility.listen();
   }
@@ -50,24 +54,32 @@ export class MyApp implements IViewModel {
   public async binding(): Promise<void> {
     // TODO: if not authenticated, here is a good
     // place to start authentication (silent try)
-    this.subscriptions.push(this.eventAggregator.subscribe('page:foreground', () => {
-      this.loginIfNotAuthenticated();
+    this.subscriptions.push(this.eventAggregator.subscribe('page:foreground', async () => {
+      const isAuth = await this.loginIfNotAuthenticated();
+      if (isAuth) {
+        this.eventAggregator.publish('page:foreground:auth')
+      }
     }));
   }
 
-  public async loginIfNotAuthenticated() {
+  public async loginIfNotAuthenticated(): Promise<boolean> {
     if (!(await apolloAuth.isAuthenticated())) {
       const vp = this.router.getViewport('main');
       const componentName = vp.content.content.componentName;
       if (!['login', 'register'].includes(componentName)) {
-        return [this.router.createViewportInstruction('login', vp)];
+        this.router.load('login');
+        return false;
       }
     }
+    return true;
   }
+
+  
 
   public async bound(): Promise<void> {
     // Authentication HOOK
     this.router.addHook(async (instructions: ViewportInstruction[]) => {
+      this.global.bumpRoute();
       // User is not logged in, so redirect them back to login page
       const mainInstruction = instructions.find(i => i.viewportName === 'main');
       if (mainInstruction && !(await apolloAuth.isAuthenticated())) {
@@ -95,8 +107,10 @@ export class MyApp implements IViewModel {
       if (prayingInstruction) {
         if (prayingInstruction.componentName === 'praying') {
           document.documentElement.classList.add('praying');
+          this.eventAggregator.publish(`praying-in`);
         } else if (prayingInstruction.componentName === '-') {
           document.documentElement.classList.remove('praying');
+          this.eventAggregator.publish(`praying-out`);
         }
       }
       if (bottomInstruction) {

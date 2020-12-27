@@ -3,17 +3,18 @@ import { AppNotification } from './../components/app-notification';
 import { ImageService } from './../services/internals';
 import { Topic } from 'shared/types/topic';
 import { Share, MyShare } from 'shared/types/share';
-import { IRouteableComponent, IRouter } from '@aurelia/router';
-import { IViewModel, inject } from 'aurelia';
+import { IRouteableComponent } from '@aurelia/router';
+import { ICustomElementViewModel, inject } from 'aurelia';
 import ImageBlobReduce from 'image-blob-reduce';
 import Croppie from 'croppie';
 import { parseColorString } from "@microsoft/fast-components";
 import { ColorRGBA64, ColorHSL, rgbToHSL, hslToRGB } from "@microsoft/fast-colors";
 import { createTopic, getTopic, editTopic } from '../commands/topic';
+import { Global } from '../global';
 const reducer = ImageBlobReduce();
 
 @inject()
-export class TopicForm implements IRouteableComponent, IViewModel {
+export class TopicForm implements IRouteableComponent, ICustomElementViewModel {
 
   public static parameters = ['topicId'];
 
@@ -34,7 +35,7 @@ export class TopicForm implements IRouteableComponent, IViewModel {
   public status: 'active' | 'answered' | 'archived' = 'active';
   public nameElement: HTMLElement;
 
-  public constructor(@IRouter private router: IRouter, private imageService: ImageService) {
+  public constructor(private global: Global, private imageService: ImageService) {
     this.imageService.heightRatio = 1.2;
     this.imageService.cropType = 'square';
     this.imageService.onCancel = () => {
@@ -51,7 +52,7 @@ export class TopicForm implements IRouteableComponent, IViewModel {
   public async load(parameters: {topicId?: string}): Promise<void> {
     if (parameters.topicId) {
       const topic = await getTopic(parameters.topicId);
-      CryptingService.decryptTopic(topic);
+      await CryptingService.decryptTopic(topic);
       this.topicId = topic.id;
       this.color = topic.color;
       this.preview = topic.image && topic.image.length ? topic.image.find(i => i.height > 50 && i.width > 50).fileId : '';
@@ -111,14 +112,14 @@ export class TopicForm implements IRouteableComponent, IViewModel {
         });
         // throw new Error('Edit topic not implemented');
       }
-      this.router.load('../-@bottom');
+      this.global.router.load('../-@bottom');
     } catch (error) {
       AppNotification.notify(error.message, 'error');
     }
   }
   
   public cancel(): void {
-    this.router.load('../-@bottom');
+    this.global.router.load('../-@bottom');
   }
 
   public removeImage(): void {

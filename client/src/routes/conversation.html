@@ -17,7 +17,7 @@
         <div class="group-person__identity" if.bind="group.who === 'them'">
           <mini-user user-id.bind="group.userId" size="small"></mini-user>
         </div>
-        <message class="message" repeat.for="message of group.messages">${message.text}</message>
+        <message class="message" repeat.for="message of group.messages" innerhtml="${message.text | nl2br}"></message>
         <div class="group-person__time">${group.messages[group.messages.length-1].date | date:'nicetime'}</div>
       </template>
       <template if.bind="group.prayers.length > 0">

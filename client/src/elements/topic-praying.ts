@@ -1,11 +1,11 @@
 import { AppNotification } from './../components/app-notification';
 import { CryptingService } from './../services/crypting-service';
 import { Topic } from 'shared/types/topic';
-import { IViewModel, ILogger, bindable } from 'aurelia';
+import { ICustomElementViewModel, ILogger, bindable } from 'aurelia';
 import { getTopic } from '../commands/topic';
 import { createMessageInTopic } from '../commands/message';
 
-export class TopicPraying implements IViewModel {
+export class TopicPraying implements ICustomElementViewModel {
 
   public static parameters = ['topicId'];
 
@@ -83,8 +83,8 @@ export class TopicPraying implements IViewModel {
       return;
     }
     try {
-      await CryptingService.encryptNewMessage(this.topic, this.message);
-      await createMessageInTopic(this.topicId, this.message);
+      const cryptedMessage = await CryptingService.encryptNewMessage(this.topic, this.message);
+      await createMessageInTopic(this.topicId, cryptedMessage);
       this.message = '';
       document.body.focus();
       AppNotification.notify('Message sent', 'success');

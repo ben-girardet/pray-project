@@ -1,5 +1,4 @@
-import { HttpClient, json } from '@aurelia/fetch-client';
-import { inject } from 'aurelia';
+import { inject, HttpClient, json } from 'aurelia';
 import conf from '../config';
 
 @inject(HttpClient)

@@ -4,13 +4,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const {BundleAnalyzerPlugin} = require('webpack-bundle-analyzer');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 
-const cssLoader = {
-  loader: 'css-loader',
-  options: {
-    // To be removed after releasing https://github.com/gajus/to-string-loader/pull/20
-    esModule: false
-  }
-};
+const cssLoader = 'css-loader';
 
 
 const postcssLoader = {
@@ -23,10 +17,10 @@ const postcssLoader = {
 };
 
 module.exports = function(env, { analyze }) {
-  const production = env === 'production' || process.env.NODE_ENV === 'production';
+  const production = env.production || process.env.NODE_ENV === 'production';
   return {
     mode: production ? 'production' : 'development',
-    devtool: production ? 'source-maps' : 'inline-source-map',
+    devtool: production ? 'source-map' : 'inline-source-map',
     entry: './src/main.ts',
     output: {
       path: path.resolve(__dirname, 'dist'),
@@ -34,7 +28,11 @@ module.exports = function(env, { analyze }) {
     },
     resolve: {
       extensions: ['.ts', '.js'],
-      modules: [path.resolve(__dirname, 'src'), 'node_modules']
+      modules: [path.resolve(__dirname, 'src'), 'node_modules'],
+      fallback: { 
+        "crypto": require.resolve("crypto-browserify"),
+        "stream": require.resolve("stream-browserify")
+      }
     },
     devServer: {
       historyApiFallback: true,

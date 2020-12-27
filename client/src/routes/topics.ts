@@ -1,14 +1,16 @@
+import { apolloAuth } from './../apollo';
 import { PageVisibility } from './../helpers/page-visibility';
 import { CryptingService } from './../services/crypting-service';
 import { AppNotification } from './../components/app-notification';
 import { Topic as ITopic } from 'shared/types/topic';
 import { MyShare } from 'shared/types/share';
 import { IRouteableComponent } from '@aurelia/router';
-import { IViewModel, ILogger, EventAggregator, IDisposable, IRouter, IPlatform } from 'aurelia';
+import { Global } from '../global';
+import { ICustomElementViewModel, ILogger, EventAggregator, IDisposable, IRouter, IPlatform } from 'aurelia';
 import easyScroll from 'easy-scroll';
 import { getTopics } from '../commands/topic';
 
-export class Topics implements IRouteableComponent, IViewModel {
+export class Topics implements IRouteableComponent, ICustomElementViewModel {
 
   public activeTopics: ITopic[] = [];
   public answeredTopics: ITopic[] = [];
@@ -18,25 +20,25 @@ export class Topics implements IRouteableComponent, IViewModel {
   public activeTab: 'active' | 'answered' | 'archived' = 'active';
   public activeTopicsTabElement: HTMLElement;
 
-  public constructor(
-    private eventAggregator: EventAggregator, 
+  public constructor( 
     @ILogger iLogger: ILogger,
-    @IRouter private router: IRouter,
-    @IPlatform private platform: IPlatform,
-    private pageVisibility: PageVisibility) {
+    private global: Global) {
     this.logger = iLogger.scopeTo('topics-route');
   }
 
   public async binding(): Promise<void> {
+    if (!this.global.isRoutingOK()) {
+      return;
+    }
     // version with a query get topics
-    this.platform.macroTaskQueue.queueTask(async () => {
+    this.global.platform.macroTaskQueue.queueTask(async () => {
       await this.getTopics();
       await this.tryToFetchTopics();
-    })
-    this.events.push(this.eventAggregator.subscribe('topic-form-out', async () => {
+    });
+    this.events.push(this.global.eventAggregator.subscribe('topic-form-out', async () => {
       await this.tryToFetchTopics();
     }));
-    this.events.push(this.eventAggregator.subscribe('topic-detail-out', async () => {
+    this.events.push(this.global.eventAggregator.subscribe('topic-detail-out', async () => {
       await this.tryToFetchTopics();
       if (this.activeTab === 'archived' && this.archivedTopics.length === 0) {
         this.activeTopicsTabElement.click();
@@ -45,10 +47,10 @@ export class Topics implements IRouteableComponent, IViewModel {
         this.activeTopicsTabElement.click();
       }
     }));
-    this.events.push(this.eventAggregator.subscribe('praying-out', async () => {
+    this.events.push(this.global.eventAggregator.subscribe('praying-out', async () => {
       await this.tryToFetchTopics();
     }));
-    this.events.push(this.eventAggregator.subscribe('page:foreground', async () => {
+    this.events.push(this.global.eventAggregator.subscribe('page:foreground:auth', async () => {
       await this.tryToFetchTopics();
     }));
   }
@@ -119,11 +121,11 @@ export class Topics implements IRouteableComponent, IViewModel {
   }
 
   public openMessages(topic: ITopic) {
-    this.router.load(`../conversation(topicId=${topic.id})`);
+    this.global.router.load(`../conversation(topicId=${topic.id})`);
   }
 
   public openSharing(topic: ITopic) {
-    this.router.load(`../sharing(${topic.id})`);
+    this.global.router.load(`../sharing(${topic.id})`);
   }
 
 }

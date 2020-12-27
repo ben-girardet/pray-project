@@ -1,12 +1,12 @@
 // TODO: fix missing interfaces and esrvice
-import { IRouteableComponent, IRouter } from '@aurelia/router';
-import { IViewModel, inject } from 'aurelia';
+import { IRouteableComponent } from '@aurelia/router';
+import { ICustomElementViewModel, inject } from 'aurelia';
 import { client } from '../apollo';
 import { gql } from 'apollo-boost';
 import { requestFriendship } from '../commands/friendship';
 import { Friend } from './friends';
 @inject()
-export class AddFriend implements IRouteableComponent, IViewModel {
+export class AddFriend implements IRouteableComponent, ICustomElementViewModel {
 
   public found: Friend[] = [];
   public emailOrMobile: string = '';

@@ -141,13 +141,15 @@ const client = new ApolloClient({
     }
   },
   onError: (error: ErrorResponse) => {
-    console.log('error', error);
+    console.log('Apollo request error', error);
     const hiddenMessages = [
       'Invalid refresh token',
       'No refresh token',
       'Failed to fetch'
     ];
-    const messages = (error.graphQLErrors || []).map(e => e.message).filter(m => !hiddenMessages.includes(m));
+    const messages = (error.graphQLErrors || [])
+    .map(e => e.message)
+    .filter(m => !hiddenMessages.includes(m));
     if (error.networkError?.message) {
       messages.push(error.networkError?.message)
     }

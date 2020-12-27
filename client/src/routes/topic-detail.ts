@@ -1,10 +1,11 @@
 import { CryptingService } from './../services/crypting-service';
 import { Topic } from 'shared/types/topic';
-import { IRouteableComponent, IRouter } from '@aurelia/router';
-import { IViewModel, ILogger, EventAggregator, IDisposable } from 'aurelia';
+import { IRouteableComponent } from '@aurelia/router';
+import { ICustomElementViewModel, ILogger, EventAggregator, IDisposable, IRouter } from 'aurelia';
 import { editTopic, getTopic, removeTopic } from '../commands/topic';
+import { Global } from '../global';
 
-export class TopicDetail implements IRouteableComponent, IViewModel {
+export class TopicDetail implements IRouteableComponent, ICustomElementViewModel {
 
   public static parameters = ['topicId'];
 
@@ -14,7 +15,9 @@ export class TopicDetail implements IRouteableComponent, IViewModel {
   private logger: ILogger;
   private events: IDisposable[] = [];
 
-  public constructor(@ILogger iLogger: ILogger, private eventAggregator: EventAggregator, @IRouter private router: IRouter) {
+  public constructor(
+    @ILogger iLogger: ILogger, 
+    private global: Global) {
     this.logger = iLogger.scopeTo('topic-detail-route');
   }
 
@@ -23,13 +26,19 @@ export class TopicDetail implements IRouteableComponent, IViewModel {
   }
 
   public async binding(): Promise<void> {
+    if (!this.global.isRoutingOK()) {
+      return;
+    }
     await this.getTopic();
-    this.events.push(this.eventAggregator.subscribe('topic-form-out', async () => {
-      await this.getTopic();
+    this.events.push(this.global.eventAggregator.subscribe('topic-form-out', async () => {
+      await this.tryToFetchTopic();
     }));
-    this.events.push(this.eventAggregator.subscribe('sharing-out', async () => {
-       await this.getTopic();
+    this.events.push(this.global.eventAggregator.subscribe('sharing-out', async () => {
+       await this.tryToFetchTopic();
     }));
+    this.events.push(this.global.eventAggregator.subscribe('page:foreground:auth', async () => {
+      await this.tryToFetchTopic();
+   }));
   }
 
   public detached(): void {
@@ -41,7 +50,7 @@ export class TopicDetail implements IRouteableComponent, IViewModel {
 
   public async getTopic(): Promise<void> {
     try {
-      const topic = await getTopic(this.topicId);
+      const topic = await getTopic(this.topicId)
       await CryptingService.decryptTopic(topic);
       this.topic = topic;
     } catch (error) {
@@ -49,10 +58,20 @@ export class TopicDetail implements IRouteableComponent, IViewModel {
     }
   }
 
+  public async tryToFetchTopic(): Promise<void> {
+    try {
+      const topic = await getTopic(this.topicId, {withMessages: false}, 'network-only');
+      await CryptingService.decryptTopic(topic);
+      this.topic = topic;
+    } catch (error) {
+      // if error, do nothing
+    }
+  }
+
   public async removeTopic(): Promise<void> {
     try {
       await removeTopic(this.topicId);
-      this.router.load('../-@detail');
+      this.global.router.load('../-@detail');
     } catch (error) {
       this.logger.error(error);
     }
@@ -61,7 +80,7 @@ export class TopicDetail implements IRouteableComponent, IViewModel {
   public async markTopicAs(status: 'active' | 'answered' | 'archived'): Promise<void> {
     try {
       await editTopic(this.topicId, {status});
-      await this.getTopic();
+      await this.tryToFetchTopic();
     } catch (error) {
       this.logger.error(error);
     }

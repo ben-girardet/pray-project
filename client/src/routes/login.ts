@@ -1,11 +1,12 @@
 import { apolloAuth, client } from './../apollo';
 import { IRouteableComponent } from '@aurelia/router';
-import { IViewModel, IRouter, ILogger } from 'aurelia';
+import { ICustomElementViewModel, IRouter, ILogger } from 'aurelia';
 import { AppNotification } from '../components/app-notification';
 import { login } from '../commands/login';
 import PhoneNumber from 'awesome-phonenumber';
+import { Global } from '../global';
 
-export class Login implements IRouteableComponent, IViewModel {
+export class Login implements IRouteableComponent, ICustomElementViewModel {
 
   public username = '';
   public password = '';
@@ -14,7 +15,10 @@ export class Login implements IRouteableComponent, IViewModel {
   private logger: ILogger;
   // private apolloAuth = apolloAuth;
 
-  public constructor(@IRouter private router: IRouter, @ILogger iLogger: ILogger) {
+  public constructor(
+    @IRouter private router: IRouter, 
+    @ILogger iLogger: ILogger,
+    private global: Global) {
     this.logger = iLogger.scopeTo('login route');
   }
 
@@ -59,7 +63,6 @@ export class Login implements IRouteableComponent, IViewModel {
         if (apolloAuth.isTokenValid()) {
           window.localStorage.setItem('sun_un', this.username);
           const state = apolloAuth.getState();
-          console.log('state', state);
           if (state === 1) {
             // active
             this.router.load('topics');

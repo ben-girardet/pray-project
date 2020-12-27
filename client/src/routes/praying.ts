@@ -4,7 +4,7 @@ import { AppNotification } from './../components/app-notification';
 import { Topic as ITopic } from 'shared/types/topic';
 import { MyShare } from 'shared/types/share';
 import { IRouteableComponent } from '@aurelia/router';
-import { IViewModel, ILogger, IDisposable, IRouter } from 'aurelia';
+import { ICustomElementViewModel, ILogger, IDisposable, IRouter } from 'aurelia';
 import { getTopics, pray } from '../commands/topic';
 import { createColorPalette, parseColorString } from "@microsoft/fast-components";
 
@@ -13,7 +13,7 @@ const accent = '#3AC3BD';
 const neutralPalette = createColorPalette(parseColorString(neutral));
 const accentPalette = createColorPalette(parseColorString(accent));
 
-export class Praying implements IRouteableComponent, IViewModel {
+export class Praying implements IRouteableComponent, ICustomElementViewModel {
 
   private playlist: ITopic[] = [];
   private events: IDisposable[] = [];

@@ -1,8 +1,8 @@
 import { CryptingService } from './../services/crypting-service';
 import { WithShares } from './../../../shared/types/share';
 import { AppNotification } from './../components/app-notification';
-import { IRouteableComponent, IRouter } from '@aurelia/router';
-import { IViewModel, inject } from 'aurelia';
+import { IRouteableComponent } from '@aurelia/router';
+import { ICustomElementViewModel, inject } from 'aurelia';
 import { Topic } from 'shared/types/topic'
 import { getTopic, addShareToTopic, removeShareToTopic } from '../commands/topic';
 import { client } from '../apollo';
@@ -10,7 +10,7 @@ import { gql } from 'apollo-boost';
 import { ExtendedFriendship } from './friends';
 import { wait } from '../util';
 @inject()
-export class Sharing implements IRouteableComponent, IViewModel {
+export class Sharing implements IRouteableComponent, ICustomElementViewModel {
 
   public static parameters = ['topicId'];
 
@@ -19,7 +19,7 @@ export class Sharing implements IRouteableComponent, IViewModel {
   public friends: ExtendedFriendship[];
   public changingUserId: {[key: string]: boolean} = {};
   
-  public constructor(@IRouter private router: IRouter) {
+  public constructor() {
     
   }
 

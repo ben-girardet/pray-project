@@ -2,41 +2,40 @@ import sjcl from 'sjcl';
 import { apolloAuth, client } from '../apollo';
 import { gql } from 'apollo-boost';
 import { customAlphabet } from 'nanoid';
-// import 'reflect-metadata';
 const contentKeyGen = customAlphabet('0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz-_.,;:!+*%&/()=?', 10);
 // TODO: maybe use another (more modern) crypting solution
 // More infos: https://medium.com/sharenowtech/high-speed-public-key-cryptography-in-javascript-part-1-3eefb6f91f77
 
 export class CryptingService {
 
-  public static encryptObject(obj: {[key: string]: any}, properties: string[], cryptingKey: string): void {
-    for (const key of properties) {
-      if (obj[key] !== undefined && typeof obj[key] === 'string') {
-        obj[key] = sjcl.encrypt(cryptingKey, obj[key] as string);
-      }
+  public static isCrypted(message: string) {
+    if (typeof message === 'string' && message.length > 50 && message.substr(0, 7) === '{"iv":"') {
+      return true;
+    }
+    return false;
+  }
+
+  public static encryptString(message: string, cryptingKey: string): string {
+    if (CryptingService.isCrypted(message)) {
+      return message;
+    }
+    return sjcl.encrypt(cryptingKey, message);
+  }
+
+  public static decryptString(message: string, cryptingKey: string): string {
+    if (!CryptingService.isCrypted(message)) {
+      return message;
+    }
+    try {
+      return sjcl.decrypt(cryptingKey, message);
+    } catch (error) {
+      console.warn('Error while trying to decode', message);
+      console.error(error);
+      throw error;
     }
   }
 
-  public static decryptObject(obj: {[key: string]: any}, properties: string[], cryptingKey: string): any {
-    for (const key of properties) {
-      if (typeof obj[key] === 'string') {
-        try {
-          const decrypted = sjcl.decrypt(cryptingKey, obj[key]);
-          obj[key] = decrypted;
-        } catch (error) {
-          console.warn('Error while trying to decode', obj[key]);
-          console.error(error);
-          throw new Error('Access denied');
-        }
-      }
-    }
-  }
-
-  public static async decryptTopic(topic: {[key: string]: any, myShare?: {encryptedContentKey?: string, encryptedBy?: string}}): Promise<any> {
-    const isDescrypted = Reflect.getMetadata('decrypted', topic);
-    if (isDescrypted) {
-      return;
-    }
+  public static async decryptTopic(topic: {[key: string]: any, myShare?: {encryptedContentKey?: string, encryptedBy?: string}}): Promise<void> {
     const user = await client.query<{user: {publicKey: string}}>({query: gql`
 query UserPubKey($id: String!) {
   user(id: $id) {
@@ -47,13 +46,14 @@ query UserPubKey($id: String!) {
     `, variables: {id: topic.myShare.encryptedBy}});
     const publicKey = user.data.user.publicKey;
     const contentKey = await apolloAuth.decrypt(topic.myShare.encryptedContentKey, publicKey);
-    CryptingService.decryptObject(topic, ['name'], contentKey);
+    topic.name = CryptingService.decryptString(topic.name, contentKey);
     if (topic.messages) {
       for (const message of topic.messages) {
-        CryptingService.decryptObject(message, ['text'], contentKey);
+        if (message.text) {
+          message.text = CryptingService.decryptString(message.text, contentKey);
+        }
       }
     }
-    Reflect.defineMetadata('decrypted', true, topic);
   }
 
   public static async encryptEditedTopic(topic: {[key: string]: any, myShare?: {encryptedContentKey?: string, encryptedBy?: string}}): Promise<any> {
@@ -67,7 +67,7 @@ query UserPubKey($id: String!) {
     `, variables: {id: topic.myShare.encryptedBy}});
     const publicKey = user.data.user.publicKey;
     const contentKey = await apolloAuth.decrypt(topic.myShare.encryptedContentKey, publicKey);
-    CryptingService.encryptObject(topic, ['name'], contentKey);
+    topic.name = CryptingService.encryptString(topic.name, contentKey);
     return topic;
   }
 
@@ -83,7 +83,7 @@ query UserPubKey($id: String!) {
     const publicKey = user.data.user.publicKey;
     const contentKey = contentKeyGen();
     topic.encryptedContentKey = await apolloAuth.encrypt(contentKey, publicKey);
-    CryptingService.encryptObject(topic, ['name'], contentKey);
+    topic.name = CryptingService.encryptString(topic.name, contentKey);
     return topic as {[key: string]: any, encryptedContentKey: string};
   }
 
@@ -98,9 +98,7 @@ query UserPubKey($id: String!) {
     `, variables: {id: topic.myShare.encryptedBy}});
     const publicKey = user.data.user.publicKey;
     const contentKey = await apolloAuth.decrypt(topic.myShare.encryptedContentKey, publicKey);
-    const messageObject = {text: message};
-    CryptingService.encryptObject(messageObject, ['text'], contentKey);
-    return messageObject.text;
+    return CryptingService.encryptString(message, contentKey);
   }
 
   public static async recryptContentKeyFor(myShare: {encryptedContentKey?: string, encryptedBy?: string}, userId: string) {
@@ -120,7 +118,7 @@ query UserPubKey($id: String!) {
     publicKey
   }
 }
-    `, variables: {id: myShare.encryptedBy}});
+    `, variables: {id: userId}});
     const encryptedContentKey = await apolloAuth.encrypt(contentKey, encryptedForUser.data.user.publicKey);
     return encryptedContentKey;
   }

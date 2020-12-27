@@ -3,12 +3,14 @@ import { CryptingService } from './../services/crypting-service';
 import { Topic } from 'shared/types/topic';
 import { Message } from 'shared/types/message';
 import { Prayer } from 'shared/types/prayer';
-import { IRouteableComponent, IRouter } from '@aurelia/router';
-import { IViewModel, ILogger, EventAggregator, IDisposable } from 'aurelia';
+import { IRouteableComponent } from '@aurelia/router';
+import { ICustomElementViewModel, ILogger, IDisposable } from 'aurelia';
 import { getTopic } from '../commands/topic';
 import { createMessageInTopic } from '../commands/message';
 import moment from 'moment';
 import { apolloAuth } from '../apollo';
+import { Global } from '../global';
+import easyScroll from 'easy-scroll';
 
 interface GroupPrayers {
   prayers: Array<{userId: string; date: Date}>;
@@ -23,7 +25,7 @@ interface GroupDay {
   groups: (GroupIdentity | GroupPrayers)[];
 }
 
-export class Conversation implements IRouteableComponent, IViewModel {
+export class Conversation implements IRouteableComponent, ICustomElementViewModel {
 
   // public static parameters = ['topicId', 'userId'];
 
@@ -32,7 +34,7 @@ export class Conversation implements IRouteableComponent, IViewModel {
   public topic: Topic & {messages?: Partial<Message>[]; prayers?: Partial<Prayer>[]};
 
   private logger: ILogger;
-  private event: IDisposable;
+  private events: IDisposable[] = [];
 
   private conversationHead: HTMLDivElement;
   private conversationContent: HTMLDivElement;
@@ -42,7 +44,9 @@ export class Conversation implements IRouteableComponent, IViewModel {
 
   public dayGroups: GroupDay[] = [];
 
-  public constructor(@ILogger iLogger: ILogger, private eventAggregator: EventAggregator, @IRouter private router: IRouter) {
+  public constructor(
+    @ILogger iLogger: ILogger, 
+    private global: Global) {
     this.logger = iLogger.scopeTo('conversation-route');
   }
 
@@ -60,34 +64,58 @@ export class Conversation implements IRouteableComponent, IViewModel {
   }
 
   public async binding(): Promise<void> {
+    if (!this.global.isRoutingOK()) {
+      return;
+    }
     if (this.topicId) {
       await this.getTopic();
     } else if (this.userId) {
       // TODO: handle this scenario later
     }
+    this.events.push(this.global.eventAggregator.subscribe('page:foreground:auth', async () => {
+      await this.tryToFetchTopic();
+    }));
+    this.events.push(this.global.eventAggregator.subscribe('praying-out', async () => {
+      await this.tryToFetchTopic();
+    }));
   }
 
   public attached() {
     this.setHeights();
+    this.global.platform.domReadQueue.queueTask(() => {
+      this.scrollToBottom();
+      setTimeout(() => {
+      }, 1000);
+    });
   }
 
   public detached(): void {
-    if (this.event) {
-      this.event.dispose();
+    for (const event of this.events) {
+      event.dispose();
     }
-    delete this.event;
+    this.events = [];
   }
 
   public async getTopic(): Promise<void> {
     try {
       const topic = await getTopic(this.topicId, {withMessages: true});
       await CryptingService.decryptTopic(topic);
-      // this.topic = JSON.parse(JSON.stringify(topic));
       this.topic = topic;
       this.prepareMessagesAndPrayersInGroups();
     } catch (error) {
       this.logger.error(error);
       AppNotification.notify(error.message, 'error');
+    }
+  }
+
+  public async tryToFetchTopic(): Promise<void> {
+    try {
+      const topic = await getTopic(this.topicId, {withMessages: true}, 'network-only');
+      await CryptingService.decryptTopic(topic);
+      this.topic = topic;
+      this.prepareMessagesAndPrayersInGroups();
+    } catch (error) {
+      // if error, do nothing
     }
   }
 
@@ -122,11 +150,15 @@ export class Conversation implements IRouteableComponent, IViewModel {
 
   public async sendMessage(): Promise<void> {
     try {
-      await CryptingService.encryptNewMessage(this.topic, this.message);
-      await createMessageInTopic(this.topicId, this.message);
+      const cryptedMessage = await CryptingService.encryptNewMessage(this.topic, this.message);
+      await createMessageInTopic(this.topicId, cryptedMessage);
       this.message = '';
       // TODO: optimize this thing when a conversation has lots of messages
-      await this.getTopic();
+      // await this.getTopic();
+      await this.tryToFetchTopic();
+      this.global.platform.macroTaskQueue.queueTask(() => {
+        this.scrollToBottom();
+      });
     } catch (error) {
       AppNotification.notify(error.message, 'error');
     }
@@ -205,6 +237,19 @@ export class Conversation implements IRouteableComponent, IViewModel {
     this.dayGroups = dayGroups;
   }
 
-  
+  private scrollToBottom(): void {
+    const vp = document.querySelector('au-viewport[name=detail] .conversation-contentview');
+    if (vp instanceof HTMLElement) {
+      easyScroll({
+        scrollableDomEle: vp,
+        direction: 'bottom',
+        duration: 250,
+        easingPreset: 'easeInQuad',
+        scrollAmount: vp.scrollHeight - vp.scrollTop
+      });
+      // vp.scrollTop = 0;
+      // const scrolling = new AnimateTo(vp, {scrollTop: 0});
+    }
+  }
 
 }

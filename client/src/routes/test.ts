@@ -1,7 +1,7 @@
 import { IRouteableComponent } from '@aurelia/router';
-import { IViewModel, IRouter, ILogger } from 'aurelia';
+import { ICustomElementViewModel, IRouter, ILogger } from 'aurelia';
 
-export class Test implements IRouteableComponent, IViewModel {
+export class Test implements IRouteableComponent, ICustomElementViewModel {
 
   private logger: ILogger;
 

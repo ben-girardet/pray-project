@@ -1,8 +1,8 @@
 import { AvatarSelection } from './../elements/avatar-selection';
 import { AppNotification } from './../components/app-notification';
 import { ImageService } from './../services/internals';
-import { IRouteableComponent, IRouter } from '@aurelia/router';
-import { IViewModel, inject, EventAggregator } from 'aurelia';
+import { IRouteableComponent } from '@aurelia/router';
+import { ICustomElementViewModel, inject, EventAggregator, IRouter } from 'aurelia';
 import Croppie from 'croppie';
 import { apolloAuth, client } from './../apollo';
 // TODO: remove all instances of /server/ in shared or client
@@ -11,7 +11,7 @@ import { editMe } from '../commands/user';
 import { gql } from 'apollo-boost';
 
 @inject()
-export class EditProfile implements IRouteableComponent, IViewModel {
+export class EditProfile implements IRouteableComponent, ICustomElementViewModel {
 
   public firstname: string;
   public lastname: string;
@@ -101,7 +101,6 @@ user(id: $userId) {
     }
     try {
       await editMe(editUserData.firstname, editUserData.lastname, editUserData.picture);
-      console.log('user:changed', apolloAuth.getUserId());
       this.eventAggregator.publish('user:changed', apolloAuth.getUserId());
       this.router.load('../-@bottom');
     } catch (error) {

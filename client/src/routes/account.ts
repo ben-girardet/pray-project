@@ -1,22 +1,29 @@
 import { AppNotification } from './../components/app-notification';
 import { apolloAuth, client } from './../apollo';
 import { gql } from 'apollo-boost';
-import { IRouteableComponent, IRouter } from '@aurelia/router';
-import { IViewModel, IDisposable, EventAggregator } from 'aurelia';
+import { IRouteableComponent } from '@aurelia/router';
+import { ICustomElementViewModel, IDisposable, EventAggregator, IRouter } from 'aurelia';
 import { User as IUser } from 'shared/types/user';
 import { logout } from '../commands/login';
+import { Global } from '../global';
 
-export class Account implements IRouteableComponent, IViewModel {
+export class Account implements IRouteableComponent, ICustomElementViewModel {
 
   // TODO: fix user interface here
   public user: IUser;
   private events: IDisposable[] = [];
 
-  public constructor(@IRouter private router: IRouter, private eventAggregator: EventAggregator) {
+  public constructor(
+    @IRouter private router: IRouter, 
+    private eventAggregator: EventAggregator,
+    private global: Global) {
     
   }
 
   public async binding(): Promise<void> {
+    if (!this.global.isRoutingOK()) {
+      return;
+    }
     this.user = await this.getUser();
     this.events.push(this.eventAggregator.subscribe('edit-profile-out', async () => {
       this.user = await this.getUser();

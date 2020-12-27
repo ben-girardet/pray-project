@@ -226,7 +226,10 @@ export async function getTopics(
   return result.data.topics;
 }
 
-export async function getTopic(topicId: string, options?: {withMessages?: boolean}, fetchPolicy: FetchPolicy = 'cache-first'): Promise<Topic & WithShares> {
+export async function getTopic(
+  topicId: string, 
+  options?: {withMessages?: boolean}, 
+  fetchPolicy: FetchPolicy = 'cache-first'): Promise<Topic & WithShares> {
   // TODO: find a way to make this "withMessages" work
   // preferable with graphql directive
   // but could also be by using another query

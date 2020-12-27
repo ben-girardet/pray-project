@@ -1,7 +1,7 @@
 import { AppNotification } from './../components/app-notification';
 // TODO: fix missing model/interfaces/commands here
-import { IRouteableComponent, IRouter } from '@aurelia/router';
-import { IViewModel, inject } from 'aurelia';
+import { IRouteableComponent } from '@aurelia/router';
+import { ICustomElementViewModel, inject } from 'aurelia';
 import { User } from 'shared/types/user';
 import { Friendship } from 'shared/types/friendship';
 import { apolloAuth, client } from '../apollo';
@@ -20,12 +20,12 @@ export interface ExtendedFriendship extends Friendship {
   }
 }
 @inject()
-export class Friends implements IRouteableComponent, IViewModel {
+export class Friends implements IRouteableComponent, ICustomElementViewModel {
 
   public friends: ExtendedFriendship[];
   public requests: ExtendedFriendship[];
   
-  public constructor(@IRouter private router: IRouter) {
+  public constructor() {
     
   }
 
