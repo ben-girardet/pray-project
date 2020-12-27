@@ -141,15 +141,24 @@ Login is now pretty well in place. Now is the time to improve the topic experien
 - [x] Try to fetch topics again when back to foreground
 - [x] Improve webpack config for better caching and PWA update
 
-## 26.12.2020 -
-- [ ] Update prod scripts for Jelastic
-- [ ] Restore the storage container in Jelastic env
+## 26.12.2020 - Prod env
+- [x] Update prod scripts for Jelastic
+- [x] Restore the storage container in Jelastic env
+
+## 27.12.2020 - Many fixes
+- [x] Upgrade Aurelia to last version
+- [x] Fix redis issues
+- [x] Refactoring of CryptingService, with more precise crypting/decrypting and detection of crypted values
+- [x] Scroll to bottom when opening a conversation
+- [x] Fetch new data silently when possible, using apollo cache otherwise
+- [x] Nl2br in messages
+- [x] Set cache-control for images so that the browser can safely cache them for long time
 
 ## Next 
 
 - [ ] Add a "viewedBy" property to topic, messages and prayers model so we can add personalised notifications based on who viewed what
+
 - [ ] Ensure the screen looks amazing even without content (after first registration)
-- [ ] Work on apollo cache, basically use it more and remove cached elements on edit. Must also set some expire so we make sure we give the data a chance to be updated
 - [ ] Work on the TODO's
 - [ ] Ensure a nice register process
 - [ ] Stack AppNotifications (so we can see several)
