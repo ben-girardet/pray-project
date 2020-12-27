@@ -3,7 +3,6 @@ import { promisify } from 'util';
 import moment from 'moment';
 import chalk from 'chalk';
 import { mongoose } from '@typegoose/typegoose';
-import { mongo } from 'mongoose';
 
 // TODO: ideas to improve redis cache
 // in the list save, only persist ids
@@ -90,7 +89,17 @@ function rehydrate(object: {[key: string]: any, id?: string}): {[key: string]: a
 //   }
   for (const prop of jsonProperties) {
     if (object[prop]) {
-      object[prop] = JSON.parse(object[prop]);
+        try {
+            object[prop] = JSON.parse(object[prop]);
+        } catch (error) {
+            log(chalk.red('Failed to rehydrate prop:'), chalk.magenta.bold(prop));
+            log(chalk.red('Prop value'), object[prop]);
+            log(chalk.red('Prop value type', typeof object[prop]));
+            if (typeof object[prop] !== 'object') {
+                throw error;
+            }
+        }
+
       log(chalk.magenta(prop, ':', object[prop]));
     }
   }
