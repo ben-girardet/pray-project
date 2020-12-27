@@ -49,6 +49,8 @@ export class ImageController {
     const { id } = req.params;
     res.status(StatusCodes.OK);
     const filepath = path.join(__dirname, `../../uploads/${id}`);
+    res.setHeader("Cache-Control", "public, max-age=31536000");
+    res.setHeader("Expires", new Date(Date.now() + 31536000000).toUTCString());
     res.download(filepath);
   }
 }
