@@ -1,1 +1,1 @@
-pm2 start --name api build/server/src/server.js
+pm2 start --name api build/server.js
