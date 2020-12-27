@@ -56,9 +56,9 @@ export class MyApp implements IViewModel {
   }
 
   public async loginIfNotAuthenticated() {
-    const vp = this.router.getViewport('main');
-    const componentName = vp.content.content.componentName;
-    if ((!apolloAuth.authenticated || !apolloAuth.isTokenValid()) && !(await apolloAuth.refresh())) {
+    if (!(await apolloAuth.isAuthenticated())) {
+      const vp = this.router.getViewport('main');
+      const componentName = vp.content.content.componentName;
       if (!['login', 'register'].includes(componentName)) {
         return [this.router.createViewportInstruction('login', vp)];
       }
@@ -70,7 +70,7 @@ export class MyApp implements IViewModel {
     this.router.addHook(async (instructions: ViewportInstruction[]) => {
       // User is not logged in, so redirect them back to login page
       const mainInstruction = instructions.find(i => i.viewportName === 'main');
-      if (mainInstruction && !apolloAuth.authenticated && ! (await apolloAuth.refresh())) {
+      if (mainInstruction && !(await apolloAuth.isAuthenticated())) {
         if (!['login', 'register'].includes(mainInstruction.componentName)) {
           return [this.router.createViewportInstruction('login', mainInstruction.viewport)];
         }

@@ -7,6 +7,7 @@ import moment from 'moment';
 import conf from './config';
 import Gun from 'gun';
 import 'gun/sea';
+import { neutralFillStealthSelected } from '@microsoft/fast-components';
 
 class ApolloAuth {
 
@@ -88,6 +89,13 @@ class ApolloAuth {
         // silent refresh failing
         return false;
       }
+    }
+
+    public async isAuthenticated(): Promise<boolean> {
+      if (this.authenticated && this.isTokenValid()) {
+        return true;
+      }
+      return await this.refresh();
     }
 
     public async encrypt(message: string, otherPublicKey: string): Promise<any> {
