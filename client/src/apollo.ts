@@ -7,8 +7,6 @@ import moment from 'moment';
 import conf from './config';
 import Gun from 'gun';
 import 'gun/sea';
-import { neutralFillStealthSelected } from '@microsoft/fast-components';
-
 class ApolloAuth {
 
     private expires: moment.Moment;

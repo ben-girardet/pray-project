@@ -19,8 +19,6 @@ export class MyApp implements ICustomElementViewModel {
 
   public subscriptions: IDisposable[] = [];
 
-  
-
   constructor(
     @IRouter private router: IRouter, 
     @ILogger private iLogger: ILogger,
@@ -34,7 +32,6 @@ export class MyApp implements ICustomElementViewModel {
   public attached(): void {
     // TODO: enable darkMode later
     const darkMode = false && window.matchMedia('(prefers-color-scheme: dark)').matches;
-    this.logger.debug('darkMode', darkMode);
     const provider = document.querySelector("fast-design-system-provider") as HTMLElement & {backgroundColor: string; neutralPalette: string[]; accentPalette: string[]; accentBaseColor: string};
     if (darkMode) {
       provider.backgroundColor = '#000000';
