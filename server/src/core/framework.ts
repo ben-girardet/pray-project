@@ -17,7 +17,7 @@ export const registerControllers = (controllers: any[], app: express.Application
     controllers.forEach(controller => {
         const instance = new controller();
         const prefix = Reflect.getMetadata('prefix', controller);
-        const routes: RouteDefinition[] = Reflect.getMetadata('routes', controller);
+        const routes: RouteDefinition[] = Reflect.getMetadata('routes', controller) || [];
 
         routes.forEach(route => {
             const restrictToRole = Reflect.getMetadata('role', instance[route.name]);

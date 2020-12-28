@@ -11,9 +11,6 @@ import { TopicModel } from "../models/topic";
 import { MessageModel } from "../models/message";
 import { PrayerModel } from "../models/prayer";
 
-// TODO: in any edit user resolver
-// we must ensure to del the hash in redis
-
 @Resolver()
 export class UserResolver {
 

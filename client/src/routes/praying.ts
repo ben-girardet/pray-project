@@ -42,9 +42,9 @@ export class Praying implements IRouteableComponent, ICustomElementViewModel {
   private startTouchX: number = 0;
   private startTouchY: number = 0;
   private touching: boolean = false;
-  // TODO: fix because I don't have observable
-  /*@observable*/ private deltaX: number = 0;
-  /*@observable*/ private deltaY: number = 0;
+  
+  private deltaX: number = 0;
+  private deltaY: number = 0;
 
   public constructor(@IRouter private router: IRouter) {
     this.handleTouchStart = e => {

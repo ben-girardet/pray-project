@@ -1,5 +1,4 @@
 import { AppNotification } from './../components/app-notification';
-// TODO: fix missing model/interfaces/commands here
 import { IRouteableComponent } from '@aurelia/router';
 import { ICustomElementViewModel, inject } from 'aurelia';
 import { User } from 'shared/types/user';

@@ -1,4 +1,3 @@
-// TODO: fix missing interfaces and esrvice
 import { IRouteableComponent } from '@aurelia/router';
 import { ICustomElementViewModel, inject } from 'aurelia';
 import { client } from '../apollo';

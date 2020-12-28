@@ -192,8 +192,6 @@ export class User implements IUser {
 
     const objectValue = value.toObject();
     saveModelItem('user', objectValue);
-    // TODO: remove user from cache (or update)
-    // when editing
     return objectValue;
   }
 

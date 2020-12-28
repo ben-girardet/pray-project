@@ -157,7 +157,6 @@ Login is now pretty well in place. Now is the time to improve the topic experien
 ## Next 
 
 - [ ] Add a "viewedBy" property to topic, messages and prayers model so we can add personalised notifications based on who viewed what
-
 - [ ] Ensure the screen looks amazing even without content (after first registration)
 - [ ] Work on the TODO's
 - [ ] Ensure a nice register process

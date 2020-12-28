@@ -49,8 +49,6 @@ export class MyApp implements ICustomElementViewModel {
   }
 
   public async binding(): Promise<void> {
-    // TODO: if not authenticated, here is a good
-    // place to start authentication (silent try)
     this.subscriptions.push(this.eventAggregator.subscribe('page:foreground', async () => {
       const isAuth = await this.loginIfNotAuthenticated();
       if (isAuth) {

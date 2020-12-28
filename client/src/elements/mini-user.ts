@@ -1,4 +1,3 @@
-// TODO: fix missing User model
 import { gql } from 'apollo-boost';
 import { bindable, IDisposable, EventAggregator,  ILogger } from 'aurelia';
 import { client } from '../apollo';

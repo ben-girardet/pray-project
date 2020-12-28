@@ -9,7 +9,6 @@ import { Global } from '../global';
 
 export class Account implements IRouteableComponent, ICustomElementViewModel {
 
-  // TODO: fix user interface here
   public user: IUser;
   private events: IDisposable[] = [];
 

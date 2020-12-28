@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
-// TODO: fix missing TOPIC model (interface)
 import { attr } from "@microsoft/fast-element";
 import { FASTElement, customElement, html, css, when } from '@microsoft/fast-element';
 import { neutralFillHoverBehavior, neutralFillActiveBehavior, neutralFillInput, neutralFillInputActive } from "@microsoft/fast-components";

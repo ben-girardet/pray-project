@@ -71,4 +71,3 @@ scenarios:
           - hasProperty: "data.login"
     - function: "logResponse"
     - function: "saveTokens"
-    # TODO: save tokens in a file for use in load.yml
