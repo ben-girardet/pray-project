@@ -41,3 +41,6 @@
 .answered-at > pray-icon {
   margin-right: 4px;
 }
+.topic-detail fast-badge {
+  transform: scale(0.8);
+}

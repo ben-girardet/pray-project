@@ -1,4 +1,4 @@
-<div class="topic-preview">
+<div class="topic-preview ${!isViewed || nbUnviewed > 0 ? 'topic-preview--highlight':''}">
   <img if.bind="topic.image.length" class="topic_preview__preview" src="${topic.image | file}">
   <div if.bind="!topic.image.length" class="topic_preview__img-placeholder" style="background: ${gradient(topic.color)}">
     <pray-icon icon="Sparkles" size="lg"></pray-icon>
@@ -10,6 +10,9 @@
     </div>
     <div class="topic_preview__main-content">
       <div class="topic_preview__title">${topic.name}</div>
+      <div class="topic_preview__notifications" if.bind="nbUnviewed > 0">
+        <fast-badge fill="primary" color="white" circular>${nbUnviewed}</fast-badge>
+      </div>
     </div>
     <div class="topic_preview__footer-actions">
       <div class="topic_preview__footer-actions__item" click.delegate="dispatchEvent('messages')">

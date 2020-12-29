@@ -240,7 +240,7 @@ export class TopicResolver {
 
   @Authorized(['user'])
   @Mutation(() => Boolean)
-  public async viewed(@Ctx() ctx: Context, @Arg('date') date: string, @Arg('context') context: string, @Arg('topicId', {nullable: true}) topicId: string) {
+  public async viewed(@Ctx() ctx: Context, @Arg('date', {nullable: true}) date: string, @Arg('context') context: string, @Arg('topicId', {nullable: false}) topicId: string) {
     const user = ctx.user;
     const userId = new mongoose.Types.ObjectId(user.userId);
     const dateMoment = moment(date);
@@ -248,19 +248,23 @@ export class TopicResolver {
         throw new Error('Invalid date');
     }
     if (context === 'topic') {
-        await TopicModel.updateMany({
-            updatedAt: {$lte: dateMoment.toDate()}
+        await TopicModel.updateOne({
+            _id: new mongoose.Types.ObjectId(topicId)
         }, {$addToSet: {viewedBy: userId.toString()}});
     } else if (context === 'messages') {
-        if (!topicId) {
-            throw new Error('Missing topicId');
+        if (!date) {
+            throw new Error('Missing date');
         }
-        await MessageModel.updateMany({
-            updatedAt: {$lte: dateMoment.toDate()},
+        console.log('Marking messages and prayers as viewed for');
+        console.log('TopicId:', topicId);
+        console.log('Date anterior to:', dateMoment.toDate());
+        const result1 = await MessageModel.updateMany({
+            createdAt: {$lte: dateMoment.add(1, 'second').toDate()},
             topicId: new mongoose.Types.ObjectId(topicId)
         }, {$addToSet: {viewedBy: userId.toString()}});
+        console.log('result1', result1);
         await PrayerModel.updateMany({
-            updatedAt: {$lte: dateMoment.toDate()},
+            createdAt: {$lte: dateMoment.add(1, 'second').toDate()},
             topicId: new mongoose.Types.ObjectId(topicId)
         }, {$addToSet: {viewedBy: userId.toString()}});
     }

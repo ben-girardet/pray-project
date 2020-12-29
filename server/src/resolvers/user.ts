@@ -10,6 +10,7 @@ import { removeModelItem } from "../core/redis";
 import { TopicModel } from "../models/topic";
 import { MessageModel } from "../models/message";
 import { PrayerModel } from "../models/prayer";
+import { UnviewedTopic as IUnviewedTopic } from 'shared/types/unviewed-topic';
 
 @Resolver()
 export class UserResolver {
@@ -118,14 +119,15 @@ export class UserResolver {
   @Authorized(['user'])
   @Query(() => [UnviewedTopic])
   public async unviewed(@Ctx() context: Context) {
+      console.log('----- unviewed ------');
     const userIdString = context.user.userId;
+    console.log('userIdString', userIdString);
     const userId = new mongoose.Types.ObjectId(context.user.userId);
 
     // fetch all topics so that
     // - we can identify those unviewed
     // - AND we can fetch messages and prayers related to "my" topis
     const topics = await TopicModel.find({"shares.userId": userId}).select('_id viewedBy');
-    const unviewedTopics = topics.filter(t => !(t.viewedBy || []).includes(userIdString));
     const topicsIds = topics.map(t => t._id);
     const unviewedMessages = await MessageModel.find({"topicId": {$in: topicsIds}, viewedBy: {$nin: [userIdString]}}).select('_id topicId');
     const unviewedPrayers = await PrayerModel.find({"topicId": {$in: topicsIds}, viewedBy: {$nin: [userIdString]}}).select('_id topicId');
@@ -155,9 +157,10 @@ export class UserResolver {
         unviewedPrayersByTopic[topicIdString].push(unviewedPrayer._id.toString());
     }
     for (const topic of topics) {
+        console.log('topic.viewedBy', topic.viewedBy);
         const unviewedTopic = new UnviewedTopic();
-        const topicIdString =
-        unviewedTopic.id = topic._id.toString();
+        const topicIdString = topic._id.toString();
+        unviewedTopic.id = topicIdString;
         unviewedTopic.isViewed = (topic.viewedBy || []).includes(userIdString);
         unviewedTopic.messages = unviewedMessagesByTopic[topicIdString] || [];
         unviewedTopic.prayers = unviewedPrayersByTopic[topicIdString] || [];
@@ -174,7 +177,7 @@ export class UserResolver {
   }
 }
 @ObjectType()
-export class UnviewedTopic {
+export class UnviewedTopic implements IUnviewedTopic {
 
     @Field()
     public id: string;

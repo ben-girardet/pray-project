@@ -2,7 +2,7 @@ import { CryptingService } from './../services/crypting-service';
 import { Topic } from 'shared/types/topic';
 import { IRouteableComponent } from '@aurelia/router';
 import { ICustomElementViewModel, ILogger, EventAggregator, IDisposable, IRouter } from 'aurelia';
-import { editTopic, getTopic, removeTopic } from '../commands/topic';
+import { editTopic, getTopic, removeTopic, viewedTopic } from '../commands/topic';
 import { Global } from '../global';
 
 export class TopicDetail implements IRouteableComponent, ICustomElementViewModel {
@@ -13,7 +13,11 @@ export class TopicDetail implements IRouteableComponent, ICustomElementViewModel
   public topic: Topic;
 
   private logger: ILogger;
-  private events: IDisposable[] = [];
+  private subscriptions: IDisposable[] = [];
+
+  private nbUnviewedMessages: number = 0;
+  private nbUnviewedPrayers: number = 0;
+  private nbUnviewed: number = 0;
 
   public constructor(
     @ILogger iLogger: ILogger, 
@@ -30,22 +34,37 @@ export class TopicDetail implements IRouteableComponent, ICustomElementViewModel
       return;
     }
     await this.getTopic();
-    this.events.push(this.global.eventAggregator.subscribe('topic-form-out', async () => {
+    this.subscriptions.push(this.global.eventAggregator.subscribe('topic-form-out', async () => {
       await this.tryToFetchTopic();
     }));
-    this.events.push(this.global.eventAggregator.subscribe('sharing-out', async () => {
+    this.subscriptions.push(this.global.eventAggregator.subscribe('sharing-out', async () => {
        await this.tryToFetchTopic();
     }));
-    this.events.push(this.global.eventAggregator.subscribe('page:foreground:auth', async () => {
+    this.subscriptions.push(this.global.eventAggregator.subscribe('page:foreground:auth', async () => {
       await this.tryToFetchTopic();
-   }));
+    }));
+    this.subscriptions.push(this.global.eventAggregator.subscribe('unviewed:update', () => {
+      this.setUnviewed();
+    }));
+    this.setUnviewed();
   }
 
-  public detached(): void {
-    for (const event of this.events) {
+  public async attached() {
+    await viewedTopic(this.topic.id);
+    this.global.notificationService.fetchUnviewedStatus();
+  }
+
+  public unbinding(): void {
+    for (const event of this.subscriptions) {
       event.dispose();
     }
-    this.events = [];
+    this.subscriptions = [];
+  }
+
+  private setUnviewed() {
+    this.nbUnviewedMessages = this.global.notificationService.unviewedMessages[this.topic.id]?.length || 0;
+    this.nbUnviewedPrayers = this.global.notificationService.unviewedPrayers[this.topic.id]?.length || 0;
+    this.nbUnviewed = this.global.notificationService.unviewedNumbers[this.topic.id] || 0;
   }
 
   public async getTopic(): Promise<void> {

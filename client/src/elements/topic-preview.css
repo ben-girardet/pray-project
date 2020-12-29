@@ -36,6 +36,11 @@
   max-height: 27px;
   overflow: hidden;
   width: 100%;
+  display: flex;
+  justify-content: space-between;
+}
+.topic_preview__main-content fast-badge {
+  transform: scale(0.6);
 }
 .topic_preview__author {
   flex-direction: row;
@@ -88,4 +93,8 @@
 }
 .topic_preview__footer-actions__item pray-icon {
   margin-right: 4px;
+}
+
+.topic-preview--highlight .topic_preview__date {
+  color: var(--accent-color);
 }

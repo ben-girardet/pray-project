@@ -30,7 +30,8 @@
     <fast-button class="full-width" load="../conversation(topicId=${topicId})" appearance="neutral" style="margin-bottom: 4px;">
       <pray-icon slot="start" icon="ChatAlt"></pray-icon>
       Messages
-      <fast-badge if.bind="topic.messages.length" slot="end" fill="secondary" color="white" circular>${topic.messages.length}</fast-badge>
+      <!-- <fast-badge if.bind="topic.messages.length" slot="end" fill="secondary" color="white" circular>${topic.messages.length}</fast-badge> -->
+      <fast-badge if.bind="nbUnviewed > 0" slot="end" fill="primary" color="white" circular>${nbUnviewed}</fast-badge>
     </fast-button>
 
     <fast-button class="full-width" load="../sharing(${topicId})" appearance="neutral" style="margin-bottom: 4px;" if.bind="topic.myShare.role === 'owner'">

@@ -1,4 +1,5 @@
 import { EventAggregator, ILogger, IRouter, IPlatform } from 'aurelia';
+import { NotificationService } from './services/notification-service';
 export class Global {
 
   private firstRouteIgnored:  -1 | 0 | 1 = -1;
@@ -8,7 +9,8 @@ export class Global {
     public eventAggregator: EventAggregator, 
     @ILogger iLogger: ILogger,
     @IRouter public router: IRouter,
-    @IPlatform public platform: IPlatform) {
+    @IPlatform public platform: IPlatform,
+    public notificationService: NotificationService) {
     this.logger = iLogger.scopeTo('global');
   }
 

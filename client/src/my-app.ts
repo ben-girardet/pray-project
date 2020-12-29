@@ -18,6 +18,7 @@ export class MyApp implements ICustomElementViewModel {
   public apolloAuth = apolloAuth;
 
   public subscriptions: IDisposable[] = [];
+  private started = false;
 
   constructor(
     @IRouter private router: IRouter, 
@@ -71,7 +72,7 @@ export class MyApp implements ICustomElementViewModel {
 
   
 
-  public async bound(): Promise<void> {
+  public async bound(): Promise<void> {    
     // Authentication HOOK
     this.router.addHook(async (instructions: ViewportInstruction[]) => {
       this.global.bumpRoute();
@@ -81,6 +82,10 @@ export class MyApp implements ICustomElementViewModel {
         if (!['login', 'register'].includes(mainInstruction.componentName)) {
           return [this.router.createViewportInstruction('login', mainInstruction.viewport)];
         }
+      }
+      if (!this.started) {
+        this.started = true;
+        this.global.eventAggregator.publish('app:started');
       }
       return true;
     });

@@ -5,7 +5,7 @@ import { Message } from 'shared/types/message';
 import { Prayer } from 'shared/types/prayer';
 import { IRouteableComponent } from '@aurelia/router';
 import { ICustomElementViewModel, ILogger, IDisposable } from 'aurelia';
-import { getTopic } from '../commands/topic';
+import { getTopic, viewedTopicMessages } from '../commands/topic';
 import { createMessageInTopic } from '../commands/message';
 import moment from 'moment';
 import { apolloAuth } from '../apollo';
@@ -80,7 +80,7 @@ export class Conversation implements IRouteableComponent, ICustomElementViewMode
     }));
   }
 
-  public attached() {
+  public async attached() {
     this.setHeights();
     this.global.platform.domReadQueue.queueTask(() => {
       this.scrollToBottom();
@@ -235,6 +235,17 @@ export class Conversation implements IRouteableComponent, ICustomElementViewMode
 
     }
     this.dayGroups = dayGroups;
+    if (messagesAndPrayers.length) {
+      new Promise(async (resolve, reject) => {
+        try {
+          await viewedTopicMessages(this.topic.id, messagesAndPrayers[messagesAndPrayers.length - 1].createdAt);
+          this.global.notificationService.fetchUnviewedStatus();
+        } catch (error) {
+          AppNotification.notify(error.message, 'error');
+        }
+        resolve(null);
+      });
+    }
   }
 
   private scrollToBottom(): void {

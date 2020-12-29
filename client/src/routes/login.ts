@@ -61,6 +61,7 @@ export class Login implements IRouteableComponent, ICustomElementViewModel {
       const username = this.parseUsername();
       login(username, this.password).then((loginResult) => {
         if (apolloAuth.isTokenValid()) {
+          this.global.eventAggregator.publish('login');
           window.localStorage.setItem('sun_un', this.username);
           const state = apolloAuth.getState();
           if (state === 1) {

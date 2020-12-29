@@ -1,4 +1,5 @@
 import 'reflect-metadata';
+import fs from 'fs';
 import dotenv from 'dotenv';
 import express from 'express';
 import path from 'path';
@@ -126,6 +127,23 @@ mongoose.connect(
     app.use(cookieParser());
 
     app.use(contextService.middleware('request'));
+
+    app.get('/version', (req, res) => {
+        const rev = fs.readFileSync(path.join(__dirname, '../../.git/HEAD')).toString();
+        let hash: string = '';
+        let branch: string = '';
+        if (rev.indexOf(':') === -1) {
+            hash = rev.trim();
+        } else {
+            branch = rev.substring(5).trim();
+            hash = fs.readFileSync(path.join(__dirname, '../../.git/' + branch)).toString().trim()
+        }
+        res.setHeader('content-type', 'application/json');
+        res.send({
+            branch,
+            hash
+        });
+    });
 
     app.get('/', (req, res) => {
         res.send('It works!');

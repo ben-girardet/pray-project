@@ -61,7 +61,7 @@ export class Topic implements ITopic {
     @Field({nullable: true})
     public myShare?: Share;
 
-    @prop()
+    @prop({type: () => [String], _id: false, index: true})
     public viewedBy?: string[] = [];
 
     public setMyShare(userId: mongoose.Types.ObjectId) {

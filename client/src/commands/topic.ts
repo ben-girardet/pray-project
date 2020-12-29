@@ -3,6 +3,7 @@ import { client } from '../apollo';
 import { Topic } from 'shared/types/topic';
 import { Prayer } from 'shared/types/prayer';
 import { WithShares } from 'shared/types/share';
+import moment from 'moment';
 
 export const getTopicsQuery = gql`
 query Topics($sort: SortBy, $status: String) {
@@ -212,6 +213,18 @@ mutation Pray($topicId: String!) {
 }
 `;
 
+const viewedTopicMutation = gql`
+mutation ViewedTopic($topicId: String!) {
+  viewed(context: "topic", topicId: $topicId)
+}
+`;
+
+const viewedTopicMessagesMutation = gql`
+mutation ViewedTopicMessages($topicId: String!, $date: String!) {
+  viewed(context: "messages", topicId: $topicId, date: $date)
+}
+`;
+
 export async function getTopics(
   sort: {field: string, order: -1 | 1}, 
   status?: string,
@@ -330,4 +343,20 @@ export async function pray(topicId): Promise<Prayer> {
     variables: { topicId }
   });
   return result.data.pray;
+}
+
+export async function viewedTopic(topicId: string): Promise<boolean> {
+  const result = await client.mutate<{viewed: boolean}>({
+    mutation: viewedTopicMutation, 
+    variables: { topicId }
+  });
+  return result.data.viewed;
+}
+
+export async function viewedTopicMessages(topicId: string, date: Date): Promise<boolean> {
+  const result = await client.mutate<{viewed: boolean}>({
+    mutation: viewedTopicMessagesMutation, 
+    variables: { topicId, date: moment(date).toISOString() }
+  });
+  return result.data.viewed;
 }

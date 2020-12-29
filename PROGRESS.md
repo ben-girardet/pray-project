@@ -154,10 +154,14 @@ Login is now pretty well in place. Now is the time to improve the topic experien
 - [x] Nl2br in messages
 - [x] Set cache-control for images so that the browser can safely cache them for long time
 
+## 29.12.2020 - Viewed by
+- [x] Add a "viewedBy" property to topic, messages and prayers model so we can add personalised notifications based on who viewed what
+
 ## Next 
 
-- [ ] Add a "viewedBy" property to topic, messages and prayers model so we can add personalised notifications based on who viewed what
 - [ ] Ensure the screen looks amazing even without content (after first registration)
+- [ ] Messages
+- [ ] Add a version from GIT
 - [ ] Work on the TODO's
 - [ ] Ensure a nice register process
 - [ ] Stack AppNotifications (so we can see several)

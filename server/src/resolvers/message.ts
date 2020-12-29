@@ -54,7 +54,13 @@ export class MessageResolver {
     newMessage.updatedBy = userId;
     newMessage.text = data.text;
     newMessage.topicId = topicId;
-    newMessage.viewedBy = [userId.toString()];
+    // if (!Array.isArray(newMessage.viewedBy)) {
+    //     newMessage.viewedBy = [];
+    // }
+    // newMessage.viewedBy.push(userId.toString());
+    // newMessage.viewedBy = userId.toString();
+    (newMessage.viewedBy as any).addToSet(userId.toString());
+    (newMessage.viewedBy as any).addToSet('asdf');
 
     const createdMessage = await newMessage.save();
     const createdMessageInstance = new MessageModel(createdMessage);
