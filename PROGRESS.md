@@ -158,7 +158,7 @@ Login is now pretty well in place. Now is the time to improve the topic experien
 - [x] Add a "viewedBy" property to topic, messages and prayers model so we can add personalised notifications based on who viewed what
 
 ## Next 
-
+- [ ] Add a badge in "list" and "settings" screen for nb of updates and nb of friends requests
 - [ ] Ensure the screen looks amazing even without content (after first registration)
 - [ ] Messages
 - [ ] Add a version from GIT

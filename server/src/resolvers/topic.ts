@@ -255,14 +255,10 @@ export class TopicResolver {
         if (!date) {
             throw new Error('Missing date');
         }
-        console.log('Marking messages and prayers as viewed for');
-        console.log('TopicId:', topicId);
-        console.log('Date anterior to:', dateMoment.toDate());
         const result1 = await MessageModel.updateMany({
             createdAt: {$lte: dateMoment.add(1, 'second').toDate()},
             topicId: new mongoose.Types.ObjectId(topicId)
         }, {$addToSet: {viewedBy: userId.toString()}});
-        console.log('result1', result1);
         await PrayerModel.updateMany({
             createdAt: {$lte: dateMoment.add(1, 'second').toDate()},
             topicId: new mongoose.Types.ObjectId(topicId)

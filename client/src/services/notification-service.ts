@@ -40,7 +40,6 @@ export class NotificationService {
   public async fetchUnviewedStatus(): Promise<void> {
     try {
       const result = await client.query<{unviewed: UnviewedTopic[]}>({query: unviewedQuery, fetchPolicy: 'network-only'});
-      console.log('result', result);
       this.unviewedTopicIds = result.data.unviewed.filter(u => !u.isViewed).map(u => u.id);
       const unviewedMessages: {[key: string]: string[]} = {};
       const unviewedPrayers: {[key: string]: string[]} = {};

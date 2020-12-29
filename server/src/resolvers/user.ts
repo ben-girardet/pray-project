@@ -119,9 +119,7 @@ export class UserResolver {
   @Authorized(['user'])
   @Query(() => [UnviewedTopic])
   public async unviewed(@Ctx() context: Context) {
-      console.log('----- unviewed ------');
     const userIdString = context.user.userId;
-    console.log('userIdString', userIdString);
     const userId = new mongoose.Types.ObjectId(context.user.userId);
 
     // fetch all topics so that
@@ -157,7 +155,6 @@ export class UserResolver {
         unviewedPrayersByTopic[topicIdString].push(unviewedPrayer._id.toString());
     }
     for (const topic of topics) {
-        console.log('topic.viewedBy', topic.viewedBy);
         const unviewedTopic = new UnviewedTopic();
         const topicIdString = topic._id.toString();
         unviewedTopic.id = topicIdString;

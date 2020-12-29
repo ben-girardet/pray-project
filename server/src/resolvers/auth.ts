@@ -39,7 +39,6 @@ export class AuthResolver {
         login.userId = user._id.toString();
         login.privateKey = user.privateKey;
         login.state = user.state;
-        console.log('login', login);
         return login;
     }
 
