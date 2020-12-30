@@ -1,5 +1,5 @@
 import { gql } from 'apollo-boost';
-import { client } from '../apollo';
+import { client, apolloAuth } from '../apollo';
 import { inject, EventAggregator, IDisposable } from 'aurelia';
 import { UnviewedTopic } from 'shared/types/unviewed-topic';
 
@@ -30,7 +30,9 @@ export class NotificationService {
       this.fetchUnviewedStatus();
     }));
     this.subscriptions.push(this.eventAggregator.subscribe('app:started', () => {
-      this.fetchUnviewedStatus();
+      if (apolloAuth.authenticated && apolloAuth.isTokenValid()) {
+        this.fetchUnviewedStatus();
+      }
     }));
     this.subscriptions.push(this.eventAggregator.subscribe('logout', () => {
       this.reset();
