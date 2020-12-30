@@ -29,13 +29,9 @@ export class AuthResolver {
         const refreshTokenData = user.generateRefreshToken();
         await user.save();
         const origin = context.req.get('origin') || '';
-        console.log('login');
-        console.log('context.req.hostname', context.req.hostname);
-        console.log('origin', origin);
         const sameSite = !context.req.hostname.includes('env-4211245.jcloud-ver-jpc.ik-server.com')
             && (context.req.hostname === 'localhost' || !origin.includes('localhost'));
 
-        console.log('sameSite', sameSite);
         this.sendRefreshToken(context.res, refreshTokenData, sameSite);
         const jwtString = jwt.sign({userId: user.id, roles: user.roles}, process.env.JWT_SECRET_OR_KEY as string, { expiresIn: process.env.JWT_TOKEN_EXPIRATION, algorithm: 'HS256' });
         // this.setJWTCookie(context.res, jwtString);
