@@ -19,7 +19,9 @@ const postcssLoader = {
 module.exports = function(env, { analyze }) {
   const production = env.production || process.env.NODE_ENV === 'production';
   return {
-    mode: production ? 'production' : 'development',
+    // currently setting mode to production makes the bundle fails
+    // mode: production ? 'production' : 'development',
+    mode: 'development',
     devtool: production ? 'source-map' : 'inline-source-map',
     entry: './src/main.ts',
     output: {

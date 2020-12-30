@@ -2,7 +2,7 @@ import { ApiService } from './api-service';
 import ImageBlobReduce from 'image-blob-reduce';
 import Croppie from 'croppie';
 import 'croppie/croppie.css';
-const reducer = ImageBlobReduce();
+const reducer = new ImageBlobReduce();
 import { transient } from 'aurelia';
 
 @transient()
@@ -74,6 +74,8 @@ export class ImageService {
   }
 
   public async saveCrop(): Promise<void> {
+    console.log('saveCrop');
+    console.log('this.croppie', this.croppie);
     const blob = await this.croppie.result({
       type: 'blob',
       size: 'original',
@@ -81,28 +83,36 @@ export class ImageService {
       quality: 1,
       circle: false
     });
+    console.log('blob', blob);
 
     this.smallBlob = await this.resizeBlob(blob, this.smallWidth);
+    console.log('smallBlob', this.smallBlob);
     this.mediumBlob = await this.resizeBlob(blob, this.mediumWidth);
     this.largeBlob = await this.resizeBlob(blob, this.largeWidth);
 
     this.smallB64 = await this.blob2base64(this.smallBlob);
+    console.log('smallB64', this.smallB64);
     this.mediumB64 = await this.blob2base64(this.mediumBlob);
     this.largeB64 = await this.blob2base64(this.largeBlob);
 
     this.cropping = false;
     this.croppie.destroy();
+    console.log('destroyed');
     URL.revokeObjectURL(this.originalImageUrl);
 
     this.imageChanged = true;
 
     if (this.onSelect) {
+      console.log('call onSelect');
       this.onSelect.call(null);
     }
   }
 
   public async resizeBlob(blob: Blob, width: number): Promise<Blob> {
+    console.log('resizeBlob');
+    console.log('reducer', reducer);
     const resizeRatio = this.heightRatio > 1 ? this.heightRatio : 1;
+    console.log('resizeRatio', resizeRatio)
     return await reducer.toBlob(blob, {max: width * resizeRatio});
   }
 
