@@ -81,7 +81,7 @@ export class AuthResolver {
             domain: undefined,
             //domain: 'localhost',
             secure: !sameSite,
-            sameSite: sameSite || 'none'
+            sameSite: sameSite || 'lax'
         });
     }
 
