@@ -80,8 +80,8 @@ export class AuthResolver {
             expires: moment(refreshTokenData.expiry).add(1, 'hour').toDate(),
             domain: undefined,
             //domain: 'localhost',
-            secure: false,
-            sameSite: sameSite || 'lax'
+            secure: !sameSite,
+            sameSite: sameSite || 'none'
         });
     }
 
