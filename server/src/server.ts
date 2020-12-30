@@ -129,13 +129,18 @@ mongoose.connect(
     app.use(contextService.middleware('request'));
 
     app.get('/version', (req, res) => {
+        console.log('/version');
+        console.log('reading', path.join(__dirname, '../../.git/HEAD'));
         const rev = fs.readFileSync(path.join(__dirname, '../../.git/HEAD')).toString();
+        console.log('rev', rev);
         let hash: string = '';
         let branch: string = '';
         if (rev.indexOf(':') === -1) {
             hash = rev.trim();
         } else {
             branch = rev.substring(5).trim();
+            console.log('branch', branch);
+            console.log('reading', path.join(__dirname, '../../.git/' + branch))
             hash = fs.readFileSync(path.join(__dirname, '../../.git/' + branch)).toString().trim()
         }
         res.setHeader('content-type', 'application/json');
