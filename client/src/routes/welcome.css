@@ -24,3 +24,9 @@
 .welcome fast-text-field {
   width: 100%;
 }
+.welcome__version {
+  text-align: center;
+  margin: 40px;
+  font-size: 10px;
+  color: var(--meta-content-color);
+}
