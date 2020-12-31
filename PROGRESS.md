@@ -164,17 +164,30 @@ Login is now pretty well in place. Now is the time to improve the topic experien
 ## 31.12.2020 - Prod client
 - [x] Add a badge in "list" and "settings" screen for nb of updates and nb of friends requests
 - [x] Fix friendship list cache and cache clearing
+- [x] Backups scripts for DB and files
+- [x] Fixes for better UX
+- [x] Version number on login screen
 
 ## Next 
+- [ ] Stats every night
+- [ ] Backups every night
+- [ ] Make the friendship flow more clear
+- [ ] Search for friends by phone number
+- [ ] Start pray from messages view must start with current topic
+- [ ] Contact page
 - [ ] When removing a friendship: also remove all shares from (in both directions)
 - [ ] Ensure the screen looks amazing even without content (after first registration)
 - [ ] Messages
+- [ ] Privacy Policy
+- [ ] Diminish the number of refresh tokens available per user
+- [ ] Avoid REDIS to crash
 - [ ] Add a version from GIT
 - [ ] Work on the TODO's
 - [ ] Ensure a nice register process
 - [ ] Stack AppNotifications (so we can see several)
 - [ ] Change password
 - [ ] Optimize bundles with code splitting (https://webpack.js.org/guides/code-splitting/)
+- [ ] Create tests with image upload (if not yet)
 - [ ] Create more realistic tests scenario including user registration and increased users friendships
 - [ ] Help tooltips
 - [ ] Allow owner to give "owner" role on their topics
