@@ -63,8 +63,8 @@
     "start": "webpack serve --env WEB_ENV=local",
     "start:stage": "webpack serve --env WEB_ENV=stage",
     "start:prod": "webpack serve",
-    "build": "rimraf dist && webpack --env.WEB_ENV=local --env production",
-    "build:stage": "rimraf dist && webpack --env.WEB_ENV=stage --env production",
+    "build": "rimraf dist && webpack --env WEB_ENV=local --env production",
+    "build:stage": "rimraf dist && webpack --env WEB_ENV=stage --env production",
     "build:prod": "rimraf dist && webpack --env production",
     "analyze": "rimraf dist && webpack --env production --analyze"
   }
