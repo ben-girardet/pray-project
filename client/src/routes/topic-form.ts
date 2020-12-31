@@ -188,9 +188,13 @@ export class TopicForm implements IRouteableComponent, ICustomElementViewModel {
   }
 
   private computePercent(color: string): void {
-    const c = parseColorString(color);
-    const hsl = rgbToHSL(c);
-    this.percent = hsl.h / 360;
+    try {
+      const c = parseColorString(color);
+      const hsl = rgbToHSL(c);
+      this.percent = hsl.h / 360;
+    } catch (error) {
+      this.percent = 0;
+    }
   }
 
 }
