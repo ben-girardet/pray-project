@@ -2,7 +2,7 @@ import chalk from 'chalk';
 import { GraphQLRequestContext } from 'apollo-server-core';
 
 const enablePerf = true;
-const logPerf = false;
+const logPerf = true;
 
 export const apolloPerfPlugin = {
 
