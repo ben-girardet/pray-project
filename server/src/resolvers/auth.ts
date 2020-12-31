@@ -1,8 +1,7 @@
 import { Response } from 'express';
-import { RefreshTokenData, User, UserModel } from "../models/user";
+import { RefreshTokenData, UserModel } from "../models/user";
 import { Login } from "../models/login";
 import { Resolver, Mutation, Ctx, Arg, AuthChecker } from "type-graphql";
-import { RegisterInput, ValidateRegistrationInput } from './inputs/registration';
 import jwt from 'jsonwebtoken';
 import { Context } from './context-interface';
 import crypto from 'crypto';
@@ -29,8 +28,9 @@ export class AuthResolver {
         const refreshTokenData = user.generateRefreshToken();
         await user.save();
         const origin = context.req.get('origin') || '';
-        const sameSite = !context.req.hostname.includes('env-4211245.jcloud-ver-jpc.ik-server.com')
-            && (context.req.hostname === 'localhost' || !origin.includes('localhost'));
+        const sameSite = context.req.hostname.includes('api.sunago.app')
+            || (context.req.hostname === 'localhost'
+            || !origin.includes('localhost'));
 
         this.sendRefreshToken(context.res, refreshTokenData, sameSite);
         const jwtString = jwt.sign({userId: user.id, roles: user.roles}, process.env.JWT_SECRET_OR_KEY as string, { expiresIn: process.env.JWT_TOKEN_EXPIRATION, algorithm: 'HS256' });
@@ -59,8 +59,9 @@ export class AuthResolver {
         const refreshTokenData = foundUser.generateRefreshToken();
         await foundUser.save();
         const origin = context.req.get('origin') || '';
-        const sameSite = !context.req.hostname.includes('env-4211245.jcloud-ver-jpc.ik-server.com')
-            && (context.req.hostname === 'localhost' || !origin.includes('localhost'));
+        const sameSite = context.req.hostname.includes('api.sunago.app')
+            || (context.req.hostname === 'localhost'
+            || !origin.includes('localhost'));
         this.sendRefreshToken(context.res, refreshTokenData, sameSite);
         const jwtString = jwt.sign({userId: foundUser.id, roles: foundUser.roles}, process.env.JWT_SECRET_OR_KEY as string, { expiresIn: process.env.JWT_TOKEN_EXPIRATION, algorithm: 'HS256'});
         // this.setJWTCookie(context.res, jwtString);
