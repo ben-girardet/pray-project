@@ -27,15 +27,11 @@ export class Topics implements IRouteableComponent, ICustomElementViewModel {
   }
 
   public async binding(): Promise<void> {
-    console.log('topics binding');
     if (!this.global.isRoutingOK()) {
-      console.log('routing not ok');
       return;
     }
     // version with a query get topics
-    console.log('add to queue');
     this.global.platform.macroTaskQueue.queueTask(async () => {
-      console.log('fetches from queue');
       await this.getTopics();
       await this.tryToFetchTopics();
     });
