@@ -9,7 +9,7 @@
         <div>
           <h4>Register</h4>
           <p>First enter your mobile number as username</p>
-          <fast-text-field placeholder="Mobile" value.two-way="username" autofocus>
+          <fast-text-field placeholder="Mobile Number" value.two-way="username" pattern="[0-9]*" autofocus>
             <!-- TODO: the icon below should now be available in update from heroicons -->
             <!-- <pray-icon icon="DeviceMobile" size="sm" slot="start"></pray-icon> -->
           </fast-text-field>
@@ -23,7 +23,7 @@
         <div>
           <h4>Validate your ${type}</h4>
           <p>We sent you a code to ${username} that you can enter here.</p>
-          <fast-text-field placeholder="Enter your 6 digit code" value.two-way="code">
+          <fast-text-field placeholder="Enter your 6 digit code" pattern="[0-9]*" value.two-way="code">
             <!-- <pray-icon icon="User" size="sm" slot="start"></pray-icon> -->
           </fast-text-field>
         </div>

@@ -6,7 +6,7 @@
         <pray-logo size="large"></pray-logo>
       </div>
       <form submit.delegate="login($event)">
-        <fast-text-field id="login_username" type="number" placeholder="Mobile" value.two-way="username" autofocus>
+        <fast-text-field id="login_username" pattern="[0-9]*" placeholder="Mobile" value.two-way="username" autofocus>
           <pray-icon icon="User" size="sm" slot="start"></pray-icon>
         </fast-text-field>
         <fast-text-field id="login_password" type="password" placeholder="Your password" value.two-way="password">
