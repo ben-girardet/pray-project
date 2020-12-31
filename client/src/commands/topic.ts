@@ -20,7 +20,8 @@ query Topics($sort: SortBy, $status: String) {
     myShare {
       userId,
       encryptedContentKey,
-      encryptedBy
+      encryptedBy,
+      role
     },
     shares {
       userId
