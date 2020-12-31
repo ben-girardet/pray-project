@@ -5,6 +5,7 @@ import { User } from 'shared/types/user';
 import { Friendship } from 'shared/types/friendship';
 import { apolloAuth, client } from '../apollo';
 import { gql } from 'apollo-boost';
+import { Global } from '../global';
 import { removeFriendship, respondToFriendshipRequest } from '../commands/friendship';
 export interface Friend extends Partial<User> {
   friendshipStatus?: 'accepted' | 'requested';
@@ -24,7 +25,7 @@ export class Friends implements IRouteableComponent, ICustomElementViewModel {
   public friends: ExtendedFriendship[];
   public requests: ExtendedFriendship[];
   
-  public constructor() {
+  public constructor(private global: Global) {
     
   }
 
@@ -58,6 +59,7 @@ export class Friends implements IRouteableComponent, ICustomElementViewModel {
   public async removeFriendship(friendshipId: string): Promise<void> {
     try {
       await removeFriendship(friendshipId);
+      this.global.notificationService.fetchFriendshipsRequests();
       this.requests = this.requests.filter(f => f.id !== friendshipId);
       this.friends = this.friends.filter(f => f.id !== friendshipId);
     } catch (error) {
@@ -69,6 +71,7 @@ export class Friends implements IRouteableComponent, ICustomElementViewModel {
     try {
       await respondToFriendshipRequest(friendshipId, response);
       await this.getAndSetFriendships();
+      this.global.notificationService.fetchFriendshipsRequests();
     } catch (error) {
       AppNotification.notify(error.message, 'error');
     }

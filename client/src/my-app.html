@@ -23,12 +23,15 @@
   <au-viewport default="topics" fallback="missing" name="main"></au-viewport>
   <div class="bottom-bar" if.bind="apolloAuth.authenticated && apolloAuth.state === 1">
     <div class="bottom-bar-button" load="topics">
+      <fast-badge fill="primary" color="black" circular if.bind="global.notificationService.unviewedTopicIds.length > 0">${global.notificationService.unviewedTopicIds.length}</fast-badge>
       <pray-icon icon="Collection" type="${topicsActive(router.activeComponents, router.activeComponents.length) ? 'solid' : 'outline'}"></pray-icon>
     </div>
     <div class="bottom-bar-button" load="messages">
+      <fast-badge fill="primary" color="black" circular if.bind="global.notificationService.unviewedMessageIds.length > 0">${global.notificationService.unviewedMessageIds.length}</fast-badge>
       <pray-icon icon="Chat" type="${messagesActives(router.activeComponents, router.activeComponents.length) ? 'solid' : 'outline'}"></pray-icon>
     </div>
     <div class="bottom-bar-button" load="account">
+      <fast-badge fill="primary" color="black" circular if.bind="global.notificationService.requestedFriendshipIds.length > 0">${global.notificationService.requestedFriendshipIds.length}</fast-badge>
       <mini-user class="${accountActive(router.activeComponents, router.activeComponents.length) ? 'active' : ''}" user-id.bind="apolloAuth.userId" if.bind="apolloAuth.userId" only-avatar.bind="true"></mini-user>
     </div>
     <div class="bottom-bar-button" load="praying">

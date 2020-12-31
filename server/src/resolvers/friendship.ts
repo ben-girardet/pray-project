@@ -149,7 +149,7 @@ export class FriendshipResolver {
     if (keys.includes(key)) {
         return;
     }
-    keys = [key];
+    keys.push(key);
     await saveModelItems(`${userId}:friendships:cache-keys`, keys, {primitive: true});
 }
 
@@ -158,8 +158,8 @@ private async clearFriendshipsCacheKeyForUser(userId: string): Promise<void> {
   if (!keys || keys.length === 0) {
       return;
   }
-  const topicKeys = keys.map(k => this.computeFriendshipsCacheKey(userId, k));
-  for (const key of keys.concat(...topicKeys)) {
+  const friendshipKeys = keys.map(k => this.computeFriendshipsCacheKey(userId, k));
+  for (const key of keys.concat(...friendshipKeys)) {
       await delAsync(key);
   }
 }

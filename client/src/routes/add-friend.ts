@@ -4,11 +4,16 @@ import { client } from '../apollo';
 import { gql } from 'apollo-boost';
 import { requestFriendship } from '../commands/friendship';
 import { Friend } from './friends';
+import { Global } from '../global';
 @inject()
 export class AddFriend implements IRouteableComponent, ICustomElementViewModel {
 
   public found: Friend[] = [];
   public emailOrMobile: string = '';
+
+  public constructor(private global: Global) {
+
+  }
 
   public attached() {
     setTimeout(() => {
@@ -25,6 +30,7 @@ export class AddFriend implements IRouteableComponent, ICustomElementViewModel {
   public async requestFriendship(userId: string): Promise<void> {
     await requestFriendship(userId);
     await this.search();
+    this.global.notificationService.fetchFriendshipsRequests();
   }
 
 }

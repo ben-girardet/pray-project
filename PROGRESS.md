@@ -157,8 +157,16 @@ Login is now pretty well in place. Now is the time to improve the topic experien
 ## 29.12.2020 - Viewed by
 - [x] Add a "viewedBy" property to topic, messages and prayers model so we can add personalised notifications based on who viewed what
 
+## 30.12.2020 - Prod client
+- [x] Fix cookie (same-site not strict)
+- [x] Fix image service (mode not production in webpack)
+
+## 31.12.2020 - Prod client
+- [x] Add a badge in "list" and "settings" screen for nb of updates and nb of friends requests
+- [x] Fix friendship list cache and cache clearing
+
 ## Next 
-- [ ] Add a badge in "list" and "settings" screen for nb of updates and nb of friends requests
+- [ ] When removing a friendship: also remove all shares from (in both directions)
 - [ ] Ensure the screen looks amazing even without content (after first registration)
 - [ ] Messages
 - [ ] Add a version from GIT

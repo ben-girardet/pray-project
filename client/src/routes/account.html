@@ -15,7 +15,7 @@
     <fast-menu-item load="../friends">
       <pray-icon icon="Users" slot="start"></pray-icon>
       Friends
-      <fast-badge slot="end" fill="secondary" color="white" circular if.bind="user.nbFriends > 0">${user.nbFriends}</fast-badge>
+      <fast-badge slot="end" fill="primary" color="white" circular if.bind="global.notificationService.requestedFriendshipIds.length > 0">${global.notificationService.requestedFriendshipIds.length}</fast-badge>
     </fast-menu-item>
     <fast-menu-item>
       <pray-icon icon="TrendingUp" slot="start"></pray-icon>

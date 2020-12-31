@@ -20,23 +20,37 @@ export class NotificationService {
   public unviewedMessages: {[key: string]: string[]} = {};
   public unviewedPrayers: {[key: string]: string[]} = {};
   public unviewedNumbers: {[key: string]: number} = {};
+
+  public unviewedMessageIds: string[] = [];
+  public requestedFriendshipIds: string[] = [];
+
   public subscriptions: IDisposable[] = [];
 
   public constructor(private eventAggregator: EventAggregator) {
     this.subscriptions.push(this.eventAggregator.subscribe('page:foreground:auth', () => {
-      this.fetchUnviewedStatus();
+      this.fetchAll();
     }));
     this.subscriptions.push(this.eventAggregator.subscribe('login', () => {
-      this.fetchUnviewedStatus();
+      this.fetchAll();
     }));
     this.subscriptions.push(this.eventAggregator.subscribe('app:started', () => {
       if (apolloAuth.authenticated && apolloAuth.isTokenValid()) {
-        this.fetchUnviewedStatus();
+        this.fetchAll();
       }
     }));
     this.subscriptions.push(this.eventAggregator.subscribe('logout', () => {
       this.reset();
     })); 
+  }
+
+  public async fetchAll(): Promise<void> {
+    return Promise.all([
+      this.fetchUnviewedStatus(),
+      this.fetchUnviewedMessages(),
+      this.fetchFriendshipsRequests()
+    ]).then(() => {
+      return;
+    });
   }
 
   public async fetchUnviewedStatus(): Promise<void> {
@@ -68,10 +82,29 @@ export class NotificationService {
     }
   }
 
+  public async fetchUnviewedMessages(): Promise<void> {
+
+  }
+
+  public async fetchFriendshipsRequests(): Promise<void> {
+    try {
+      const result = await client.query<{friendships: {id: string}[]}>({query: gql`query {
+        friendships(status: "requested") {
+          id
+        }
+      }`, fetchPolicy: 'no-cache'});
+      this.requestedFriendshipIds = result.data.friendships.map(f => f.id);
+    } catch (error) {
+      // do nothing
+    }
+  }
+
   private reset() {
     this.unviewedTopicIds = [];
     this.unviewedMessages = {};
     this.unviewedPrayers = {};
+    this.unviewedMessageIds = [];
+    this.requestedFriendshipIds = [];
   }
 
 }
