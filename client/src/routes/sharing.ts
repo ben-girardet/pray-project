@@ -27,6 +27,7 @@ export class Sharing implements IRouteableComponent, ICustomElementViewModel {
     if (parameters.topicId) {
       try {
         const topic = await getTopic(parameters.topicId);
+        await CryptingService.decryptTopic(topic);
         this.topicId = topic.id;
         this.topic = topic;
       } catch (error) {
