@@ -24,7 +24,7 @@
         <pray-icon icon="Sparkles" size="sm"></pray-icon>
         ${topic.nbPrayers || 0} <!-- prayers -->
       </div>
-      <div class="topic_preview__footer-actions__item" if.bind="topic.myShare.role === 'owner' && topic.shares.length > 1" click.delegate="dispatchEvent('sharing')">
+      <div class="topic_preview__footer-actions__item" if.bind="(topic.myShare.role === 'owner' || true) && topic.shares.length > 1" click.delegate="dispatchEvent('sharing')">
         <pray-icon icon="UserGroup" size="sm"></pray-icon>
         ${topic.shares.length} <!-- prayers -->
       </div>
