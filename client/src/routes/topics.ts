@@ -27,11 +27,15 @@ export class Topics implements IRouteableComponent, ICustomElementViewModel {
   }
 
   public async binding(): Promise<void> {
+    console.log('topics binding');
     if (!this.global.isRoutingOK()) {
+      console.log('routing not ok');
       return;
     }
     // version with a query get topics
+    console.log('add to queue');
     this.global.platform.macroTaskQueue.queueTask(async () => {
+      console.log('fetches from queue');
       await this.getTopics();
       await this.tryToFetchTopics();
     });
@@ -121,11 +125,11 @@ export class Topics implements IRouteableComponent, ICustomElementViewModel {
   }
 
   public openMessages(topic: ITopic) {
-    this.global.router.load(`../conversation(topicId=${topic.id})`);
+    // this.global.router.load(`../conversation(topicId=${topic.id})`);
   }
 
   public openSharing(topic: ITopic) {
-    this.global.router.load(`../sharing(${topic.id})`);
+    // this.global.router.load(`../sharing(${topic.id})`);
   }
 
 }
