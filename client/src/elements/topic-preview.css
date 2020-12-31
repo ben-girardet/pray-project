@@ -94,7 +94,7 @@
 .topic_preview__footer-actions__item pray-icon {
   margin-right: 4px;
 }
-
 .topic-preview--highlight .topic_preview__date {
   color: var(--accent-color);
+  font-weight: bold;
 }
