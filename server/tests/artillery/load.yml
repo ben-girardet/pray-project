@@ -4,9 +4,9 @@ config:
     staging:
       target: "https://api-dev.sunago.app"
     prod:
-      target: "http://node50571-env-6259510.jcloud-ver-jpc.ik-server.com:11128"
+      target: "https://api.sunago.app"
   http:
-    timeout: 30
+    timeout: 10
   phases:
     - duration: 30
       arrivalRate: 1
@@ -22,6 +22,9 @@ config:
       arrivalRate: 5
       rampTo: 20
       name: "Heavy"
+    - duration: 120
+      arrivalRate: 20
+      name: "Heavy Sustained"
   defaults:
     headers:
       Content-Type: "application/json"

@@ -1,5 +1,10 @@
 config:
   target: 'http://localhost:3000'
+  environments:
+    staging:
+      target: "https://api-dev.sunago.app"
+    prod:
+      target: "https://api.sunago.app"
   http:
     timeout: 10 # max 10 seconds before considering a request as timed out
   plugins:
@@ -179,7 +184,7 @@ scenarios:
             - hasProperty: "data.topics.0"
             - hasProperty: "data.topics.0.shares.0.encryptedBy"
             - hasProperty: "data.topics.0.myShare"
-            - hasProperty: "data.topics.0.image.0"
+            - hasProperty: "data.topics.0.image"
             # - equals:
             #     - "{{ data.topics.length }}"
             #     - 1
@@ -192,24 +197,6 @@ scenarios:
             - equals:
                 - "{{ data.topics.0.myShare.userId }}"
                 - "{{ benId }}"
-            - equals:
-                - "{{ data.topics.0.image.0.fileId }}"
-                - "original"
-            - equals:
-                - "{{ data.topics.0.image.0.width }}"
-                - 1200
-            - equals:
-                - "{{ data.topics.0.image.0.height }}"
-                - 800
-            - equals:
-                - "{{ data.topics.0.image.1.fileId }}"
-                - "thumb"
-            - equals:
-                - "{{ data.topics.0.image.1.width }}"
-                - 400
-            - equals:
-                - "{{ data.topics.0.image.1.height }}"
-                - 300
     - post:
         name: "Get First Topic Messages"
         url: "/graphql"
@@ -737,5 +724,5 @@ scenarios:
                 - 2
             - equals:
                 - "{{ topic.nbPrayers }}"
-                - 2
+                - 4
 

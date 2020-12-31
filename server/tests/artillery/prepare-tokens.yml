@@ -4,7 +4,7 @@ config:
     staging:
       target: "https://api-dev.sunago.app"
     prod:
-      target: "http://node50571-env-6259510.jcloud-ver-jpc.ik-server.com:11128"
+      target: "https://api.sunago.app"
   http:
     timeout: 10 # max 10 seconds before considering a request as timed out
   plugins:
