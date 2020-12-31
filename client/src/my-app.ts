@@ -28,6 +28,10 @@ export class MyApp implements ICustomElementViewModel {
     private global: Global) {
     this.logger = iLogger.scopeTo('app');
     this.pageVisibility.listen();
+    const roots = ['https://sunago.app', 'https://sunago.app/', 'https://sunago.app/#', 'https://sunago.app/#/']
+    if (roots.includes(location.href)) {
+      this.global.bumpRoute();
+    }
   }
 
   public attached(): void {
@@ -69,8 +73,6 @@ export class MyApp implements ICustomElementViewModel {
     }
     return true;
   }
-
-  
 
   public async bound(): Promise<void> {    
     // Authentication HOOK
