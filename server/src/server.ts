@@ -61,7 +61,7 @@ console.log('REDIS_PORT', process.env.REDIS_PORT);
 const whitelist = ['http://localhost:9000', 'https://sunago.app', 'https://dev.sunago.app', 'https://www.sunago.app'];
 const corsOptions: CorsOptions = {
     origin: function (origin, callback) {
-        if (origin === undefined) {
+        if (origin === undefined || origin === null) {
           callback(null, true)
         } else if (whitelist.indexOf(origin) !== -1) {
           callback(null, true)
