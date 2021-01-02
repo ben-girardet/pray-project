@@ -28,7 +28,8 @@ export class AuthResolver {
         const refreshTokenData = user.generateRefreshToken();
         await user.save();
         const origin = context.req.get('origin') || '';
-        const sameSite = context.req.hostname.includes('api.sunago.app')
+        console.log('origin', origin)
+        const sameSite = (context.req.hostname.includes('api.sunago.app') && origin !== '')
             || (context.req.hostname === 'localhost'
             || !origin.includes('localhost'));
 
@@ -59,7 +60,7 @@ export class AuthResolver {
         const refreshTokenData = foundUser.generateRefreshToken();
         await foundUser.save();
         const origin = context.req.get('origin') || '';
-        const sameSite = context.req.hostname.includes('api.sunago.app')
+        const sameSite = (context.req.hostname.includes('api.sunago.app') && origin !== null)
             || (context.req.hostname === 'localhost'
             || !origin.includes('localhost'));
         this.sendRefreshToken(context.res, refreshTokenData, sameSite);
