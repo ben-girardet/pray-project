@@ -28,7 +28,10 @@ export class AuthResolver {
         const refreshTokenData = user.generateRefreshToken();
         await user.save();
         const origin = context.req.get('origin') || '';
-        console.log('origin', origin)
+        console.log('origin', origin);
+        console.log('typeof origin', typeof origin);
+        console.log('origin === null', origin === null);
+        console.log('origin === null (str)', origin === 'null');
         const sameSite = (context.req.hostname.includes('api.sunago.app') && origin !== '' && origin !== 'null')
             || (context.req.hostname === 'localhost'
             || !origin.includes('localhost'));
