@@ -56,9 +56,6 @@ export class Topics implements IRouteableComponent, ICustomElementViewModel {
     this.events.push(this.global.eventAggregator.subscribe('page:foreground:auth', async () => {
       await this.tryToFetchTopics();
     }));
-    this.events.push(this.global.eventAggregator.subscribe('app:started', async () => {
-      await this.tryToFetchTopics();
-    }));
   }
 
   public detaching(): void {

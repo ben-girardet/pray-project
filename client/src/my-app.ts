@@ -32,6 +32,18 @@ export class MyApp implements ICustomElementViewModel {
     if (roots.includes(location.href)) {
       this.global.bumpRoute();
     }
+    if (
+      location.href.substr(-25) === 'Sunago.app/www/index.html'
+      || location.href.substr(-26) === 'Sunago.app/www/index.html/'
+      || location.href.substr(-27) === 'Sunago.app/www/index.html/#'
+      || location.href.substr(-28) === 'Sunago.app/www/index.html/#/'
+      ) {
+      this.global.bumpRoute();
+    }
+    document.addEventListener("deviceready", () => {
+      this.global.eventAggregator.publish('device:ready');
+    }, false);
+
   }
 
   public attached(): void {
