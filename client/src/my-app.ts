@@ -68,8 +68,8 @@ export class MyApp implements ICustomElementViewModel {
       const componentName = vp.content.content.componentName;
       if (!['login', 'register'].includes(componentName)) {
         this.router.load('login');
-        return false;
       }
+      return false;
     }
     return true;
   }

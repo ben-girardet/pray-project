@@ -7,6 +7,18 @@ import moment from 'moment';
 import conf from './config';
 import Gun from 'gun';
 import 'gun/sea';
+
+const w: any = window;
+w.getRefreshToken = function() {
+  return window.localStorage.getItem('refreshToken');
+}
+w.getRefreshTokenExpiry = function() {
+  return window.localStorage.getItem('refreshTokenExpiry');
+}
+w.setRefreshToken = function(refreshToken, refreshTokenExpiry) {
+  window.localStorage.setItem('refreshToken', refreshToken);
+  window.localStorage.setItem('refreshTokenExpiry', refreshTokenExpiry);
+}
 class ApolloAuth {
 
     private expires: moment.Moment;
@@ -15,6 +27,9 @@ class ApolloAuth {
     private jwt: string;
     private privateKey: string;
     private state: number;
+
+    private refreshToken?: string;
+    private refreshTokenExpiry?: moment.Moment;
     
     public setLogin(login: {token: string, userId: string, expires: string, privateKey: string, state: number}) {
       if (typeof login.expires === 'string') {
@@ -34,6 +49,15 @@ class ApolloAuth {
         throw new Error('Invalid login');
       }
       this.userId = login.userId;
+    }
+
+    public setRefreshToken(refreshToken: string, refreshTokenExpiry: string) {
+      if (w.setRefreshToken) {
+        w.setRefreshToken.call(null, refreshToken, refreshTokenExpiry);
+      } else {
+        this.refreshToken = refreshToken;
+        this.refreshTokenExpiry = moment(refreshTokenExpiry);
+      }
     }
 
     public setState(state: number) {
@@ -65,6 +89,20 @@ class ApolloAuth {
 
     public getJWT(): string {
       return this.jwt;
+    }
+
+    public getRefreshToken(): string | null {
+      const refreshToken = w.getRefreshToken ? w.getRefreshToken() : this.refreshToken;
+      const refreshTokenExpiry = w.getRefreshTokenExpiry ? moment(w.getRefreshTokenExpiry()) : this.refreshTokenExpiry;
+      if (refreshToken && refreshTokenExpiry && refreshTokenExpiry.isValid() && refreshTokenExpiry.isAfter(moment())) {
+        return refreshToken;
+      }
+      if (w.setRefreshToken) {
+        w.setRefreshToken.call(null, '', '');
+      } 
+      delete this.refreshToken;
+      delete this.refreshTokenExpiry;
+      return null;
     }
 
     public logout() {
@@ -125,8 +163,24 @@ const client = new ApolloClient({
   uri: `${conf.apiHost}/graphql`,
   credentials: 'include',
   request: async (operation: Operation) => {
+    if (w.device?.platform) {
+      operation.setContext(context => ({
+        headers: {
+            ...context.headers,
+            "sunago-source": `${w.device.platform}-mobile-app`
+        }
+      }));
+    }
     if (operation.operationName !== 'Login' && operation.operationName !== 'RefreshToken' && !apolloAuth.isTokenValid() && apolloAuth.getUserId()) {
         await refreshToken();
+    }
+    if (operation.operationName === 'RefreshToken' && apolloAuth.getRefreshToken()) {
+      operation.setContext(context => ({
+        headers: {
+            ...context.headers,
+            "sunago-refresh-token": apolloAuth.getRefreshToken()
+        }
+      }));
     }
     const token = apolloAuth.getToken();
     if (token && operation.operationName !== 'RefreshToken' && operation.operationName !== 'Login') {
@@ -139,7 +193,6 @@ const client = new ApolloClient({
     }
   },
   onError: (error: ErrorResponse) => {
-    console.log('Apollo request error', error);
     const hiddenMessages = [
       'Invalid refresh token',
       'No refresh token',

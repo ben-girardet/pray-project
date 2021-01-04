@@ -10,7 +10,9 @@ mutation Login($username: String!, $password: String!) {
     userId,
     expires,
     privateKey,
-    state
+    state,
+    refreshToken,
+    refreshTokenExpiry,
   }
 }`;
 
@@ -21,6 +23,8 @@ mutation RefreshToken($withPrivateKey: Boolean!) {
     userId,
     expires,
     state,
+    refreshToken,
+    refreshTokenExpiry,
     privateKey @include(if: $withPrivateKey)
   }
 }`;
@@ -44,6 +48,9 @@ export async function login(username: string, password: string) {
       state: result.data.login.state
     });
   }
+  if (typeof result.data.login.refreshToken === 'string') {
+    apolloAuth.setRefreshToken(result.data.login.refreshToken, result.data.login.refreshTokenExpiry);
+  }
   return result.data.login;
 }
 
@@ -63,6 +70,9 @@ export async function refreshToken(withPrivateKey = false) {
       privateKey: result.data.refreshToken.privateKey,
       state: result.data.refreshToken.state
     });
+  }
+  if (typeof result.data.refreshToken.refreshToken === 'string') {
+    apolloAuth.setRefreshToken(result.data.refreshToken.refreshToken, result.data.refreshToken.refreshTokenExpiry);
   }
   return result.data.refreshToken;
 }
