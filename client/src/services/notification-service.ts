@@ -40,7 +40,7 @@ export class NotificationService {
     }));
     this.subscriptions.push(this.eventAggregator.subscribe('logout', () => {
       this.reset();
-    })); 
+    }));
   }
 
   public async fetchAll(): Promise<void> {

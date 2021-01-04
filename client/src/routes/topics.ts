@@ -19,6 +19,7 @@ export class Topics implements IRouteableComponent, ICustomElementViewModel {
   private logger: ILogger;
   public activeTab: 'active' | 'answered' | 'archived' = 'active';
   public activeTopicsTabElement: HTMLElement;
+  public loadingTopics = false;
 
   public constructor( 
     @ILogger iLogger: ILogger,
@@ -31,9 +32,11 @@ export class Topics implements IRouteableComponent, ICustomElementViewModel {
       return;
     }
     // version with a query get topics
+    this.loadingTopics = true;
     this.global.platform.macroTaskQueue.queueTask(async () => {
       await this.getTopics();
       await this.tryToFetchTopics();
+      this.loadingTopics = false;
     });
     this.events.push(this.global.eventAggregator.subscribe('topic-form-out', async () => {
       await this.tryToFetchTopics();
@@ -51,6 +54,9 @@ export class Topics implements IRouteableComponent, ICustomElementViewModel {
       await this.tryToFetchTopics();
     }));
     this.events.push(this.global.eventAggregator.subscribe('page:foreground:auth', async () => {
+      await this.tryToFetchTopics();
+    }));
+    this.events.push(this.global.eventAggregator.subscribe('app:started', async () => {
       await this.tryToFetchTopics();
     }));
   }

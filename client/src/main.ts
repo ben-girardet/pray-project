@@ -26,7 +26,8 @@ import {
   FASTTab,
   FASTTabPanel,
   FASTMenu,
-  FASTMenuItem 
+  FASTMenuItem,
+  FASTProgressRing 
 } from '@microsoft/fast-components';
 
 /*
@@ -48,6 +49,7 @@ FASTTab;
 FASTTabPanel;
 FASTMenu;
 FASTMenuItem;
+FASTProgressRing;
 
 import { PrayIcon } from './components/pray-icon';
 import { PrayList } from './components/pray-list';

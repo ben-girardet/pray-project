@@ -110,6 +110,11 @@ class ApolloAuth {
       this.expires = undefined;
       this.authenticated = false;
       this.privateKey = '';
+      if (w.setRefreshToken) {
+        w.setRefreshToken.call(null, '', '');
+      } 
+      delete this.refreshToken;
+      delete this.refreshTokenExpiry;
     }
 
     public async refresh(): Promise<boolean> {
@@ -163,11 +168,12 @@ const client = new ApolloClient({
   uri: `${conf.apiHost}/graphql`,
   credentials: 'include',
   request: async (operation: Operation) => {
-    if (w.device?.platform) {
+    // the window.device object is populated by: `cordova-plugin-device`
+    if (typeof w.device?.platform === 'string') {
       operation.setContext(context => ({
         headers: {
             ...context.headers,
-            "sunago-source": `${w.device.platform}-mobile-app`
+            "sunago-source": `${w.device.platform.toLowerCase()}-mobile-app`
         }
       }));
     }
