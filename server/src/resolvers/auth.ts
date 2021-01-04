@@ -28,10 +28,6 @@ export class AuthResolver {
         const refreshTokenData = user.generateRefreshToken();
         await user.save();
         const origin = context.req.get('origin') || '';
-        console.log('origin', origin);
-        console.log('typeof origin', typeof origin);
-        console.log('origin === null', origin === null);
-        console.log('origin === null (str)', origin === 'null');
         const sameSite = (context.req.hostname.includes('api.sunago.app') && origin !== 'null')
             || context.req.hostname === 'localhost'
             || (!origin.includes('localhost') && origin !== 'null');
@@ -42,6 +38,10 @@ export class AuthResolver {
         // this.setJWTCookie(context.res, jwtString);
         const login = new Login();
         login.token = jwtString;
+        if (context.req.header('sunago-source') === 'ios-mobile-app') {
+            login.refreshToken = refreshTokenData.refreshToken;
+            login.refreshTokenExpiry = moment(refreshTokenData.expiry).toISOString();
+        }
         login.expires = moment().add(15, 'minutes').toDate(); // TODO: fix this by using the env variable
         login.userId = user._id.toString();
         login.privateKey = user.privateKey;
@@ -51,7 +51,9 @@ export class AuthResolver {
 
     @Mutation(() => Login)
     public async refreshToken(@Ctx() context: Context) {
-        const { refreshToken } = context.req.cookies;
+        const { refreshToken } = context.req.header('sunago-source') !== 'ios-mobile-app'
+            ? context.req.cookies
+            : {refreshToken: context.req.header('sunago-refresh-token')};
         if (!refreshToken) {
             throw new Error('No refresh token');
         }
@@ -73,6 +75,10 @@ export class AuthResolver {
         // this.setJWTCookie(context.res, jwtString);
         const login = new Login();
         login.token = jwtString;
+        if (context.req.header('sunago-source') === 'ios-mobile-app') {
+            login.refreshToken = refreshTokenData.refreshToken;
+            login.refreshTokenExpiry = moment(refreshTokenData.expiry).toISOString();
+        }
         login.expires = moment().add(15, 'minutes').toDate(); // TODO: fix this by using the env variable
         login.userId = foundUser._id.toString();
         login.privateKey = foundUser.privateKey;

@@ -7,6 +7,12 @@ export class Login implements ILogin {
     @Field(() => String)
     public token: string;
 
+    @Field(() => String, {nullable: true})
+    public refreshToken?: string;
+
+    @Field(() => String, {nullable: true})
+    public refreshTokenExpiry?: string;
+
     @Field(() => Date)
     public expires: Date;
 
