@@ -51,7 +51,7 @@ export class AuthResolver {
 
     @Mutation(() => Login)
     public async refreshToken(@Ctx() context: Context) {
-        const { refreshToken } = context.req.header('sunago-source') !== 'ios-mobile-app'
+        const { refreshToken } = context.req.cookies?.refreshToken
             ? context.req.cookies
             : {refreshToken: context.req.header('sunago-refresh-token')};
         if (!refreshToken) {
