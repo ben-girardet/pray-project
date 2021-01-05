@@ -37,14 +37,18 @@ import { UserMessagesResolver } from './resolvers/user.messages';
 import { TopicResolver } from './resolvers/topic';
 import { TopicMessagesResolver } from './resolvers/topic.messages';
 import { TopicPrayersResolver } from './resolvers/topic.prayers';
-import { TopicUserResolver, MessageUserResolver, PrayerUserResolver, FriendshipUserResolver } from './resolvers/x.user';
+import { TopicUserResolver, MessageUserResolver, PrayerUserResolver, FriendshipUserResolver, ActivityUserResolver } from './resolvers/x.user';
 import { MessageResolver } from './resolvers/message';
 import { FriendshipResolver } from './resolvers/friendship';
+import { ActivityResolver } from './resolvers/activity';
+import { ActivityMessageResolver } from './resolvers/activity.messages';
+import { ActivityTopicResolver } from './resolvers/activity.topic';
 import { RegistrationResolver } from './resolvers/registration';
 import { AuthResolver, customAuthChecker } from './resolvers/auth';
 const resolvers: NonEmptyArray<Function> | NonEmptyArray<string> =
     [UserResolver, UserMessagesResolver, TopicResolver, TopicMessagesResolver,
         TopicPrayersResolver, TopicUserResolver, PrayerUserResolver,
+        ActivityResolver, ActivityMessageResolver, ActivityTopicResolver, ActivityUserResolver,
         MessageResolver, MessageUserResolver, RegistrationResolver, AuthResolver,
         FriendshipResolver, FriendshipUserResolver];
 

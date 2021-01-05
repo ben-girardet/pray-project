@@ -5,7 +5,7 @@
   <div class="list-content-head">
     <div style="display: flex; align-items: center; justify-content: space-between;">
       <fast-tabs change.trigger="tabChanged($event)">
-        <fast-tab id="messages">Messages</fast-tab>
+        <fast-tab id="messages">Activity</fast-tab>
         <fast-tab-panel id="messagesPanel">
         </fast-tab-panel>
       </fast-tabs>
@@ -16,7 +16,7 @@
   </div>
 
   <div class="list-content">
-    <div class="list-content-list" if.bind="activeTab === 'messages'">
+    <div class="list-content-list" if.bind="activeTab === 'activity'">
       
     </div>
   </div>

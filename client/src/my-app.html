@@ -9,7 +9,7 @@
 <import from="./routes/edit-profile"></import>
 <import from="./routes/friends"></import>
 <import from="./routes/add-friend"></import>
-<import from="./routes/messages"></import>
+<import from="./routes/activity"></import>
 <import from="./routes/praying"></import>
 <import from="./routes/topics"></import>
 <import from="./routes/conversation"></import>
@@ -25,9 +25,9 @@
       <fast-badge fill="primary" color="black" circular if.bind="global.notificationService.unviewedTopicIds.length > 0">${global.notificationService.unviewedTopicIds.length}</fast-badge>
       <pray-icon icon="Collection" type="${topicsActive(router.activeComponents, router.activeComponents.length) ? 'solid' : 'outline'}"></pray-icon>
     </div>
-    <div class="bottom-bar-button" load="messages">
-      <fast-badge fill="primary" color="black" circular if.bind="global.notificationService.unviewedMessageIds.length > 0">${global.notificationService.unviewedMessageIds.length}</fast-badge>
-      <pray-icon icon="Chat" type="${messagesActives(router.activeComponents, router.activeComponents.length) ? 'solid' : 'outline'}"></pray-icon>
+    <div class="bottom-bar-button" load="activity">
+      <fast-badge fill="primary" color="black" circular if.bind="global.notificationService.unviewedNumbers > 0">${global.notificationService.unviewedNumbers}</fast-badge>
+      <pray-icon icon="Clock" type="${activityActive(router.activeComponents, router.activeComponents.length) ? 'solid' : 'outline'}"></pray-icon>
     </div>
     <div class="bottom-bar-button" load="account">
       <fast-badge fill="primary" color="black" circular if.bind="global.notificationService.requestedFriendshipIds.length > 0">${global.notificationService.requestedFriendshipIds.length}</fast-badge>

@@ -170,8 +170,8 @@ export class MyApp implements ICustomElementViewModel {
     return activeComponents.find(c => c.componentName === 'account') !== undefined;
   }
 
-  public messagesActives(activeComponents: ViewportInstruction[]): boolean {
-    return activeComponents.find(c => c.componentName === 'messages') !== undefined;
+  public activityActive(activeComponents: ViewportInstruction[]): boolean {
+    return activeComponents.find(c => c.componentName === 'activity') !== undefined;
   }
 
   public settingsActive(activeComponents: ViewportInstruction[]): boolean {

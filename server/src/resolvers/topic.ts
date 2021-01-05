@@ -10,6 +10,7 @@ import { CreateTopicInput, EditTopicInput, AddShareToTopicInput } from './inputs
 import { SortBy, SortOrder } from './inputs/sorting';
 import { Prayer, PrayerModel } from "../models/prayer";
 import moment from 'moment';
+import { ActivityModel } from '../models/activity';
 
 @Resolver()
 export class TopicResolver {
@@ -109,6 +110,7 @@ export class TopicResolver {
     await saveModelItem('topic', createdTopicInstance.toObject());
     createdTopicInstance.setMyShare(userId);
     await TopicResolver.clearTopicsCacheKeyForUser(userId.toString());
+    await ActivityModel.topic(userId, createdTopic._id, 'create');
     return createdTopicInstance.toObjectWithMyShare();
   }
 
@@ -139,6 +141,12 @@ export class TopicResolver {
     for (const share of updatedTopicInstance.shares) {
         await TopicResolver.clearTopicsCacheKeyForUser(share.userId.toString());
     }
+    if (data.name) {
+        await ActivityModel.topic(userId, topicId, 'edit:name', data.name);
+    }
+    if (data.status) {
+        await ActivityModel.topicStatus(userId, topicId, data.status as 'answered' | 'active' | 'archived');
+    }
     return updatedTopicInstance.toObjectWithMyShare();
   }
 
@@ -162,6 +170,7 @@ export class TopicResolver {
     // clear `unviewed:_____` REDIS cache of the use who
     // now have access to this topic
     await delAsync(`unviewed:${data.userId}`);
+    await ActivityModel.topicShare(loggedInUserId, topicId, 'add', newShareUserId);
     return updatedTopicInstance.toObjectWithMyShare();
   }
 
@@ -189,6 +198,7 @@ export class TopicResolver {
     // clear `unviewed:_____` REDIS cache of the use who
     // now have access to this topic
     await delAsync(`unviewed:${userId}`);
+    await ActivityModel.topicShare(loggedInUserId, topicId, 'remove', removeShareUserId);
     return updatedTopicInstance.toObjectWithMyShare();
   }
 
@@ -208,7 +218,8 @@ export class TopicResolver {
         // who used to have access to this topic
         await delAsync(`unviewed:${share.userId.toString()}`);
     }
-    await delAsync(`topic:${originalTopic._id}`)
+    await delAsync(`topic:${originalTopic._id}`);
+    await ActivityModel.topic(userId, topicId, 'delete');
     return true;
   }
 
@@ -234,7 +245,7 @@ export class TopicResolver {
         // who have access to this topic
         await delAsync(`unviewed:${share.userId.toString()}`);
     }
-
+    await ActivityModel.prayed(userId, topic._id, createdPrayer._id);
     return prayerObject;
   }
 

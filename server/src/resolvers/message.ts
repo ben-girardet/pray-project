@@ -1,11 +1,9 @@
 import { existsAsync, lpushAsync, delAsync } from './../core/redis';
 import { CreateMessageInTopicInput, EditMessageInput } from './inputs/message';
-import { Topic, TopicModel } from "../models/topic";
+import { TopicModel } from "../models/topic";
 import { Message, MessageModel } from "../models/message";
-import { User, UserModel } from "../models/user";
-import { Share } from "../models/share";
-import { Resolver, Query, Arg, Authorized, Ctx, Mutation } from "type-graphql";
-import { FilterQuery } from 'mongoose';
+import { ActivityModel } from "../models/activity";
+import { Resolver, Arg, Authorized, Ctx, Mutation } from "type-graphql";
 import { Context } from "./context-interface";
 import { mongoose } from "@typegoose/typegoose";
 import { TopicResolver } from './topic';
@@ -54,13 +52,7 @@ export class MessageResolver {
     newMessage.updatedBy = userId;
     newMessage.text = data.text;
     newMessage.topicId = topicId;
-    // if (!Array.isArray(newMessage.viewedBy)) {
-    //     newMessage.viewedBy = [];
-    // }
-    // newMessage.viewedBy.push(userId.toString());
-    // newMessage.viewedBy = userId.toString();
     (newMessage.viewedBy as any).addToSet(userId.toString());
-    (newMessage.viewedBy as any).addToSet('asdf');
 
     const createdMessage = await newMessage.save();
     const createdMessageInstance = new MessageModel(createdMessage);
@@ -76,7 +68,7 @@ export class MessageResolver {
         // who have access to this topic
         await delAsync(`unviewed:${share.userId.toString()}`);
     }
-
+    await ActivityModel.message(userId, topic._id, createdMessage._id, 'create');
     return messageObject;
   }
 
@@ -101,6 +93,9 @@ export class MessageResolver {
             await delAsync(`topic-messages:${originalMessage.topicId.toString()}`);
         }
     }
+    if (originalMessage.topicId instanceof mongoose.Types.ObjectId) {
+        await ActivityModel.message(userId, originalMessage.topicId as mongoose.Types.ObjectId, editedMessage._id, 'edit');
+    }
     return editedMessageInstance.toObject();
   }
 
@@ -123,6 +118,9 @@ export class MessageResolver {
         if (exists) {
             await delAsync(`topic-messages:${originalMessage.topicId.toString()}`);
         }
+    }
+    if (originalMessage.topicId instanceof mongoose.Types.ObjectId) {
+        await ActivityModel.message(userId, originalMessage.topicId as mongoose.Types.ObjectId, editedMessage._id, 'delete');
     }
     return editedMessageInstance.toObject();
   }
