@@ -69,6 +69,7 @@ export class Conversation implements IRouteableComponent, ICustomElementViewMode
     }
     if (this.topicId) {
       await this.getTopic();
+      await this.tryToFetchTopic();
     } else if (this.userId) {
       // TODO: handle this scenario later
     }

@@ -15,11 +15,11 @@ const styles = css`
     contain: content;
   }
   :host(.border-top-bottom) {
-    border-top: 1px solid #ccc;
-    border-bottom: 1px solid #ccc;
+    border-top: 1px solid var(--separator-color);
+    border-bottom: 1px solid var(--separator-color);
   }
   ::slotted(pray-list-item) {
-    border-bottom: 1px solid #ccc;
+    border-bottom: 1px solid var(--separator-color);
   }
   ::slotted(pray-list-item:last-of-type) {
     border-bottom: none;

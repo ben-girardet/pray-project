@@ -91,7 +91,7 @@ html.detail au-viewport[name=detail] {
   height: calc(50px + constant(safe-area-inset-bottom));
   height: calc(50px + env(safe-area-inset-bottom));
   background-color: var(--body-color);
-  border-top: #fefefe 1px solid;
+  border-top: var(--separator-color) 1px solid;
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
@@ -155,7 +155,7 @@ html.detail au-viewport[name=detail] {
   background-color: var(--body-color);
   z-index:1;
   transform: translateY(-1px);
-  border-bottom: 1px solid #efefef;
+  border-bottom: 1px solid var(--separator-color);
 }
 .list-content-head h2 {
   margin: 0px;
@@ -168,6 +168,7 @@ html.detail au-viewport[name=detail] {
   width: 100%;
   position: relative;
   height: 50px;
+  height: calc(50px + env(safe-area-inset-top));
   overflow: hidden;
 }
 

@@ -106,7 +106,7 @@ form label {
 .user-list-item {
   display: flex;
   justify-content: space-between;
-  border-bottom: 1px solid #ccc;
+  border-bottom: 1px solid var(--separator-color);
   height: 45px;
   align-items: center;
 }

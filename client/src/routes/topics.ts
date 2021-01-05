@@ -1,12 +1,10 @@
-import { apolloAuth } from './../apollo';
-import { PageVisibility } from './../helpers/page-visibility';
 import { CryptingService } from './../services/crypting-service';
 import { AppNotification } from './../components/app-notification';
 import { Topic as ITopic } from 'shared/types/topic';
 import { MyShare } from 'shared/types/share';
 import { IRouteableComponent } from '@aurelia/router';
 import { Global } from '../global';
-import { ICustomElementViewModel, ILogger, EventAggregator, IDisposable, IRouter, IPlatform } from 'aurelia';
+import { ICustomElementViewModel, ILogger, IDisposable } from 'aurelia';
 import easyScroll from 'easy-scroll';
 import { getTopics } from '../commands/topic';
 

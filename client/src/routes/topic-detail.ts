@@ -34,6 +34,7 @@ export class TopicDetail implements IRouteableComponent, ICustomElementViewModel
       return;
     }
     await this.getTopic();
+    await this.tryToFetchTopic();
     this.subscriptions.push(this.global.eventAggregator.subscribe('topic-form-out', async () => {
       await this.tryToFetchTopic();
     }));

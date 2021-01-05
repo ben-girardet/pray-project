@@ -17,8 +17,7 @@
 <import from="./routes/login"></import>
 <import from="./routes/register"></import>
 <!-- TODO: enable dark mode later -->
-<!-- <import from="./dark.css"></import> -->
-<!-- <import from="./routes/test"></import> -->
+<import from="./dark.css"></import>
 <fast-design-system-provider use-defaults background-color="#FFFFFF" type-ramp-base-font-size="16px" class="dw">
   <au-viewport default="topics" fallback="missing" name="main"></au-viewport>
   <div class="bottom-bar" if.bind="apolloAuth.authenticated && apolloAuth.state === 1">

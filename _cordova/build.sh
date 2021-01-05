@@ -4,7 +4,7 @@ cp resources/app-cordova.css www/app-cordova.css
 cp resources/app-cordova.js www/app-cordova.js
 sed -i'.orig' -e 's+</body>+<script src="app-cordova.js"></script><script src="cordova.js"></script></body>+g' www/index.html
 rm www/index.html.orig
-sed -i'.orig' -e 's+<body>+<body class="cordova">+g' www/index.html
+sed -i'.orig' -e 's+<html>+<html class="cordova">+g' www/index.html
 rm www/index.html.orig
 sed -i'.orig' -e 's+</head>+<link rel="stylesheet" type="text/css" href="app-cordova.css"></head>+g' www/index.html
 rm www/index.html.orig

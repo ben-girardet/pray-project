@@ -3,7 +3,10 @@
   --accent-color: #3AC3BD;
   --praying-body-color: var(--accent-color);
   --praying-accent-color: #16615F;
+  --message-background-color: #efefef;
+  --message-foreground-color: #000;
   --message-me-background-color: #B3E9E5;
+  --message-me-foreground-color: #000;
 
   --praying-body-color: #16615F;
   --praying-accent-color: var(--accent-color);

@@ -3,6 +3,7 @@ cordova create sunago.cordova app.sunago Sunago
 cd sunago.cordova
 cordova plugin add cordova-plugin-splashscreen
 cordova plugin add cordova-plugin-device
+cordova plugin add cordova-plugin-statusbar
 cordova platform add browser
 cordova platform add ios
 cp ../_cordova/build.sh build.sh

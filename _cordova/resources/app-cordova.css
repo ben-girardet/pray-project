@@ -1,19 +1,19 @@
-body.cordova .bottom-headview {
+html.cordova .bottom-headview {
   top: constant(safe-area-inset-top);
   top: env(safe-area-inset-top);
 }
-body.cordova .bottom-contentview {
+html.cordova .bottom-contentview {
   top: calc(50px + constant(safe-area-inset-top));
   top: calc(50px + env(safe-area-inset-top));
   bottom: constant(safe-area-inset-bottom);
   bottom: env(safe-area-inset-bottom);
 }
 
-body.cordova .conversation-headview {
+html.cordova .conversation-headview {
   top: constant(safe-area-inset-top);
   top: env(safe-area-inset-top);
 }
-body.cordova .conversation-contentview {
+html.cordova .conversation-contentview {
   top: calc(50px + constant(safe-area-inset-top));
   top: calc(50px + env(safe-area-inset-top));
   bottom: constant(safe-area-inset-bottom);

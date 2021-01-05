@@ -11,6 +11,7 @@ const accent = '#3AC3BD';
 const neutralPalette = createColorPalette(parseColorWebRGB(neutral));
 const accentPalette = createColorPalette(parseColorString(accent));
 
+const w: any = window;
 @inject()
 export class MyApp implements ICustomElementViewModel {
 
@@ -47,12 +48,8 @@ export class MyApp implements ICustomElementViewModel {
   }
 
   public attached(): void {
-    // TODO: enable darkMode later
-    const darkMode = false && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    this.global.adaptProviderWithTheme();
     const provider = document.querySelector("fast-design-system-provider") as HTMLElement & {backgroundColor: string; neutralPalette: string[]; accentPalette: string[]; accentBaseColor: string};
-    if (darkMode) {
-      provider.backgroundColor = '#000000';
-    }
     provider.neutralPalette = neutralPalette;
     provider.accentBaseColor = accent;
     provider.accentPalette = accentPalette;
@@ -67,6 +64,10 @@ export class MyApp implements ICustomElementViewModel {
 
   public async binding(): Promise<void> {
     this.subscriptions.push(this.eventAggregator.subscribe('page:foreground', async () => {
+      this.global.platform.domReadQueue.queueTask(() => {
+        this.global.adaptProviderWithTheme();
+        this.global.adaptStatusBarWithThemeAndRoute([]);
+      });
       const isAuth = await this.loginIfNotAuthenticated();
       if (isAuth) {
         this.eventAggregator.publish('page:foreground:auth')
@@ -104,10 +105,13 @@ export class MyApp implements ICustomElementViewModel {
       return true;
     });
 
-    // Add HTML class component HOOK
+    // Cordova StatusBar hook
     this.router.addHook(async (instructions: ViewportInstruction[]) => {
-      for (const instruction of instructions) {
-      }
+      this.global.adaptProviderWithTheme();
+      this.global.adaptStatusBarWithThemeAndRoute(instructions);
+      this.global.platform.domReadQueue.queueTask(() => {
+        this.global.adaptStatusBarWithThemeAndRoute([]);
+      });
       return true;
     });
 
