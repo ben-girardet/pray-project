@@ -140,7 +140,7 @@ export class Activity implements IActivity {
           });
         }
         const topics = await TopicModel.find({"shares.userId": userId}).select('_id');
-        const activities = await ActivityModel.find({topic: {$in: topics.map(t => t._id)}});
+        const activities = await ActivityModel.find({topic: {$in: topics.map(t => t._id)}}, null, {sort: {date: -1}});
         const values = activities.map(m => m.toObject());
         if (!values.length) {
           return values;

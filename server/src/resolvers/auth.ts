@@ -31,7 +31,6 @@ export class AuthResolver {
         const sameSite = (context.req.hostname.includes('api.sunago.app') && origin !== 'null')
             || context.req.hostname === 'localhost'
             || (!origin.includes('localhost') && origin !== 'null');
-        console.log('sameSite', sameSite);
 
         this.sendRefreshToken(context.res, refreshTokenData, sameSite);
         const jwtString = jwt.sign({userId: user.id, roles: user.roles}, process.env.JWT_SECRET_OR_KEY as string, { expiresIn: process.env.JWT_TOKEN_EXPIRATION, algorithm: 'HS256' });
@@ -69,7 +68,6 @@ export class AuthResolver {
         const sameSite = (context.req.hostname.includes('api.sunago.app') && origin !== 'null')
             || context.req.hostname === 'localhost'
             || (!origin.includes('localhost') && origin !== 'null');
-        console.log('sameSite', sameSite);
         this.sendRefreshToken(context.res, refreshTokenData, sameSite);
         const jwtString = jwt.sign({userId: foundUser.id, roles: foundUser.roles}, process.env.JWT_SECRET_OR_KEY as string, { expiresIn: process.env.JWT_TOKEN_EXPIRATION, algorithm: 'HS256'});
         // this.setJWTCookie(context.res, jwtString);

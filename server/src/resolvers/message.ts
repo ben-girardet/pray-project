@@ -3,7 +3,7 @@ import { CreateMessageInTopicInput, EditMessageInput } from './inputs/message';
 import { TopicModel } from "../models/topic";
 import { Message, MessageModel } from "../models/message";
 import { ActivityModel } from "../models/activity";
-import { Resolver, Arg, Authorized, Ctx, Mutation } from "type-graphql";
+import { Resolver, Arg, Authorized, Ctx, Mutation, Query } from "type-graphql";
 import { Context } from "./context-interface";
 import { mongoose } from "@typegoose/typegoose";
 import { TopicResolver } from './topic';
@@ -20,25 +20,29 @@ export class MessageResolver {
 //     return messages;
 //   }
 
-//    @Query(() => Topic)
-//    public async topic(@Arg("id") id: string, @Ctx() context: Context) {
-//     try {
-//         const userId = new mongoose.Types.ObjectId(context.user.userId);
-//         const topicId = new mongoose.Types.ObjectId(id);
-//         const query: FilterQuery<typeof TopicModel> = {
-//             _id: topicId,
-//             shares: {$elemMatch: {userId}}
-//         };
-//         const topic = await TopicModel.findOne(query);
-//         if (!topic) {
-//             throw new Error('Topic not found');
-//         }
-//         topic.setMyShare(userId);
-//         return topic.toObjectWithMyShare();
-//     } catch (error) {
-//         throw new Error(error);
-//     }
-//    }
+   @Query(() => Message)
+   public async message(@Arg("id") id: string, @Ctx() context: Context) {
+    try {
+        const userId = new mongoose.Types.ObjectId(context.user.userId);
+        const messageId = new mongoose.Types.ObjectId(id);
+        // TODO: add cache
+        const message = await MessageModel.findById(messageId);
+        if (!message) {
+            throw new Error('Message not found');
+        }
+        const topic = await TopicModel.findById(message.topicId);
+        if (!topic) {
+            throw new Error('Related topic not found');
+        }
+        topic.setMyShare(userId);
+        if (topic.myShare === undefined) {
+            throw new Error('Access denied');
+        }
+        return message.toObject();
+    } catch (error) {
+        throw new Error(error);
+    }
+   }
 
   @Authorized(['user'])
   @Mutation(() => Message)

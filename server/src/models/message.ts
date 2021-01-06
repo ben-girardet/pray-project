@@ -25,7 +25,7 @@ export class Message implements IMessage {
     @prop({default: false})
     public deleted: boolean = false;
 
-    @Field(() => Topic)
+    @Field(() => String)
     @prop({ref: () => Topic, index: true})
     public topicId?: Ref<Topic>;
 
