@@ -1,0 +1,9 @@
+.activities activity-preview {
+  border-top: 1px solid var(--separator-color);
+  padding-top: 16px;
+  margin-bottom: 16px;
+  display: block;
+}
+.activities activity-preview:first-of-type {
+  border-top: none;
+}

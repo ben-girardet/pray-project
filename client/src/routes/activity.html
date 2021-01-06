@@ -1,4 +1,4 @@
-<div class="topics">
+<div class="activities">
   <div class="list-head" style="padding-left: 16px;">
     <pray-logo size="medium"></pray-logo>
   </div>
@@ -17,7 +17,12 @@
 
   <div class="list-content">
     <div class="list-content-list" if.bind="activeTab === 'activity'">
-      
+      <activity-preview
+        class="content"
+        repeat.for="activity of activities"
+        activity.bind="activity"
+        >
+      </activity-preview>
     </div>
   </div>
 

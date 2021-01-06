@@ -1,5 +1,6 @@
 import Aurelia, { RouterConfiguration, LoggerConfiguration, LogLevel, ColorOptions } from 'aurelia';
 import { TopicPreview } from './elements/topic-preview';
+import { ActivityPreview } from './elements/activity-preview';
 import { MyApp } from './my-app';
 import { DateValueConverter } from './resources/date-value-converter';
 import { GradientValueConverter } from './resources/gradient-value-converter';
@@ -81,6 +82,7 @@ Aurelia
   .register(Nl2brValueConverter)
   .register(AvatarSelection)
   .register(TopicPreview)
+  .register(ActivityPreview)
   .register(MiniUser)
   .register(TopicPraying)
   // To use HTML5 pushState routes, replace previous line with the following

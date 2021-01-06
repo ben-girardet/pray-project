@@ -7,40 +7,15 @@ export const getActivitiesQuery = gql`
 query Activities {
   activities {
     id,
-    user {
-      id,
-      firstname,
-      lastname,
-      picture {
-        fileId,
-        width,
-        height
-      }
-    },
-    topic {
-      name,
-      image {
-        fileId,
-        width,
-        height
-      },
-    },
-    prayer,
+    userId,
+    topicId,
+    prayerId,
     message {
       text
     },
     action,
     date,
-    user2 {
-      id,
-      firstname,
-      lastname,
-      picture {
-        fileId,
-        width,
-        height
-      }
-    }
+    userId2
   }
 }`;
 
