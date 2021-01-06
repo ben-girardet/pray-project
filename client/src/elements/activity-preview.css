@@ -1,11 +1,6 @@
 .activity-preview {
   contain: content;
-  /* display: flex;    
-  align-items: center;
-  justify-content: space-between;
-  height: var(--topic-height);
-  border-radius: calc(var(--corner-radius) * 1px);
-  overflow: hidden;  */
+  font-size: 14px;
 }
 .activity-preview__main {
   display: flex;
@@ -15,15 +10,19 @@
 .activity-preview__avatar {
   flex-shrink: 0;
   flex-grow: 0;
-}
-.activity-preview__action {
-  display: flex;
-  width: 100%;
-}
-.activity-preview__name {
   margin-right: 8px;
 }
+.activity-preview__action {
+  width: 100%;
+}
+.activity-preview__action .activity-preview__name,
+.activity-preview__action .mini-user,
+.activity-preview__action .mini-user__name {
+  display: inline;
+  font-weight: bold;
+}
 .activity-preview__date {
+  margin-left: 16px;
   white-space: nowrap;
   overflow: hidden;
   color: #999;
@@ -31,7 +30,15 @@
   margin-left: auto;
   flex-shrink: 0;
   flex-grow: 0;
+  font-size: 12px;
 }
 .activity-preview__meta {
   color: var(--meta-content-color);
+  padding: 8px 0 0 40px;
+  font-size: 12px;
+}
+.activity-preview__topic-name {
+  cursor: pointer;
+  color: var(--accent-color);
+  font-weight: bold;
 }

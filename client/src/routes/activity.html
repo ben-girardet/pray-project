@@ -16,11 +16,18 @@
   </div>
 
   <div class="list-content">
+
+    <div class="activities--loading" if.bind="activities.length === 0 && loadingActivities">
+      <fast-progress-ring></fast-progress-ring>
+      Loading activities
+    </div>
+
     <div class="list-content-list" if.bind="activeTab === 'activity'">
       <activity-preview
         class="content"
-        repeat.for="activity of activities"
+        repeat.for="activity of activities.slice(0, limit)"
         activity.bind="activity"
+        topic.delegate="openTopic(activity.topicId)"
         >
       </activity-preview>
     </div>

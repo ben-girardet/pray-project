@@ -1,4 +1,4 @@
-import { gql, ApolloQueryResult } from 'apollo-boost';
+import { gql, ApolloQueryResult, FetchPolicy } from 'apollo-boost';
 import { client } from '../apollo';
 import { Message } from 'shared/types/message';
 
@@ -8,6 +8,7 @@ mutation CreateMessageInTopic($topicId: String!, $text: String!) {
   {
     id,
     text,
+    topicId,
     createdBy {
       id,
       firstname,
@@ -22,8 +23,29 @@ mutation CreateMessageInTopic($topicId: String!, $text: String!) {
   }
 }`;
 
+const getMessageTextQuery = gql`
+query Message($id: String!) {
+  message(id: $id) {
+    topicId,
+    text
+  }
+}
+`
 
 export async function createMessageInTopic(topicId: string, text: string): Promise<Message> {
   const result = await client.mutate<{createMessageInTopic: Message}>({mutation: createMessageInTopicMutation, variables: {topicId, text}, fetchPolicy: 'no-cache'});
   return result.data.createMessageInTopic;
+}
+
+export async function getMessageText(
+  id: string, 
+  fetchPolicy: FetchPolicy = 'cache-first'): Promise<Partial<Message>> {
+  interface Res {
+    message: Partial<Message>
+  }
+  const result = await client.query<Res>({
+    query: getMessageTextQuery, 
+    variables: {id}, 
+    fetchPolicy});
+  return result.data.message;
 }

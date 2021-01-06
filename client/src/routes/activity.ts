@@ -13,7 +13,8 @@ export class Activity implements IRouteableComponent, ICustomElementViewModel {
   public activities: IActivity[] = [];
   private events: IDisposable[] = [];
   private logger: ILogger;
-  public loadingTopics = false;
+  public loadingActivities = false;
+  private limit = 30;
 
   public constructor( 
     @ILogger iLogger: ILogger,
@@ -30,17 +31,17 @@ export class Activity implements IRouteableComponent, ICustomElementViewModel {
       return;
     }
     // version with a query get topics
-    this.loadingTopics = true;
+    this.loadingActivities = true;
     this.global.platform.macroTaskQueue.queueTask(async () => {
       await this.getActivities();
       await this.tryToFetchActivities();
-      this.loadingTopics = false;
+      this.loadingActivities = false;
     });
     this.events.push(this.global.eventAggregator.subscribe('praying-out', async () => {
       await this.tryToFetchActivities();
     }));
     this.events.push(this.global.eventAggregator.subscribe('page:foreground:auth', async () => {
-      await this.tryToFetchActivities();
+      // await this.tryToFetchActivities();
     }));
   }
 
@@ -95,6 +96,10 @@ export class Activity implements IRouteableComponent, ICustomElementViewModel {
       // vp.scrollTop = 0;
       // const scrolling = new AnimateTo(vp, {scrollTop: 0});
     }
+  }
+
+  public openTopic(topicId: string) {
+    this.global.router.load(`../topic-detail(${topicId})`);
   }
 
 }

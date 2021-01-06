@@ -6,14 +6,14 @@
       <span if.bind="activity.action === 'topic:create'">added a new topic</span>
       <span if.bind="activity.action === 'topic:delete'">deleted a topic</span>
       <span if.bind="activity.action === 'message:create'">wrote a message in the topic</span>
-      <span if.bind="activity.action === 'message:create'">${activity.topicId}</span>
+      <span if.bind="activity.action === 'message:create'" class="activity-preview__topic-name" click.delegate="dispatchEvent('topic')">${topic.name}</span>
       <span if.bind="activity.action === 'prayed'">prayed for</span>
-      <span if.bind="activity.action === 'prayed'">${activity.topicId}</span>
-      <span class="activity-preview__date">${activity.date | date:'fromnow'}</span>
+      <span if.bind="activity.action === 'prayed'" class="activity-preview__topic-name" click.delegate="dispatchEvent('topic')">${topic.name}</span>
     </div>
+    <span class="activity-preview__date">${activity.date | date:'fromnow'}</span>
   </div>
   <div class="activity-preview__meta">
-    <span if.bind="activity.action === 'topic:create' || activity.action === 'topic:delete'">${activity.topicId}</span>
-    <span if.bind="activity.action === 'message:create'">${activity.message.text}</span>
+    <span if.bind="activity.action === 'topic:create' || activity.action === 'topic:delete'" class="activity-preview__topic-name" click.delegate="dispatchEvent('topic')">${topic.name}</span>
+    <span if.bind="activity.action === 'message:create'">${message.text}</span>
   </div>
 </div>

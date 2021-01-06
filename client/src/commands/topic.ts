@@ -109,6 +109,20 @@ query Topic($topicId: String!) {
   }
 }`;
 
+export const getTopicNameQuery = gql`
+query Topic($topicId: String!) {
+  topic(id: $topicId) {
+    id,
+    name,
+    myShare {
+      userId,
+      encryptedContentKey,
+      encryptedBy,
+      role
+    },
+  }
+}`;
+
 const createTopicMutation = gql`
 mutation CreateTopic($name: String!, $color: String!, $image: [ImageInput!], $encryptedContentKey: String!) {
   createTopic(data: {name: $name, color: $color, image: $image, encryptedContentKey: $encryptedContentKey})
@@ -253,6 +267,19 @@ export async function getTopic(
   }
   const result = await client.query<Res>({
     query: getTopicQuery, 
+    variables: {topicId}, 
+    fetchPolicy});
+  return result.data.topic;
+}
+
+export async function getTopicName(
+  topicId: string, 
+  fetchPolicy: FetchPolicy = 'cache-first'): Promise<Partial<Topic & WithShares>> {
+  interface Res {
+    topic: Partial<Topic & WithShares>
+  }
+  const result = await client.query<Res>({
+    query: getTopicNameQuery, 
     variables: {topicId}, 
     fetchPolicy});
   return result.data.topic;

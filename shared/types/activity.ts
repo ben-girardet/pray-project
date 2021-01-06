@@ -1,11 +1,16 @@
 export interface Activity {
   user: any;
+  userId?: string | null;
   topic?: any;
+  topicId?: string | null;
   prayer?: any;
+  prayerId?: string | null;
   message?: any;
+  messageId?: string | null;
   action: ActivityAction;
   date: Date;
   user2?: any;
+  userId2?: string | null;
   data?: string;
 }
 

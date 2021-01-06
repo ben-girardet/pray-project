@@ -1,7 +1,6 @@
 import { gql, FetchPolicy } from 'apollo-boost';
 import { client } from '../apollo';
 import { Activity } from 'shared/types/activity';
-import moment from 'moment';
 
 export const getActivitiesQuery = gql`
 query Activities {
@@ -10,9 +9,7 @@ query Activities {
     userId,
     topicId,
     prayerId,
-    message {
-      text
-    },
+    messageId,
     action,
     date,
     userId2
