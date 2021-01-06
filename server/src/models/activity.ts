@@ -22,17 +22,37 @@ export class Activity implements IActivity {
     @prop({ref: () => User, index: true})
     public user: Ref<User>;
 
+    @Field(() => String)
+    public get userId(): string {
+        return this.user ? this.user.toString() : '';
+    }
+
     // @Field(() => String)
     @prop({ref: () => Topic, index: true})
     public topic: Ref<Topic>;
+
+    @Field(() => String, {nullable: true})
+    public get topicId(): string | null {
+        return this.topic ? this.topic.toString() : null;
+    }
 
     // @Field(() => String)
     @prop({ref: () => Message, index: true})
     public message: Ref<Message>;
 
     @Field(() => String, {nullable: true})
+    public get messageId(): string | null {
+        return this.message ? this.message.toString() : null;
+    }
+
+    @Field(() => String, {nullable: true})
     @prop({ref: () => Prayer, index: true})
     public prayer: Ref<Prayer>;
+
+    @Field(() => String, {nullable: true})
+    public get prayerId(): string | null {
+        return this.prayer ? this.prayer.toString() : null;
+    }
 
     @Field(() => String)
     @prop({type: String})
@@ -45,6 +65,11 @@ export class Activity implements IActivity {
     // @Field(() => String)
     @prop({ref: () => User, index: true})
     public user2: Ref<User>;
+
+    @Field(() => String, {nullable: true})
+    public get userId2(): string {
+        return this.user2 ? this.user2.toString() : '';
+    }
 
     @Field(() => String, {nullable: true})
     @prop()
