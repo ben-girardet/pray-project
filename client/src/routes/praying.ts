@@ -15,6 +15,9 @@ const accentPalette = createColorPalette(parseColorString(accent));
 
 export class Praying implements IRouteableComponent, ICustomElementViewModel {
 
+  public static parameters = ['topicId'];
+  public startWithTopicId: string = '';
+
   private playlist: ITopic[] = [];
   private events: IDisposable[] = [];
   private logger: ILogger;
@@ -46,7 +49,8 @@ export class Praying implements IRouteableComponent, ICustomElementViewModel {
   private deltaX: number = 0;
   private deltaY: number = 0;
 
-  public constructor(@IRouter private router: IRouter) {
+  public constructor(@IRouter private router: IRouter, @ILogger logger: ILogger) {
+    this.logger = logger.scopeTo('praying route');
     this.handleTouchStart = e => {
       e.preventDefault();
       e.stopPropagation();
@@ -88,6 +92,12 @@ export class Praying implements IRouteableComponent, ICustomElementViewModel {
     };
   }
 
+  public load(parameters: {topicId: string}): void {
+    this.logger.debug('load', parameters);
+    this.startWithTopicId = parameters.topicId;
+    this.logger.debug('startWithTopicId', this.startWithTopicId);
+  }
+
   public async binding(): Promise<void> {
     await this.getTopics();
   }
@@ -126,9 +136,21 @@ export class Praying implements IRouteableComponent, ICustomElementViewModel {
   }
 
   public async getTopics(): Promise<void> {
+    this.logger.debug('getTopics', this.startWithTopicId);
     try {
       const activeTopics = [].concat(await getTopics({field: 'updatedAt', order: -1}, 'active'));
       shuffleArray(activeTopics);
+      if (this.startWithTopicId) {
+        const topic = activeTopics.find(t => t.id === this.startWithTopicId);
+        this.logger.debug('topic', topic);
+        if (topic) {
+          const index = activeTopics.indexOf(topic);
+          this.logger.debug('index', index);
+          activeTopics.unshift(activeTopics.splice(index, 1)[0]);
+          this.logger.debug('activeTopics', activeTopics);
+        }
+        this.startWithTopicId = '';
+      }
       this.playlist = await this.decryptTopics(activeTopics);
       this.currentTopicIndex = 0;
     } catch (error) {
