@@ -43,7 +43,7 @@ export class AureliaFastAdapter {
           value: valuePropertyConfig
         },
         'FAST-SWITCH': {
-          value: valuePropertyConfig
+          checked: valuePropertyConfig
         },
         'FAST-TABS': {
           activeid: valuePropertyConfig

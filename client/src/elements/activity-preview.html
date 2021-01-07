@@ -3,17 +3,27 @@
     <mini-user class="activity-preview__avatar" user-id="${activity.userId}" size="medium" only-avatar.bind="true"></mini-user>
     <div class="activity-preview__action">
       <mini-user class="activity-preview__name" user-id="${activity.userId}" only-name.bind="true"></mini-user>
-      <span if.bind="activity.action === 'topic:create'">added a new topic</span>
-      <span if.bind="activity.action === 'topic:delete'">deleted a topic</span>
+      <span if.bind="activity.action === 'topic:create'">added a new topic: </span>
+      <span if.bind="activity.action === 'topic:delete'">deleted a topic: </span>
+      <span if.bind="activity.action === 'topic:edit:name'">change the name of <i>${originalName}</i> to</span>
       <span if.bind="activity.action === 'message:create'">wrote a message in the topic</span>
-      <span if.bind="activity.action === 'message:create'" class="activity-preview__topic-name" click.delegate="dispatchEvent('topic')">${topic.name}</span>
       <span if.bind="activity.action === 'prayed'">prayed for</span>
-      <span if.bind="activity.action === 'prayed'" class="activity-preview__topic-name" click.delegate="dispatchEvent('topic')">${topic.name}</span>
+      <span if.bind="activity.action === 'topic:share:add'">share the topic</span>
+      <span if.bind="activity.action === 'topic:share:remove'">Remove sharing of</span>
+      <span if.bind="['topic:setStatus:answered', 'topic:setStatus:archived', 'topic:setStatus:active'].includes(activity.action)">marked </span>
+      <span if.bind="activity.action !== 'topic:edit:name'" class="activity-preview__topic-name" click.delegate="dispatchEvent('topic')">${topic.name}</span>
+      <span if.bind="activity.action === 'topic:edit:name'" class="activity-preview__topic-name" click.delegate="dispatchEvent('topic')">${newName}</span>
+      <span if.bind="['topic:share:add'].includes(activity.action)">with</span>
+      <span if.bind="['topic:share:remove'].includes(activity.action)">to</span>
+      <span if.bind="['topic:setStatus:answered', 'topic:setStatus:archived', 'topic:setStatus:active'].includes(activity.action)">as</span>
+      <span if.bind="['topic:setStatus:answered'].includes(activity.action)">answered</span>
+      <span if.bind="['topic:setStatus:archived'].includes(activity.action)">archived</span>
+      <span if.bind="['topic:setStatus:active'].includes(activity.action)">active</span>
+      <mini-user if.bind="['topic:share:add', 'topic:share:remove'].includes(activity.action)" class="activity-preview__name" user-id="${activity.userId2}" only-name.bind="true"></mini-user>
     </div>
     <span class="activity-preview__date">${activity.date | date:'fromnow'}</span>
   </div>
   <div class="activity-preview__meta">
-    <span if.bind="activity.action === 'topic:create' || activity.action === 'topic:delete'" class="activity-preview__topic-name" click.delegate="dispatchEvent('topic')">${topic.name}</span>
     <span if.bind="activity.action === 'message:create'">${message.text}</span>
   </div>
 </div>

@@ -12,7 +12,8 @@ query Activities {
     messageId,
     action,
     date,
-    userId2
+    userId2,
+    data
   }
 }`;
 

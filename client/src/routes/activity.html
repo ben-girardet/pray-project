@@ -9,9 +9,9 @@
         <fast-tab-panel id="messagesPanel">
         </fast-tab-panel>
       </fast-tabs>
-      <a load="../topic-form" id="add-button">
-        <pray-icon icon="Plus" size="lg" button lightweight></pray-icon>
-      </a>
+      <span class="activities__switch-button">
+        <fast-switch checked.bind="global.includeMyActivity"></fast-switch>
+      </span>
     </div>
   </div>
 
@@ -26,6 +26,7 @@
       <activity-preview
         class="content"
         repeat.for="activity of activities.slice(0, limit)"
+        if.bind="global.includeMyActivity || activity.userId !== global.apollo.getUserId()"
         activity.bind="activity"
         topic.delegate="openTopic(activity.topicId)"
         >

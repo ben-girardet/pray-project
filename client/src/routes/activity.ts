@@ -2,7 +2,6 @@ import { Activity as IActivity } from 'shared/types/activity';
 import { IRouteableComponent } from '@aurelia/router';
 import { ICustomElementViewModel, IDisposable, ILogger } from 'aurelia';
 import { Global } from '../global';
-import { CryptingService } from './../services/crypting-service';
 import { AppNotification } from './../components/app-notification';
 import easyScroll from 'easy-scroll';
 import { getActivities } from '../commands/activity';
@@ -45,7 +44,39 @@ export class Activity implements IRouteableComponent, ICustomElementViewModel {
     }));
   }
 
+  public attached() {
+    const vp = document.querySelector('au-viewport[name=main]');
+    if (vp) {
+      vp.addEventListener('scroll', this);
+    }
+  }
+
+  private increasing = false;
+  public handleEvent(event: Event) {
+    if (this.increasing || this.limit === this.activities.length) {
+      return;
+    }
+    const vp = event.target as HTMLElement;
+    if (vp) {
+      if (vp.offsetHeight + vp.scrollTop > vp.scrollHeight - 200) {
+        this.increasing = true;
+        this.limit += Math.min(this.activities.length, this.limit + 30);
+        setTimeout(() => {
+          this.increasing = false;
+        }, 1000);
+      }
+    }
+  }
+
+  public detached() {
+    
+  }
+
   public detaching(): void {
+    const vp = document.querySelector('au-viewport[name=main]');
+    if (vp) {
+      vp.removeEventListener('scroll', this);
+    }
     for (const event of this.events) {
       event.dispose();
     }

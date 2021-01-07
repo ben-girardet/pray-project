@@ -27,7 +27,6 @@
   overflow: hidden;
   color: #999;
   color: var(--meta-content-color);
-  margin-left: auto;
   flex-shrink: 0;
   flex-grow: 0;
   font-size: 12px;

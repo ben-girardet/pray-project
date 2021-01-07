@@ -28,6 +28,7 @@ import {
   FASTTabPanel,
   FASTMenu,
   FASTMenuItem,
+  FASTSwitch,
   FASTProgressRing 
 } from '@microsoft/fast-components';
 
@@ -50,6 +51,7 @@ FASTTab;
 FASTTabPanel;
 FASTMenu;
 FASTMenuItem;
+FASTSwitch;
 FASTProgressRing;
 
 import { PrayIcon } from './components/pray-icon';

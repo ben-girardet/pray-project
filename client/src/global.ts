@@ -1,3 +1,4 @@
+import { apolloAuth } from './apollo';
 import { EventAggregator, ILogger, IRouter, IPlatform, ViewportInstruction } from 'aurelia';
 import { NotificationService } from './services/notification-service';
 
@@ -8,6 +9,8 @@ export class Global {
   private logger: ILogger;
   public isCordova = false;
   public isDarkModeEnabled = false;
+  public apollo = apolloAuth;
+  public includeMyActivity = false;
 
   public constructor(
     public eventAggregator: EventAggregator, 

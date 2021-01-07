@@ -14,6 +14,8 @@ export class ActivityPreview implements ICustomElementViewModel {
   private subscriptions: IDisposable[] = [];
   private topic: Partial<Topic>;
   private message?: Partial<Message>;
+  private originalName: string = '';
+  private newName: string = '';
 
   constructor(private element: HTMLElement, private global: Global) {
 
@@ -29,6 +31,10 @@ export class ActivityPreview implements ICustomElementViewModel {
   public async bound() {
     await this.getTopic();
     await this.getMessage();
+    if (this.activity.action === 'topic:edit:name') {
+      await this.setOriginalName();
+      await this.setNewName();
+    }
   }
 
   private async getTopic() {
@@ -48,6 +54,13 @@ export class ActivityPreview implements ICustomElementViewModel {
     this.message = fakeTopic.messages[0];
   }
 
+  private async decryptStringWithTopic(text: string): Promise<string> {
+    const fakeMessage = {text};
+    const fakeTopic = Object.assign({}, this.topic, {messages: [fakeMessage]});
+    await CryptingService.decryptTopic(fakeTopic);
+    return fakeTopic.messages[0].text;
+  }
+
   public unbinding() {
     for (const sub of this.subscriptions) {
       sub.dispose();
@@ -57,6 +70,38 @@ export class ActivityPreview implements ICustomElementViewModel {
 
   private setUnviewed() {
     // TODO: setUnviewed in activity
+  }
+
+  public async setOriginalName(): Promise<string> {
+    this.originalName = '';
+    try {
+      const data = JSON.parse(this.activity.data);
+      if (!Array.isArray(data)) {
+        return;
+      }
+      if (data[0]) {
+        this.originalName = await this.decryptStringWithTopic(data[0]);
+        return;
+      }
+    } catch (error) {
+      return;
+    }
+  }
+
+  public async setNewName(): Promise<string> {
+    this.newName = '';
+    try {
+      const data = JSON.parse(this.activity.data);
+      if (!Array.isArray(data)) {
+        return;
+      }
+      if (data[1]) {
+        this.newName = await this.decryptStringWithTopic(data[1]);
+        return;
+      }
+    } catch (error) {
+      return;
+    }
   }
 
   public dispatchEvent(event: string) {
