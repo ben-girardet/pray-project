@@ -23,7 +23,6 @@ new Promise(async (resolve, reject) => {
             pass: process.env.MONGO_PASSWORD,
         });
         console.log(chalk.dim('Connected to database'));
-        await ActivityModel.deleteMany({});
         console.log(chalk.magenta('Fetching Apple User'));
         const appleUser = await UserModel.findOne({mobile: process.env.APPLE_USER});
         if (appleUser) {
