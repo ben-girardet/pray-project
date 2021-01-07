@@ -122,6 +122,10 @@ export class TopicResolver {
     const topicId = new mongoose.Types.ObjectId(id);
     const originalTopic = await TopicModel.findOneAndCheckRole(topicId, userId, true);
 
+    const editingName = data.name && data.name !== originalTopic.name;
+    const editingStatus = data.status && data.status !== originalTopic.status;
+    const originalName = originalTopic.name;
+
     originalTopic.updatedBy = userId;
     originalTopic.name = data.name !== undefined ? data.name : originalTopic.name;
     originalTopic.image = data.image !== undefined ? data.image : originalTopic.image;
@@ -141,10 +145,10 @@ export class TopicResolver {
     for (const share of updatedTopicInstance.shares) {
         await TopicResolver.clearTopicsCacheKeyForUser(share.userId.toString());
     }
-    if (data.name) {
-        await ActivityModel.topic(userId, topicId, 'edit:name', data.name);
+    if (editingName) {
+        await ActivityModel.topic(userId, topicId, 'edit:name', JSON.stringify([originalName, data.name]));
     }
-    if (data.status) {
+    if (editingStatus) {
         await ActivityModel.topicStatus(userId, topicId, data.status as 'answered' | 'active' | 'archived');
     }
     return updatedTopicInstance.toObjectWithMyShare();
