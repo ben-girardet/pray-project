@@ -15,6 +15,7 @@
     "start": "npx nodemon src/server.ts",
     "seed": "ts-node src/seeds/seed-data.ts",
     "seed:activity": "ts-node src/seeds/seed-activity.ts",
+    "seed:apple-user": "ts-node src/seeds/seed-apple-user.ts",
     "unseed": "ts-node src/seeds/clear-seed.ts",
     "reseed": "npm-run-all unseed seed",
     "import": "ts-node src/seeds/import-data.ts",
