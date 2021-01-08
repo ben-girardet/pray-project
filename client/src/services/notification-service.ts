@@ -87,7 +87,6 @@ export class NotificationService {
   }
 
   public async fetchFriendshipsRequests(): Promise<void> {
-    console.log('fetchFriendshipsRequests');
     try {
       const result = await client.query<{friendships: {id: string, userId1: string}[]}>({query: gql`query {
         friendships(status: "requested") {
@@ -95,8 +94,6 @@ export class NotificationService {
           userId1
         }
       }`, fetchPolicy: 'no-cache'});
-      console.log('result', result);
-      console.log('apolloAuth.getUserId()', apolloAuth.getUserId());
       this.requestedFriendshipIds = result.data.friendships.filter(f => f.userId1 !== apolloAuth.getUserId()).map(f => f.id);
     } catch (error) {
       // do nothing
