@@ -168,16 +168,26 @@ Login is now pretty well in place. Now is the time to improve the topic experien
 - [x] Fixes for better UX
 - [x] Version number on login screen
 
+## Early January
+
+- [x] Activity feed
+- [x] Cordova App (TestFlight)
+- [x] Start pray from messages view must start with current topic
+
+
+## 9.1.2020 - Improve frienship flow
+- [x] Add little helps along the process
+- [x] Improve wording
+- [x] Only display notification for friends requests, not friends waiting for reply
+- [x] Add friendships in activity
+- [x] Search for friends by phone number
+- [x] When removing a friendship: also remove all shares from (in both directions)
+
 ## Next 
 - [ ] Stats every night
 - [ ] Backups every night
-- [ ] Make the friendship flow more clear
-- [ ] Search for friends by phone number
-- [ ] Start pray from messages view must start with current topic
 - [ ] Contact page
-- [ ] When removing a friendship: also remove all shares from (in both directions)
 - [ ] Ensure the screen looks amazing even without content (after first registration)
-- [ ] Messages
 - [ ] Privacy Policy
 - [ ] Diminish the number of refresh tokens available per user
 - [ ] Avoid REDIS to crash
@@ -193,4 +203,4 @@ Login is now pretty well in place. Now is the time to improve the topic experien
 - [ ] Allow owner to give "owner" role on their topics
 - [ ] Cache images
 - [ ] Fix class-validator warning, check if I need it for the project
-- [ ] Cordova App
+
