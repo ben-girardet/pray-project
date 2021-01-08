@@ -129,6 +129,23 @@ export class Activity implements IActivity {
         await ActivityModel.clearActivityCacheRelatedToTopic(topicId);
     }
 
+    public static async friendship(userId: mongoose.Types.ObjectId, userId2: mongoose.Types.ObjectId) {
+        const newActivity = new ActivityModel();
+        newActivity.user = userId;
+        newActivity.user2 = userId2;
+        newActivity.action = 'friendship:new';
+        newActivity.date = new Date();
+        await newActivity.save();
+        const newActivity2 = new ActivityModel();
+        newActivity2.user = userId2;
+        newActivity2.user2 = userId;
+        newActivity2.action = 'friendship:new';
+        newActivity2.date = new Date();
+        await newActivity.save();
+        await ActivityModel.clearActivityCacheRelatedToUser(userId);
+        await ActivityModel.clearActivityCacheRelatedToUser(userId2);
+    }
+
     public static async findUserActivitiesWithCache(userId: any) {
         if (!userId) {
           return [];
@@ -140,7 +157,12 @@ export class Activity implements IActivity {
           });
         }
         const topics = await TopicModel.find({"shares.userId": userId}).select('_id');
-        const activities = await ActivityModel.find({topic: {$in: topics.map(t => t._id)}}, null, {sort: {date: -1}});
+        const activities = await ActivityModel.find({$or: [
+                {topic: {$in: topics.map(t => t._id)}},
+                {user: userId, action: 'friendship:new'}
+            ]},
+            null,
+            {sort: {date: -1}});
         const values = activities.map(m => m.toObject());
         if (!values.length) {
           return values;
@@ -158,6 +180,10 @@ export class Activity implements IActivity {
         for (const userId of userIds) {
             await delAsync(`user-activities:${userId.toString()}`);
         }
+    }
+
+    public static async clearActivityCacheRelatedToUser(userId: mongoose.Types.ObjectId) {
+        await delAsync(`user-activities:${userId.toString()}`);
     }
 
 }

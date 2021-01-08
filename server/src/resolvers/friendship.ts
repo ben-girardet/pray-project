@@ -1,3 +1,4 @@
+import { TopicResolver } from './topic';
 import { Friendship, FriendshipModel } from "../models/friendship";
 import { User, UserModel } from "../models/user";
 import { Resolver, Query, Arg, Authorized, Ctx, Mutation } from "type-graphql";
@@ -5,7 +6,11 @@ import { FilterQuery } from 'mongoose';
 import { Context } from "./context-interface";
 import { mongoose } from "@typegoose/typegoose";
 import { SortBy, SortOrder } from './inputs/sorting';
-import { getModelItems, saveModelItems, delAsync } from './../core/redis';
+import { getModelItems, saveModelItems, delAsync, saveModelItem } from './../core/redis';
+import { ActivityModel } from "../models/activity";
+import { TopicModel } from "src/models/topic";
+import { MessageModel } from "src/models/message";
+import { PrayerModel } from "src/models/prayer";
 
 @Resolver()
 export class FriendshipResolver {
@@ -81,6 +86,11 @@ export class FriendshipResolver {
     const updatedFriendshipInstance = new FriendshipModel(updatedFriendship);
     await this.clearFriendshipsCacheKeyForUser((friendship.user1 as any).toString());
     await this.clearFriendshipsCacheKeyForUser((friendship.user2 as any).toString());
+    if (updatedFriendshipInstance.status === 'accepted') {
+        ActivityModel.friendship(
+            updatedFriendshipInstance.user1 as mongoose.Types.ObjectId,
+            updatedFriendshipInstance.user2 as mongoose.Types.ObjectId);
+    }
     return updatedFriendshipInstance.toObject();
   }
 
@@ -107,6 +117,38 @@ export class FriendshipResolver {
     await friendship.save();
     await this.clearFriendshipsCacheKeyForUser((friendship.user1 as any).toString());
     await this.clearFriendshipsCacheKeyForUser((friendship.user2 as any).toString());
+
+    const otherUserId: mongoose.Types.ObjectId = userId.equals(friendship.user1 as mongoose.Types.ObjectId) ? friendship.user2 as mongoose.Types.ObjectId : friendship.user1 as mongoose.Types.ObjectId;
+
+    const topicsToRemoveShare = await TopicModel.find({$and:[
+        {shares: {$elemMatch: {userId: userId, role: 'owner'}}},
+        {shares: {$elemMatch: {userId: otherUserId, role: 'member'}}},
+    ]});
+
+    for (const topic of topicsToRemoveShare) {
+        const nbOwner = topic.shares.filter(s => s.role === 'owner');
+        // if several owners, we assume the removed friend can keep access
+        if (nbOwner.length > 1) {
+            continue;
+        }
+        // if the remover of friendship is the only owner we remove the friend access
+        topic.removeShare(otherUserId);
+        topic.updatedBy = userId;
+        const updatedTopic = await topic.save();
+        const updatedTopicInstance = new TopicModel(updatedTopic);
+        await saveModelItem('topic', updatedTopicInstance.toObject());
+        // we decide not to update REDIS cache for this updates below
+        // as it does not interfere witch anything special, it's more a cleaning purpose
+        await MessageModel.updateMany({topicId: topic._id}, {$pull: {viewedBy: userId.toString()}});
+        await PrayerModel.updateMany({topicId: topic._id}, {$pull: {viewedBy: userId.toString()}});
+        for (const share of updatedTopicInstance.shares) {
+            await TopicResolver.clearTopicsCacheKeyForUser(share.userId.toString());
+        }
+        // clear `unviewed:_____` REDIS cache of the use who
+        // now have access to this topic
+        await delAsync(`unviewed:${userId}`);
+    }
+
     return true;
   }
 

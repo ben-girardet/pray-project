@@ -23,9 +23,25 @@ export class Friendship implements IFriendship {
     @prop({ref: () => 'User', index: true})
     public user1: Ref<User>;;
 
+    @Field(() => String)
+    public get userId1(): string {
+        if (this.user1 instanceof mongoose.Types.ObjectId) {
+            return (this.user1 as mongoose.Types.ObjectId).toString();
+        }
+        return '';
+    }
+
     // https://typegoose.github.io/typegoose/docs/guides/advanced/reference-other-classes#common-problems
     @prop({ref: () => 'User', index: true})
     public user2: Ref<User>;;
+
+    @Field(() => String)
+    public get userId2(): string {
+        if (this.user2 instanceof mongoose.Types.ObjectId) {
+            return (this.user2 as mongoose.Types.ObjectId).toString();
+        }
+        return '';
+    }
 
     // https://typegoose.github.io/typegoose/docs/guides/advanced/reference-other-classes#common-problems
     @prop({ref: () => 'User', index: true})
