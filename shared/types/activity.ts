@@ -26,4 +26,5 @@ export type ActivityAction =
   | 'prayed'
   | 'message:create'
   | 'message:edit'
-  | 'message:delete';
+  | 'message:delete'
+  | 'friendship:new';
