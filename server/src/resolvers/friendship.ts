@@ -8,9 +8,9 @@ import { mongoose } from "@typegoose/typegoose";
 import { SortBy, SortOrder } from './inputs/sorting';
 import { getModelItems, saveModelItems, delAsync, saveModelItem } from './../core/redis';
 import { ActivityModel } from "../models/activity";
-import { TopicModel } from "src/models/topic";
-import { MessageModel } from "src/models/message";
-import { PrayerModel } from "src/models/prayer";
+import { TopicModel } from "../models/topic";
+import { MessageModel } from "../models/message";
+import { PrayerModel } from "../models/prayer";
 
 @Resolver()
 export class FriendshipResolver {
