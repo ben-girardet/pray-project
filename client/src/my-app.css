@@ -109,6 +109,7 @@ form label {
   border-bottom: 1px solid var(--separator-color);
   height: 45px;
   align-items: center;
+  --design-unit: 3;
 }
 .user-list-item fast-progress-ring {
   margin: 0;
@@ -122,6 +123,9 @@ fast-badge {
   --badge-fill-transparent: transparent;
   --badge-color-black: #000000;
   --badge-color-white: #FFFFFF;
+}
+fast-menu-item fast-badge {
+  transform: scale(0.8);
 }
 
 /* fix fast-button start/end mis-align */

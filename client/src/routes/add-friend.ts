@@ -1,3 +1,4 @@
+import { AppNotification } from './../components/app-notification';
 import { IRouteableComponent } from '@aurelia/router';
 import { ICustomElementViewModel, inject } from 'aurelia';
 import { client } from '../apollo';
@@ -29,6 +30,7 @@ export class AddFriend implements IRouteableComponent, ICustomElementViewModel {
 
   public async requestFriendship(userId: string): Promise<void> {
     await requestFriendship(userId);
+    AppNotification.notify('Friendship requested', 'success');
     await this.search();
     this.global.notificationService.fetchFriendshipsRequests();
   }

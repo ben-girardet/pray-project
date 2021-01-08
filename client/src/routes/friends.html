@@ -1,24 +1,27 @@
 <import from="./bottom.css"></import>
 <import from="./friends.css"></import>
 <div class="bottom-headview">
-  <!-- <fast-button appearance="lightweight" load="../-@bottom">Cancel</fast-button> -->
   <fast-button appearance="lightweight" load="../-@bottom">Close</fast-button>
   <span>Friends</span>
-  <fast-button appearance="lightweight" load="../add-friend">Add</fast-button>
+  <fast-button appearance="lightweight" load="../add-friend">Search</fast-button>
 </div>
 
 <div class="bottom-contentview">
 
-  <p if.bind="friends.length === 0" style="color: #666; font-size: 18px; margin: 32px;">Click the Add button to search for your friends. Then you'll be able to share your prayer topics with them.</p>
+  <img if.bind="friends.length < 4" src="images/help-arrow-top-right.png" style="display: block; margin-top: -10px; margin-left: auto;">
+  <p if.bind="friends.length < 4" style="color: var(--meta-content-color); font-size: 18px; margin: 0 32px 64px 32px;">
+    Click the <span class="color: var(--accent-color)">Search</span> button to search friends. Then you'll be able to share your prayer topics with them.
+  </p>
 
   <template if.bind="requests.length">
     <p>Friend Requests</p>
     <div class="user-list">
       <div class="user-list-item" repeat.for="friendship of requests">
-        <mini-user user-id.bind="friendship.friend.id"></mini-user>
-        <fast-button if.bind="isMyRequest(friendship)" appearance="lightweight" click.trigger="removeFriendship(friendship.id)">Cancel</fast-button>
-        <fast-button if.bind="!isMyRequest(friendship)" appearance="lightweight" click.trigger="respondToFriendshipRequest(friendship.id, 'accepted')">Accept</fast-button>
+        <mini-user style="margin-right: auto;" user-id.bind="friendship.friend.id"></mini-user>
+        <fast-button if.bind="isMyRequest(friendship) && !friendship.removing" appearance="lightweight" click.trigger="requestRemovingFriendship(friendship)">Cancel</fast-button>
+        <fast-button if.bind="isMyRequest(friendship) && friendship.removing" appearance="outline" click.trigger="removeFriendship(friendship.id, 'canceled')">Confirm cancel</fast-button>
         <fast-button if.bind="!isMyRequest(friendship)" appearance="lightweight" click.trigger="respondToFriendshipRequest(friendship.id, 'declined')">Decline</fast-button>
+        <fast-button style="margin-left: 8px;" if.bind="!isMyRequest(friendship)" appearance="outline" click.trigger="respondToFriendshipRequest(friendship.id, 'accepted')">Accept</fast-button>
       </div>
     </div>
   </template>
@@ -28,8 +31,10 @@
     <div class="user-list">
       <div class="user-list-item" repeat.for="friendship of friends">
         <mini-user user-id.bind="friendship.friend.id"></mini-user>
-        <fast-button appearance="lightweight" click.trigger="removeFriendship(friendship.id)">Remove</fast-button>
+        <fast-button if.bind="!friendship.removing" appearance="lightweight" click.trigger="requestRemovingFriendship(friendship)">Remove</fast-button>
+        <fast-button if.bind="friendship.removing" appearance="outline" click.trigger="removeFriendship(friendship.id, 'removed')">Confirm remove</fast-button>
       </div>
     </div>
   </template>
+
 </div>

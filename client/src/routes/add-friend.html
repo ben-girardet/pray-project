@@ -14,13 +14,18 @@
     <fast-button click.trigger="search()">Search</fast-button>
   </div>
 
-  <p if.bind="found.length === 0" style="color: #666; font-size: 18px; margin: 32px;">Search for your friends. You can find them by their name or their full email or mobile number.</p>
+  <ol if.bind="found.length < 4" type="1" style="color: var(--meta-content-color); font-size: 18px; margin: 32px 32px 32px 0;">
+    <li style="padding-left: 16px;"><span style="color: var(--main-content-color);">Search for friends</span> using their name or mobile number</li>
+    <li style="padding-left: 16px;">Send them a <span style="color: var(--main-content-color);">request</span> to become friends in Sunago App</li>
+    <li style="padding-left: 16px;">Once they <span style="color: var(--main-content-color);">accept</span> your request you'll be able to share prayer topics and more</li>
+  </ol>
 
   <div class="user-list" style="margin-top: 32px;" if.bind="found.length">
     <div class="user-list-item" repeat.for="user of found">
       <mini-user user-id.bind="user.id"></mini-user>
-      <fast-button appearance="lightweight" click.trigger="requestFriendship(user.id)" if.bind="!user.friendshipStatus">Request</fast-button>
-      <fast-button appearance="lightweight" disabled if.bind="user.friendshipStatus">${user.friendshipStatus}</fast-button>
+      <fast-button appearance="outline" click.trigger="requestFriendship(user.id)" if.bind="!user.friendshipStatus">Request</fast-button>
+      <fast-button appearance="outline" disabled if.bind="user.friendshipStatus">${user.friendshipStatus}</fast-button>
     </div>
   </div>
+
 </div>

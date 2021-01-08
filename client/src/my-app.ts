@@ -1,4 +1,5 @@
 import { IRouter, ICustomElementViewModel, ViewportInstruction, inject, ILogger, EventAggregator, IDisposable } from 'aurelia';
+import { HookTypes } from '@aurelia/router';
 import { parseColorWebRGB } from "@microsoft/fast-colors";
 import { createColorPalette, parseColorString } from "@microsoft/fast-components";
 import { apolloAuth } from './apollo';
@@ -89,6 +90,11 @@ export class MyApp implements ICustomElementViewModel {
 
   public async bound(): Promise<void> {    
     // Authentication HOOK
+    this.router.addHook(async (title: string | ViewportInstruction[]) => {
+      return 'Sunago';
+    }, {
+        type: HookTypes.SetTitle
+    });
     this.router.addHook(async (instructions: ViewportInstruction[]) => {
       this.global.bumpRoute();
       // User is not logged in, so redirect them back to login page

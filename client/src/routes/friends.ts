@@ -56,9 +56,19 @@ export class Friends implements IRouteableComponent, ICustomElementViewModel {
     }
   }
 
-  public async removeFriendship(friendshipId: string): Promise<void> {
+  public requestRemovingFriendship(friendship: Friendship) {
+    setTimeout(() => {
+      (friendship as any).removing = true;
+      setTimeout(() => {
+        (friendship as any).removing = false;
+      }, 2000);
+    }, 200);
+  }
+
+  public async removeFriendship(friendshipId: string, action: 'canceled' | 'removed'): Promise<void> {
     try {
       await removeFriendship(friendshipId);
+      AppNotification.notify(`Friendship ${action}`, 'success');
       this.global.notificationService.fetchFriendshipsRequests();
       this.requests = this.requests.filter(f => f.id !== friendshipId);
       this.friends = this.friends.filter(f => f.id !== friendshipId);
@@ -71,6 +81,7 @@ export class Friends implements IRouteableComponent, ICustomElementViewModel {
     try {
       await respondToFriendshipRequest(friendshipId, response);
       await this.getAndSetFriendships();
+      AppNotification.notify(`Friendship ${response}`, 'success');
       this.global.notificationService.fetchFriendshipsRequests();
     } catch (error) {
       AppNotification.notify(error.message, 'error');

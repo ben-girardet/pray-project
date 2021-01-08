@@ -38,12 +38,18 @@ export class ActivityPreview implements ICustomElementViewModel {
   }
 
   private async getTopic() {
+    if (!this.activity.topicId) {
+      return;
+    }
     const topic = await getTopicName(this.activity.topicId, 'cache-first');
     await CryptingService.decryptTopic(topic);
     this.topic = topic;
   }
 
   private async getMessage() {
+    if (!this.topic) {
+      return;
+    }
     if (!this.activity.messageId) {
       this.message = undefined;
       return;
@@ -55,6 +61,9 @@ export class ActivityPreview implements ICustomElementViewModel {
   }
 
   private async decryptStringWithTopic(text: string): Promise<string> {
+    if (!this.topic) {
+      return '';
+    }
     const fakeMessage = {text};
     const fakeTopic = Object.assign({}, this.topic, {messages: [fakeMessage]});
     await CryptingService.decryptTopic(fakeTopic);
