@@ -11,6 +11,7 @@ import { TopicModel } from "../models/topic";
 import { MessageModel } from "../models/message";
 import { PrayerModel } from "../models/prayer";
 import { UnviewedTopic as IUnviewedTopic } from 'shared/types/unviewed-topic';
+import PhoneNumber from 'awesome-phonenumber';
 
 @Resolver()
 export class UserResolver {
@@ -22,12 +23,23 @@ export class UserResolver {
     if (search.length < 3) {
         throw new Error('users query is only allowed for 3+ search word');
     }
+
+
+
+
     query.$or = [
         {email: search},
         {mobile: search},
         {firstname: {$regex: `${search}`, $options: 'i'}},
         {lastname: {$regex: `${search}`, $options: 'i'}}
     ];
+
+    for (const countryCode of ['ch']) {
+        const phoneNumber = new PhoneNumber( search, countryCode );
+        if (phoneNumber.isValid()) {
+            query.$or.push({mobile: phoneNumber.getNumber()});
+        }
+    }
 
     if (alreadyFriends === true || alreadyFriends === false) {
         const userId = new mongoose.Types.ObjectId(context.user.userId);
