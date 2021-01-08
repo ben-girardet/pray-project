@@ -9,23 +9,44 @@
     </div>
   </div>
 
-  <fast-divider style="margin: 32px 0;"></fast-divider>
-
+  <fast-menu>
+    <fast-menu-item load="../friends">
+      <pray-icon icon="User" slot="start"></pray-icon>
+      Edit my profile
+      <fast-badge slot="end" fill="primary" color="white" circular if.bind="global.notificationService.requestedFriendshipIds.length > 0">${global.notificationService.requestedFriendshipIds.length}</fast-badge>
+    </fast-menu-item>
+    <fast-menu-item disabled>
+      <pray-icon icon="Key" slot="start"></pray-icon>
+      Change password
+      <fast-badge slot="end" fill="primary" color="white" circular if.bind="global.notificationService.requestedFriendshipIds.length > 0">${global.notificationService.requestedFriendshipIds.length}</fast-badge>
+    </fast-menu-item>
+  </fast-menu>
   <fast-menu>
     <fast-menu-item load="../friends">
       <pray-icon icon="Users" slot="start"></pray-icon>
-      Friends
+      Manage my Friends
       <fast-badge slot="end" fill="primary" color="white" circular if.bind="global.notificationService.requestedFriendshipIds.length > 0">${global.notificationService.requestedFriendshipIds.length}</fast-badge>
     </fast-menu-item>
-    <fast-menu-item>
+    <fast-menu-item disabled>
       <pray-icon icon="TrendingUp" slot="start"></pray-icon>
-      Stats
+      View my praying stats
     </fast-menu-item>
-    <fast-menu-item>
-      <pray-icon icon="Key" slot="start"></pray-icon>
-      Privacy
+    <fast-menu-item disabled>
+      <pray-icon icon="Bell" slot="start"></pray-icon>
+      Notifications settings
     </fast-menu-item>
-    <fast-divider></fast-divider>
+  </fast-menu>
+  <fast-menu>
+    <fast-menu-item disabled>
+      <pray-icon icon="ChatAlt" slot="start"></pray-icon>
+      Contact Us
+    </fast-menu-item>
+    <fast-menu-item disabled>
+      <pray-icon icon="ShieldCheck" slot="start"></pray-icon>
+      Privacy Policy
+    </fast-menu-item>
+  </fast-menu>
+  <fast-menu>
     <fast-menu-item click.trigger="logout()">
       <pray-icon icon="Logout" slot="start"></pray-icon>
       Logout
