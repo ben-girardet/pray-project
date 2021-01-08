@@ -139,15 +139,42 @@ export class FriendshipResolver {
         await saveModelItem('topic', updatedTopicInstance.toObject());
         // we decide not to update REDIS cache for this updates below
         // as it does not interfere witch anything special, it's more a cleaning purpose
+        await MessageModel.updateMany({topicId: topic._id}, {$pull: {viewedBy: otherUserId.toString()}});
+        await PrayerModel.updateMany({topicId: topic._id}, {$pull: {viewedBy: otherUserId.toString()}});
+        for (const share of updatedTopicInstance.shares) {
+            await TopicResolver.clearTopicsCacheKeyForUser(share.userId.toString());
+        }
+    }
+
+    const topicsToRemoveShare2 = await TopicModel.find({$and:[
+        {shares: {$elemMatch: {userId: otherUserId, role: 'owner'}}},
+        {shares: {$elemMatch: {userId: userId, role: 'member'}}},
+    ]});
+
+    for (const topic of topicsToRemoveShare2) {
+        const nbOwner = topic.shares.filter(s => s.role === 'owner');
+        // if several owners, we assume the removed friend can keep access
+        if (nbOwner.length > 1) {
+            continue;
+        }
+        // if the remover of friendship is the only owner we remove the friend access
+        topic.removeShare(userId);
+        topic.updatedBy = userId;
+        const updatedTopic = await topic.save();
+        const updatedTopicInstance = new TopicModel(updatedTopic);
+        await saveModelItem('topic', updatedTopicInstance.toObject());
+        // we decide not to update REDIS cache for this updates below
+        // as it does not interfere witch anything special, it's more a cleaning purpose
         await MessageModel.updateMany({topicId: topic._id}, {$pull: {viewedBy: userId.toString()}});
         await PrayerModel.updateMany({topicId: topic._id}, {$pull: {viewedBy: userId.toString()}});
         for (const share of updatedTopicInstance.shares) {
             await TopicResolver.clearTopicsCacheKeyForUser(share.userId.toString());
         }
-        // clear `unviewed:_____` REDIS cache of the use who
+        // clear `unviewed:_____` REDIS cache of the user who
         // now have access to this topic
-        await delAsync(`unviewed:${userId}`);
     }
+    await delAsync(`unviewed:${userId}`);
+    await delAsync(`unviewed:${otherUserId}`);
 
     return true;
   }

@@ -193,15 +193,15 @@ export class TopicResolver {
     await saveModelItem('topic', updatedTopicInstance.toObject());
     // we decide not to update REDIS cache for this updates below
     // as it does not interfere witch anything special, it's more a cleaning purpose
-    await MessageModel.updateMany({topicId}, {$pull: {viewedBy: userId.toString()}});
-    await PrayerModel.updateMany({topicId}, {$pull: {viewedBy: userId.toString()}});
+    await MessageModel.updateMany({topicId}, {$pull: {viewedBy: removeShareUserId.toString()}});
+    await PrayerModel.updateMany({topicId}, {$pull: {viewedBy: removeShareUserId.toString()}});
     updatedTopicInstance.setMyShare(loggedInUserId);
     for (const share of updatedTopicInstance.shares) {
         await TopicResolver.clearTopicsCacheKeyForUser(share.userId.toString());
     }
     // clear `unviewed:_____` REDIS cache of the use who
     // now have access to this topic
-    await delAsync(`unviewed:${userId}`);
+    await delAsync(`unviewed:${removeShareUserId}`);
     await ActivityModel.topicShare(loggedInUserId, topicId, 'remove', removeShareUserId);
     return updatedTopicInstance.toObjectWithMyShare();
   }
