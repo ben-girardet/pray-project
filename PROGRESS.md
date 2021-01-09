@@ -184,18 +184,18 @@ Login is now pretty well in place. Now is the time to improve the topic experien
 - [x] When removing a friendship: also remove all shares from (in both directions)
 
 ## Next 
+- [ ] Contact page
+- [ ] Privacy Policy
+- [ ] Change password
 - [ ] Stats every night
 - [ ] Backups every night
-- [ ] Contact page
 - [ ] Ensure the screen looks amazing even without content (after first registration)
-- [ ] Privacy Policy
 - [ ] Diminish the number of refresh tokens available per user
 - [ ] Avoid REDIS to crash
 - [ ] Add a version from GIT
 - [ ] Work on the TODO's
 - [ ] Ensure a nice register process
 - [ ] Stack AppNotifications (so we can see several)
-- [ ] Change password
 - [ ] Optimize bundles with code splitting (https://webpack.js.org/guides/code-splitting/)
 - [ ] Create tests with image upload (if not yet)
 - [ ] Create more realistic tests scenario including user registration and increased users friendships
