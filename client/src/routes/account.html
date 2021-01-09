@@ -5,12 +5,12 @@
     <img src="images/avatars/liquid1.gif" if.bind="!user.picture.length">
     <div>
       <div class="name">${user.firstname} ${user.lastname}</div>
-      <fast-button appearance="lightweight" load="../edit-profile">Edit Profile</fast-button>
+      <!-- <fast-button appearance="lightweight" load="../edit-profile">Edit Profile</fast-button> -->
     </div>
   </div>
 
   <fast-menu>
-    <fast-menu-item load="../friends">
+    <fast-menu-item load="../edit-profile">
       <pray-icon icon="User" slot="start"></pray-icon>
       Edit my profile
       <fast-badge slot="end" fill="primary" color="white" circular if.bind="global.notificationService.requestedFriendshipIds.length > 0">${global.notificationService.requestedFriendshipIds.length}</fast-badge>
