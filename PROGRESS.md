@@ -183,13 +183,17 @@ Login is now pretty well in place. Now is the time to improve the topic experien
 - [x] Search for friends by phone number
 - [x] When removing a friendship: also remove all shares from (in both directions)
 
+## 11.1.2020 - Improve UX with help screens and illustrations
+
+- [x] Ensure the screen looks amazing even without content (after first registration)
+- [x] Help tooltips
+
 ## Next 
 - [ ] Contact page
 - [ ] Privacy Policy
 - [ ] Change password
 - [ ] Stats every night
 - [ ] Backups every night
-- [ ] Ensure the screen looks amazing even without content (after first registration)
 - [ ] Diminish the number of refresh tokens available per user
 - [ ] Avoid REDIS to crash
 - [ ] Add a version from GIT
@@ -199,7 +203,6 @@ Login is now pretty well in place. Now is the time to improve the topic experien
 - [ ] Optimize bundles with code splitting (https://webpack.js.org/guides/code-splitting/)
 - [ ] Create tests with image upload (if not yet)
 - [ ] Create more realistic tests scenario including user registration and increased users friendships
-- [ ] Help tooltips
 - [ ] Allow owner to give "owner" role on their topics
 - [ ] Cache images
 - [ ] Fix class-validator warning, check if I need it for the project

@@ -2,9 +2,11 @@ import { IRouter, ICustomElementViewModel, ViewportInstruction, inject, ILogger,
 import { HookTypes } from '@aurelia/router';
 import { parseColorWebRGB } from "@microsoft/fast-colors";
 import { createColorPalette, parseColorString } from "@microsoft/fast-components";
-import { apolloAuth } from './apollo';
+import { apolloAuth, client } from './apollo';
 import { PageVisibility } from './helpers/page-visibility';
 import { Global } from './global';
+import { HelpId } from 'shared/types/user';
+import { gql } from 'apollo-boost';
 
 const neutral = 'rgb(200, 200, 200)'; // 'rgb(70,51,175)';
 // const accent = 'rgb(0,201,219)';
@@ -21,6 +23,8 @@ export class MyApp implements ICustomElementViewModel {
 
   public subscriptions: IDisposable[] = [];
   private started = false;
+
+  public prayingHelp: 'welcome' | 'direction' | '' = '';
 
   constructor(
     @IRouter private router: IRouter, 
@@ -132,6 +136,8 @@ export class MyApp implements ICustomElementViewModel {
         if (prayingInstruction.componentName === 'praying') {
           document.documentElement.classList.add('praying');
           this.eventAggregator.publish(`praying-in`);
+          console.log('here1');
+          this.shouldDisplayPrayingHelp();
         } else if (prayingInstruction.componentName === '-') {
           document.documentElement.classList.remove('praying');
           this.eventAggregator.publish(`praying-out`);
@@ -184,6 +190,32 @@ export class MyApp implements ICustomElementViewModel {
     this.logger.debug('settingsActive', activeComponents);
     this.logger.debug('activeComponents.find(c => c.componentName === settings)', activeComponents.find(c => c.componentName === 'settings'));
     return activeComponents.find(c => c.componentName === 'settings') !== undefined;
+  }
+
+  public async shouldDisplayPrayingHelp(): Promise<any> {
+    console.log('here2');
+    if (!apolloAuth.getUserId()) {
+      return null
+    }
+    console.log('here3');
+    const result = await client.query<{user: {
+      id: string,
+      helpSeen: HelpId[]}}>({query: gql`query User($userId: String!) {
+        user(id: $userId) {
+          id,
+          helpSeen
+        }
+      }`, variables: {userId: apolloAuth.getUserId()}, fetchPolicy: 'cache-first'});
+    console.log('here4');
+    if (!result.data.user.helpSeen.includes('praying-directions')) {
+      console.log('here5');
+      this.prayingHelp = 'welcome';
+    }
+  }
+
+  public prayingHelpViewed(helpId: HelpId) {
+    this.prayingHelp = '';
+    this.global.helpViewed(helpId);
   }
 
 }

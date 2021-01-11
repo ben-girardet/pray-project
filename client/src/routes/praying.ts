@@ -1,4 +1,3 @@
-
 import { CryptingService } from './../services/crypting-service';
 import { AppNotification } from './../components/app-notification';
 import { Topic as ITopic } from 'shared/types/topic';
@@ -7,6 +6,7 @@ import { IRouteableComponent } from '@aurelia/router';
 import { ICustomElementViewModel, ILogger, IDisposable, IRouter } from 'aurelia';
 import { getTopics, pray } from '../commands/topic';
 import { createColorPalette, parseColorString } from "@microsoft/fast-components";
+import { Global } from '../global';
 
 const neutral = '#16615F';
 const accent = '#3AC3BD';
@@ -49,7 +49,7 @@ export class Praying implements IRouteableComponent, ICustomElementViewModel {
   private deltaX: number = 0;
   private deltaY: number = 0;
 
-  public constructor(@IRouter private router: IRouter, @ILogger logger: ILogger) {
+  public constructor(@IRouter private router: IRouter, @ILogger logger: ILogger, private global: Global) {
     this.logger = logger.scopeTo('praying route');
     this.handleTouchStart = e => {
       e.preventDefault();
@@ -337,8 +337,6 @@ export class Praying implements IRouteableComponent, ICustomElementViewModel {
       // TODO: log end of playlist
     }
   }
-
-
 }
 
 function shuffleArray(array) {

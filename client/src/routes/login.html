@@ -1,23 +1,32 @@
 <import from="./welcome.css"></import>
 <div class="login welcome">
 
-    <div class="welcome__container">
-      <div style="text-align: center">
-        <pray-logo size="large"></pray-logo>
-      </div>
-      <form submit.delegate="login($event)">
-        <fast-text-field id="login_username" pattern="[0-9]*" placeholder="Mobile" value.two-way="username" autofocus>
-          <pray-icon icon="User" size="sm" slot="start"></pray-icon>
-        </fast-text-field>
-        <fast-text-field id="login_password" type="password" placeholder="Your password" value.two-way="password">
-          <pray-icon icon="Key" size="sm" slot="start"></pray-icon>
-        </fast-text-field>
-        <div class="button-row__two">
-          <fast-button appearance="lightweight" load="../register">Create an account</fast-button>
-          <fast-button appearance="accent" type="submit" >Login</fast-button>
-        </div>
-        <div class="welcome__version">v1.0.4</div>
-      </form>
+  <pray-help-container if.bind="screen">
+    <template if.bind="screen === 'welcome'">
+      <img src="images/stories/welcome.svg">
+      <p class="slogan">Together in prayer. Wherever. Whenever.</p>
+      <fast-anchor appearance="lightweight" style="margin-top: auto;">Terms of use and privacy policy</fast-anchor>
+      <fast-button appearance="accent" click.delegate="continue()">Continue</fast-button>
+    </template>
+  </pray-help-container>
+
+  <div class="welcome__container">
+    <div style="text-align: center">
+      <pray-logo size="large"></pray-logo>
     </div>
+    <form submit.delegate="login($event)">
+      <fast-text-field id="login_username" pattern="[0-9]*" placeholder="Mobile" value.two-way="username" autofocus>
+        <pray-icon icon="User" size="sm" slot="start"></pray-icon>
+      </fast-text-field>
+      <fast-text-field id="login_password" type="password" placeholder="Your password" value.two-way="password">
+        <pray-icon icon="Key" size="sm" slot="start"></pray-icon>
+      </fast-text-field>
+      <div class="button-row__two">
+        <fast-button appearance="lightweight" load="../register">Create an account</fast-button>
+        <fast-button appearance="accent" type="submit" >Login</fast-button>
+      </div>
+      <div class="welcome__version">v1.0.4</div>
+    </form>
+  </div>
 
 </div>

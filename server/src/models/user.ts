@@ -1,5 +1,5 @@
 import crypto from 'crypto';
-import { User as IUser } from "shared/types/user";
+import { User as IUser, HelpId } from "shared/types/user";
 import { ObjectType, Field, Authorized, FieldResolver, Ctx, Root } from "type-graphql";
 import { prop, Ref, getModelForClass } from "@typegoose/typegoose";
 import mongoose from 'mongoose';
@@ -83,7 +83,7 @@ export class User implements IUser {
   @prop()
   public lastLogin?: Date;
 
-  @Field(() => String, {nullable: false})
+  @Field(() => [String], {nullable: false})
   @prop({type: () => [String]})
   public roles: RoleType[];
 
@@ -105,6 +105,11 @@ export class User implements IUser {
   @Field(() => Date)
   @prop()
   public updatedAt: Date;
+
+  @Authorized(['me'])
+  @Field(() => [String], {nullable: false})
+  @prop({type: () => [String]})
+  public helpSeen: HelpId[];
 
   @Field(() => [Friendship])
   public async friendships(@Ctx() context: Context) {

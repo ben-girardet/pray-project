@@ -1,6 +1,6 @@
 import { ApolloQueryResult, gql } from 'apollo-boost';
 import { apolloAuth, client } from '../apollo';
-import { User } from 'shared/types/user';
+import { User, HelpId } from 'shared/types/user';
 
 const editMeMutation = gql`
 mutation EditMe($firstname: String, $lastname: String, $picture: [ImageInput!]) {
@@ -24,4 +24,15 @@ export async function editMe(firstname: string | undefined, lastname: string |�
     apolloAuth.setState(result.data.editMe.state);
   }
   return result.data.editMe;
+}
+
+export async function helpViewed(helpId: HelpId): Promise<boolean> {
+  await client.mutate({mutation: gql`
+mutation HelpViewed($helpId: String) {
+  editMe(data: {viewedHelpId: $helpId}) {
+    id,
+    helpSeen
+  }
+}`, variables: {helpId}}) as ApolloQueryResult<{editMe: User}>;
+return true;
 }

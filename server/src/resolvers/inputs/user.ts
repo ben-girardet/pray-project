@@ -1,5 +1,6 @@
 import { ImageInput } from './../../models/image';
 import { InputType, Field } from "type-graphql";
+import { HelpId } from 'shared/types/user';
 
 @InputType()
 export class EditMeInput {
@@ -12,4 +13,7 @@ export class EditMeInput {
 
     @Field(type => [ImageInput], {nullable: true})
     picture?: ImageInput[];
+
+    @Field(() => String, {nullable: true})
+    viewedHelpId?: HelpId;
 }

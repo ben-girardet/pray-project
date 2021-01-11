@@ -40,4 +40,30 @@
   <au-viewport name="detail" used-by="topic-detail,conversation" no-history></au-viewport>
   <au-viewport name="praying" used-by="praying" no-history></au-viewport>
   <au-viewport name="bottom" used-by="topic-form,sharing,friends,add-friend,edit-profile" no-history></au-viewport>
+
+  <pray-help-container if.bind="prayingHelp" fullscreen.bind="false" class="praying-help">
+    <template if.bind="prayingHelp === 'welcome'">
+      <img src="images/stories/praying.svg">
+      <p class="slogan">Welcome in the praying screen</p>
+      <fast-button style="margin-top: 32px;" appearance="accent" click.delegate="prayingHelp = 'directions'">Tell me how it works</fast-button>
+    </template>
+    <template if.bind="prayingHelp === 'directions'">
+      <p class="slogan">
+        Use your finger and <strong>swipe&nbsp;topics</strong>
+      </p>
+      <div class="praying-help__direction">
+        <pray-icon icon="ChevronDoubleUp" class="animate__swipe-up" weight="2"></pray-icon>
+        <p>Swipe up to log a prayer</p>
+      </div>
+      <div class="praying-help__direction praying-help__left">
+        <pray-icon icon="ChevronDoubleLeft" class="animate__swipe-left" weight="2"></pray-icon>
+        <p>Swipe left to skip a topic</p>
+      </div>
+      <div class="praying-help__direction">
+        <p>Swipe down to close</p>
+        <pray-icon icon="ChevronDoubleDown" class="animate__swipe-bottom" weight="2"></pray-icon> 
+      </div>
+      <fast-button appearance="accent" click.delegate="prayingHelpViewed('praying-directions')">Ok, I understand</fast-button>
+    </template>
+  </pray-help-container>
 </fast-design-system-provider>

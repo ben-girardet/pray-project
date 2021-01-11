@@ -61,6 +61,7 @@ import { PrayGrid } from './components/pray-grid';
 import { PrayGridItem } from './components/pray-grid-item';
 import { PraySearchInput } from './components/pray-search-input';
 import { PrayLogo } from './components/pray-logo';
+import { PrayHelpContainer } from './components/pray-help-container';
 PrayIcon;
 PrayList;
 PrayListItem;
@@ -68,6 +69,7 @@ PrayGrid;
 PrayGridItem;
 PraySearchInput;
 PrayLogo;
+PrayHelpContainer;
 
 Aurelia
   .register(AureliaFastAdapter)

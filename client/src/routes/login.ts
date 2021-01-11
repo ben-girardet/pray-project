@@ -8,6 +8,7 @@ import { Global } from '../global';
 
 export class Login implements IRouteableComponent, ICustomElementViewModel {
 
+  public screen = 'welcome';
   public username = '';
   public password = '';
   public countryCode = 'CH';
@@ -20,6 +21,10 @@ export class Login implements IRouteableComponent, ICustomElementViewModel {
     @ILogger iLogger: ILogger,
     private global: Global) {
     this.logger = iLogger.scopeTo('login route');
+  }
+
+  public continue() {
+    this.screen = '';
   }
 
   public async binding(): Promise<void> {

@@ -117,6 +117,14 @@ export class UserResolver {
     if (data.picture !== undefined) {
       user.picture = data.picture;
     }
+    if (data.viewedHelpId !== undefined) {
+      if (!user.helpSeen || !Array.isArray(user.helpSeen)) {
+        user.helpSeen = [];
+      }
+      if (!user.helpSeen.includes(data.viewedHelpId)) {
+          user.helpSeen.push(data.viewedHelpId);
+      }
+    }
 
     if (user.firstname && user.lastname && user.picture !== undefined) {
         user.state = 1;

@@ -146,3 +146,67 @@ fast-button.full-width::part(end) {
   margin-left: auto;
   margin-right: 8px;
 }
+.help-text {
+  text-align: center;
+  margin: 0 32px;
+  font-size: var(--type-ramp-plus-2-font-size);
+  line-height: var(--type-ramp-plus-2-line-height);
+}
+
+.praying-help__direction {
+  margin: 16px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+}
+.praying-help__direction > pray-icon {
+  margin: 8px;
+  color: var(--accent-color);
+}
+.praying-help__left {
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+}
+.animate__swipe-up {
+	animation: animate__swipe-up 2s cubic-bezier(0.600, -0.280, 0.735, 0.045) infinite both;
+}
+ @keyframes animate__swipe-up {
+  0% {
+    transform: translateY(0);
+  }
+  20% {
+    transform: translateY(-20px);
+  }
+  25% {
+    transform: translateY(0px);
+  }
+}
+.animate__swipe-left {
+	animation: animate__swipe-left 2s cubic-bezier(0.600, -0.280, 0.735, 0.045) infinite both;
+}
+ @keyframes animate__swipe-left {
+  30% {
+    transform: translateX(0);
+  }
+  50% {
+    transform: translateX(-20px);
+  }
+  55% {
+    transform: translateX(0px);
+  }
+}
+.animate__swipe-bottom {
+	animation: animate__swipe-bottom 2s cubic-bezier(0.600, -0.280, 0.735, 0.045) infinite both;
+}
+ @keyframes animate__swipe-bottom {
+  60% {
+    transform: translateY(0);
+  }
+  80% {
+    transform: translateY(20px);
+  }
+  85% {
+    transform: translateY(00px);
+  }
+}

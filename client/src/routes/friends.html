@@ -8,10 +8,15 @@
 
 <div class="bottom-contentview">
 
-  <img if.bind="friends.length < 4" src="images/help-arrow-top-right.png" style="display: block; margin-top: -10px; margin-left: auto;">
-  <p if.bind="friends.length < 4" style="color: var(--meta-content-color); font-size: 18px; margin: 0 32px 64px 32px;">
-    Click the <span class="color: var(--accent-color)">Search</span> button to search friends. Then you'll be able to share your prayer topics with them.
-  </p>
+  <template if.bind="friends.length < 2">
+    <img src="images/help-arrow-top-right.png" style="display: block; margin-top: -10px; margin-left: auto; margin-right: 16px;">
+    <p class="help-text">
+      Use the <span class="color: var(--accent-color)">Search</span> button to find friends. Then you'll be able to share your prayer topics with them.
+    </p>
+    <p class="help-text">
+      <img style="max-width: 80%;" src="images/stories/friends.svg">
+    </p>
+  </template>
 
   <template if.bind="requests.length">
     <p>Friend Requests</p>

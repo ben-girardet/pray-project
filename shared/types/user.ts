@@ -29,3 +29,5 @@ export interface TokenUserPayload {
     picture: string | null;
     claims: string[];
 }
+
+export type HelpId = 'praying-directions';

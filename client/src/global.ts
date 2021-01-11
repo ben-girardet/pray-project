@@ -1,6 +1,8 @@
 import { apolloAuth } from './apollo';
 import { EventAggregator, ILogger, IRouter, IPlatform, ViewportInstruction } from 'aurelia';
 import { NotificationService } from './services/notification-service';
+import { HelpId } from 'shared/types/user';
+import { helpViewed } from './commands/user';
 
 const w: any = window;
 export class Global {
@@ -68,5 +70,9 @@ export class Global {
     } else {
       w.StatusBar.styleDefault()
     }
+  }
+
+  public async helpViewed(helpId: HelpId): Promise<boolean> {
+    return await helpViewed(helpId);
   }
 }

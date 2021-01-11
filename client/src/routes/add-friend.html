@@ -20,6 +20,10 @@
     <li style="padding-left: 16px;">Once they <span style="color: var(--main-content-color);">accept</span> your request you'll be able to share prayer topics and more</li>
   </ol>
 
+  <p class="help-text" if.bind="found.length === 0">
+    <img style="max-width: 80%;" src="images/stories/friends.svg">
+  </p>
+
   <div class="user-list" style="margin-top: 32px;" if.bind="found.length">
     <div class="user-list-item" repeat.for="user of found">
       <mini-user user-id.bind="user.id"></mini-user>
