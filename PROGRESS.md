@@ -190,6 +190,7 @@ Login is now pretty well in place. Now is the time to improve the topic experien
 
 ## Next 
 - [ ] Contact page
+- [ ] Ackknoledgment (incl. illustrations)
 - [ ] Privacy Policy
 - [ ] Change password
 - [ ] Stats every night
