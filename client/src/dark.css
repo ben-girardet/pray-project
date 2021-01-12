@@ -15,6 +15,7 @@
 
     --message-background-color: #333;
     --message-foreground-color: #fff;
+    --message-me-background-color: #16615F;
   }
   .conversation-bottomview {
     background: #222;
