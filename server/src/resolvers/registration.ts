@@ -49,7 +49,7 @@ export class RegistrationResolver {
         token.setToken();
         token.data = data;
 
-        const isTestAccount = data.mobile.substr(0, 5) === '+4170000';
+        const isTestAccount = data.mobile.substr(0, 8) === '+4170000';
         if (isTestAccount) {
             token.code = process.env.TEST_CODE || '001122';
         }
@@ -95,7 +95,7 @@ export class RegistrationResolver {
         newUser.email = token.data.email;
         newUser.mobile = token.data.mobile;
         newUser.roles = ['user'];
-        const isTestAccount = token.data.mobile.substr(0, 5) === '+4170000';
+        const isTestAccount = token.data.mobile.substr(0, 8) === '+4170000';
         if (isTestAccount) {
             data.password = process.env.TEST_PASSWORD || 'this-must-be-set-by-env-variable';
         }
