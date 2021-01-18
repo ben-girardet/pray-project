@@ -48,14 +48,23 @@ export class RegistrationResolver {
         const token = new TokenModel();
         token.setToken();
         token.data = data;
+
+        const isTestAccount = data.mobile.substr(0, 5) === '+4170000';
+        if (isTestAccount) {
+            token.code = process.env.TEST_CODE || '001122';
+        }
+
         const response = await token.save();
-        await smsapi.message
-            .sms()
-            //.from(app.name)
-            .from('Info')
-            .to(data.mobile)
-            .message('Sunago registration code: ' + token.code)
-            .execute(); // return Promise
+
+        if (!isTestAccount) {
+            await smsapi.message
+                .sms()
+                //.from(app.name)
+                .from('Info')
+                .to(data.mobile)
+                .message('Sunago registration code: ' + token.code)
+                .execute(); // return Promise
+        }
         return response.toObject();
     }
 
@@ -86,6 +95,10 @@ export class RegistrationResolver {
         newUser.email = token.data.email;
         newUser.mobile = token.data.mobile;
         newUser.roles = ['user'];
+        const isTestAccount = token.data.mobile.substr(0, 5) === '+4170000';
+        if (isTestAccount) {
+            data.password = process.env.TEST_PASSWORD || 'this-must-be-set-by-env-variable';
+        }
         newUser.hashPassword(data.password);
         const pair = await this.generatePair();
         newUser.privateKey = pair.epriv;
