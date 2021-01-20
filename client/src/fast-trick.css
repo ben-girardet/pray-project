@@ -26,3 +26,6 @@ fast-tabs::part(activeIndicator) {
 fast-tab:focus {
   box-shadow: none;
 }
+fast-button[appearance="accent"] {
+  color: white;
+}

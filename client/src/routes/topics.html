@@ -5,9 +5,9 @@
   <div class="list-content-head">
     <div style="display: flex; align-items: center; justify-content: space-between;">
       <fast-tabs change.trigger="tabChanged($event)" activeid.bind="activeTab">
-        <fast-tab id="active" ref="activeTopicsTabElement">Active</fast-tab>
-        <fast-tab class="${answeredTopics.length > 0 ? '':'disabled'}" id="answered">Answered</fast-tab>
-        <fast-tab class="${archivedTopics.length > 0 ? '':'disabled'}" id="archived">Archived</fast-tab>
+        <fast-tab id="active" ref="activeTopicsTabElement" t="topics.Active">Active</fast-tab>
+        <fast-tab class="${answeredTopics.length > 0 ? '':'disabled'}" id="answered" t="topics.Answered">Answered</fast-tab>
+        <fast-tab class="${archivedTopics.length > 0 ? '':'disabled'}" id="archived" t="topics.Archived">Archived</fast-tab>
         <fast-tab-panel id="activePanel">
         </fast-tab-panel>
         <fast-tab-panel id="answeredPanel">
@@ -25,8 +25,8 @@
 
     <template if.bind="activeTopics.length === 0 && answeredTopics.length === 0 && archivedTopics.length === 0 && !loadingTopics">
       <img src="images/help-arrow-top-right.png" style="display: block; margin-top: -10px; margin-left: auto; margin-right: 16px;">
-      <p class="help-text">
-        Use the <span class="color: var(--accent-color)">+</span> icon right here to add prayer topics and start enjoying Sunago.
+      <p class="help-text" t="topics.Use this button to add prayer topics and start enjoying Sunago">
+        Use this button to add prayer topics and start enjoying Sunago.
       </p>
       <p class="help-text">
         <img style="max-width: 70%;" src="images/stories/empty-topics.svg">
@@ -35,7 +35,7 @@
 
     <div class="topics--loading" if.bind="activeTopics.length === 0 && answeredTopics.length === 0 && archivedTopics.length === 0 && loadingTopics">
       <fast-progress-ring></fast-progress-ring>
-      Loading topics
+      ${'topics.Loading topics' | t}
     </div>
 
     <div class="list-content-list" if.bind="activeTab === 'active'">
@@ -48,7 +48,7 @@
         load="../topic-detail(${topic.id})"
         >
       </topic-preview>
-      <p if.bind="activeTopics.length === 1" class="help-text" style="margin-top: 250px;">
+      <p if.bind="activeTopics.length === 1" class="help-text" style="margin-top: 250px;" t="topics.Click here to start praying for your active topics">
         Click here to start praying for your active topics.
       </p>
       <img if.bind="activeTopics.length === 1" src="images/help-arrow-bottom-right.png" style="display: block; margin-left: auto; margin-right: 16px;">

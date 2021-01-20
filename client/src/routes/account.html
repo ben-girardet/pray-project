@@ -9,10 +9,15 @@
     </div>
   </div>
 
+  <fast-select class="lang-selector" value.bind="language" change.delegate="updateLanguage()">
+    <fast-option value="en">English</fast-option>
+    <fast-option value="fr">Français</fast-option>
+  </fast-select>
+
   <fast-menu>
     <fast-menu-item load="../edit-profile">
       <pray-icon icon="User" slot="start"></pray-icon>
-      Edit my profile
+      ${'account.Edit my profile' | t}
       <fast-badge slot="end" fill="primary" color="white" circular if.bind="global.notificationService.requestedFriendshipIds.length > 0">${global.notificationService.requestedFriendshipIds.length}</fast-badge>
     </fast-menu-item>
     <fast-menu-item disabled>
@@ -24,36 +29,40 @@
   <fast-menu>
     <fast-menu-item load="../friends">
       <pray-icon icon="Users" slot="start"></pray-icon>
-      Manage my Friends
+      ${'account.Manage my Friends' | t}
       <fast-badge slot="end" fill="primary" color="white" circular if.bind="global.notificationService.requestedFriendshipIds.length > 0">${global.notificationService.requestedFriendshipIds.length}</fast-badge>
     </fast-menu-item>
     <fast-menu-item disabled>
       <pray-icon icon="TrendingUp" slot="start"></pray-icon>
-      View my praying stats
+      ${'account.View my praying stats' | t}
     </fast-menu-item>
     <fast-menu-item disabled>
       <pray-icon icon="Bell" slot="start"></pray-icon>
-      Notifications settings
+      ${'account.Notifications settings' | t}
     </fast-menu-item>
   </fast-menu>
   <fast-menu>
     <fast-menu-item disabled>
       <pray-icon icon="ChatAlt" slot="start"></pray-icon>
-      Contact Us
+      ${'account.Contact Us' | t}
     </fast-menu-item>
     <fast-menu-item disabled>
       <pray-icon icon="ShieldCheck" slot="start"></pray-icon>
-      Privacy Policy
+      ${'misc.Privacy Policy' | t}
+    </fast-menu-item>
+    <fast-menu-item disabled>
+      <pray-icon icon="ShieldCheck" slot="start"></pray-icon>
+      ${'misc.Terms of use' | t}
     </fast-menu-item>
   </fast-menu>
   <fast-menu>
     <fast-menu-item disabled>
       <pray-icon icon="Code" slot="start"></pray-icon>
-      Version: VERSIONNB
+      <span t="account.Version: {{ versionNb }}" t-params.bind="{versionNb: 'VERSIONNB'}"></span>
     </fast-menu-item>
     <fast-menu-item click.trigger="logout()">
       <pray-icon icon="Logout" slot="start"></pray-icon>
-      Logout
+      ${'account.Logout' | t}
     </fast-menu-item>
   </fast-menu>
 </div>

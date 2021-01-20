@@ -6,9 +6,9 @@
   </fast-button> -->
   <fast-button  click.delegate="selectImage()">
     <pray-icon appearance="accent" icon="Photograph" size="lg" slot="start"></pray-icon>
-    Select an image
+    ${'avatar.Select an image' | t}
   </fast-button>
-  <label>Or pick one below</label>
+  <label t="avatar.Or pick one below">Or pick one below</label>
 </div>
 
 <div class="avatar-selection">
@@ -49,10 +49,10 @@
   <div class="head on-image">
     <span class="head__left" click.delegate="imageService.cancelImage()">
       <pray-icon icon="ArrowLeft" weight="2"></pray-icon>
-      Cancel
+      ${'Cancel' | t}
     </span>
     <span class="head__right" click.delegate="imageService.saveCrop()">
-      Save
+      ${'Save' | t}
       <pray-icon icon="Check" weight="2"></pray-icon>
     </span>
   </div>

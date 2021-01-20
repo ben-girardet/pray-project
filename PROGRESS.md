@@ -188,16 +188,19 @@ Login is now pretty well in place. Now is the time to improve the topic experien
 - [x] Ensure the screen looks amazing even without content (after first registration)
 - [x] Help tooltips
 
+# 20.1.2020 - Internationalization
+- [x] Translation i18n
+
 ## Next 
 - [ ] Contact page
 - [ ] Ackknoledgment (incl. illustrations)
-- [ ] Privacy Policy
-- [ ] Change password
-- [ ] Stats every night
+- [ ] Privacy Policy and Terms of Use
+- [ ] Change password / no password, only SMS
 - [ ] Backups every night
 - [ ] Diminish the number of refresh tokens available per user
 - [ ] Avoid REDIS to crash
-- [ ] Add a version from GIT
+- [ ] Add a version from GIT in API ? Or use the build version ?
+- [ ] Add a client version checker (for API) in order to inform user of out-of date client version and require update
 - [ ] Work on the TODO's
 - [ ] Ensure a nice register process
 - [ ] Stack AppNotifications (so we can see several)
@@ -208,3 +211,10 @@ Login is now pretty well in place. Now is the time to improve the topic experien
 - [ ] Cache images
 - [ ] Fix class-validator warning, check if I need it for the project
 
+## Crypting compliance
+
+- Apple Encryption
+https://help.apple.com/app-store-connect/#/dev63c95e436
+https://help.apple.com/app-store-connect/#/devc3f64248f
+https://getonthestore.com/export-compliance/
+https://annual-self-classification-report.github.io

@@ -36,6 +36,11 @@
   font-size: 0.7rem;
 }
 
+.account .lang-selector {
+  margin: 32px 0 16px;
+  width: 100%;
+}
+
 .account fast-menu {
   margin-left: -16px;
   margin-right: -16px;

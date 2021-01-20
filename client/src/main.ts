@@ -1,6 +1,7 @@
 import Aurelia, { RouterConfiguration, LoggerConfiguration, LogLevel, ColorOptions } from 'aurelia';
 import { TopicPreview } from './elements/topic-preview';
 import { ActivityPreview } from './elements/activity-preview';
+import { i18nConf } from './i18n.conf';
 import { MyApp } from './my-app';
 import { DateValueConverter } from './resources/date-value-converter';
 import { GradientValueConverter } from './resources/gradient-value-converter';
@@ -23,6 +24,8 @@ import {
   FASTTextField,
   FASTTextArea,
   FASTDialog,
+  FASTOption,
+  FASTSelect,
   FASTTabs,
   FASTTab,
   FASTTabPanel,
@@ -46,6 +49,8 @@ FASTDivider;
 FASTTextField;
 FASTTextArea;
 FASTDialog;
+FASTSelect;
+FASTOption;
 FASTTabs;
 FASTTab;
 FASTTabPanel;
@@ -72,6 +77,7 @@ PrayLogo;
 PrayHelpContainer;
 
 Aurelia
+  .register(i18nConf())
   .register(AureliaFastAdapter)
   .register(TwoWayCe)
   .register(RouterConfiguration)

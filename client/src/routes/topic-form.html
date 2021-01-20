@@ -2,10 +2,10 @@
 <import from="../cropping.css"></import>
 
 <div class="bottom-headview">
-  <fast-button appearance="lightweight" click.trigger="cancel()">Cancel</fast-button>
-  <span if.bind="!topicId">New Topic</span>
-  <span if.bind="topicId">Edit Topic</span>
-  <fast-button appearance="lightweight" click.trigger="save()">Save</fast-button>
+  <fast-button appearance="lightweight" click.trigger="cancel()" t="Cancel">Cancel</fast-button>
+  <span if.bind="!topicId" t="topicForm.New Topic">New Topic</span>
+  <span if.bind="topicId" t="topicForm.Edit Topic">Edit Topic</span>
+  <fast-button appearance="lightweight" click.trigger="save()" t="Save">Save</fast-button>
 </div>
 
 <div class="bottom-contentview">
@@ -13,14 +13,14 @@
 
     <div class="topic-form-name">
       <mini-user user-id.bind="apolloAuth.getUserId()" only-avatar.bind="true" size="large"></mini-user>
-      <textarea value.bind="name" placeholder="What do you want to say to God ?"></textarea>
+      <textarea value.bind="name" placeholder="What do you want to say to God ?" t="[placeholder]topicForm.What do you want to say to God ?"></textarea>
     </div>
   
-    <label>Illustrate your topic</label>
+    <label t="topicForm.Illustrate your topic">Illustrate your topic</label>
   
     <div class="select-two__head">
-      <span class="${illustrateWith === 'color' ? 'selected':''}">Color</span>
-      <span class="${illustrateWith === 'picture' ? 'selected':''}">Picture</span>
+      <span class="${illustrateWith === 'color' ? 'selected':''}" t="topicForm.Color">Color</span>
+      <span class="${illustrateWith === 'picture' ? 'selected':''}" t="topicForm.Picture">Picture</span>
     </div>
   
     <div class="select-two__zone">
@@ -51,8 +51,8 @@
         <span class="indicator" style="left: ${percent * 100}%;"></span>
       </div>
       
-      <fast-button class="illustration-button ${illustrateWith === 'picture' ? 'selected':''}" style="display: ${image ? 'none':'block'}" click.trigger="imageService.selectImage()">Select an image</fast-button>
-      <fast-button class="illustration-button ${illustrateWith === 'picture' ? 'selected':''}" style="display: ${image ? 'block':'none'}" click.trigger="imageService.removeImage()">Remove image</fast-button>
+      <fast-button class="illustration-button ${illustrateWith === 'picture' ? 'selected':''}" style="display: ${image ? 'none':'block'}" click.trigger="imageService.selectImage()" t="topicForm.Select an image">Select an image</fast-button>
+      <fast-button class="illustration-button ${illustrateWith === 'picture' ? 'selected':''}" style="display: ${image ? 'block':'none'}" click.trigger="imageService.removeImage()" t="topicForm.Remove image">Remove image</fast-button>
     </div>
   
     <div class="input-file-container" ref="inputFileContainer"></div>
@@ -65,10 +65,10 @@
   <div class="head on-image">
     <span class="head__left" click.delegate="imageService.cancelImage()">
       <pray-icon icon="ArrowLeft" weight="2"></pray-icon>
-      Cancel
+      ${'Cancel' | t}
     </span>
     <span class="head__right" click.delegate="imageService.saveCrop()">
-      Save
+      ${'Save' | t}
       <pray-icon icon="Check" weight="2"></pray-icon>
     </span>
   </div>

@@ -11,6 +11,7 @@ export class Account implements IRouteableComponent, ICustomElementViewModel {
 
   public user: IUser;
   private events: IDisposable[] = [];
+  public language: string;
 
   public constructor(
     @IRouter private router: IRouter, 
@@ -27,6 +28,10 @@ export class Account implements IRouteableComponent, ICustomElementViewModel {
     this.events.push(this.eventAggregator.subscribe('edit-profile-out', async () => {
       this.user = await this.getUser();
     }));
+  }
+
+  public attached() {
+    this.language = this.global.i18n.getLocale();
   }
 
   public detached(): void {
@@ -77,5 +82,10 @@ user(id: $userId) {
 
   public editProfile() {
     
+  }
+
+  public updateLanguage() {
+    this.global.i18n.setLocale(this.language);
+    this.global.eventAggregator.publish('app:locale:changed');
   }
 }

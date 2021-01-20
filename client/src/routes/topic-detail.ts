@@ -1,3 +1,4 @@
+import { DateValueConverter } from './../resources/date-value-converter';
 import { CryptingService } from './../services/crypting-service';
 import { Topic } from 'shared/types/topic';
 import { IRouteableComponent } from '@aurelia/router';
@@ -104,6 +105,11 @@ export class TopicDetail implements IRouteableComponent, ICustomElementViewModel
     } catch (error) {
       this.logger.error(error);
     }
+  }
+
+  public niceDate(date: any, params: any) {
+    const dateVm = new DateValueConverter();
+    return dateVm.toView(date, params);
   }
 
 }

@@ -1,0 +1,97 @@
+{
+  "welcome": {
+    "slogan": "Together in prayer. Wherever. Whenever."
+  },
+  "misc": {
+    "Terms of use": "Terms of use",
+    "Privacy Policy": "Privacy Policy"
+  },
+  "fields": {
+    "Mobile": "Mobile",
+    "Your password": "Your password"
+  },
+  "buttons": {
+    "Create an account": "Create an account",
+    "Login": "Login"
+  },
+  "topics": {
+    "Active": "Active",
+    "Answered": "Answered",
+    "Archived": "Archived",
+    "Loading topics": "Loading topics",
+    "Use this button to add prayer topics and start enjoying Sunago": "Use this button to add prayer topics and start enjoying Sunago.",
+    "Click here to start praying for your active topics": "Click here to start praying for your active topics."
+  },
+  "topicForm": {
+    "New Topic": "New Topic",
+    "Edit Topic": "Edit Topic",
+    "What do you want to say to God ?": "What do you want to say to God ?",
+    "Illustrate your topic": "Illustrate your topic",
+    "Color": "Color",
+    "Picture": "Picture",
+    "Select an image": "Select an image",
+    "Remove image": "Remove image"
+  },
+  "topicDetail": {
+    "Answered {{ date }}": "Answered {{ date }}",
+    "Messages": "Messages",
+    "Shares": "Shares",
+    "Mark as answered": "Mark as answered",
+    "Mark as active": "Mark as active",
+    "Archive": "Archive",
+    "Make active": "Make active",
+    "Remove topic": "Remove topic"
+  },
+  "conversation": {
+    "Write your message": "Write your message"
+  },
+  "praying": {
+    "Write your message": "Write your message"
+  },
+  "activity": {
+    "Loading activities": "Loading activities",
+    "Use this switch to toggle your own activity": "Use this switch to toggle your own activity.",
+    "On this screen you'll find what's happening in your prayer community": "On this screen you'll find what's happening in your prayer community."
+  },
+  "account": {
+    "Edit my profile": "Edit my profile",
+    "Manage my Friends": "Manage my Friends",
+    "View my praying stats": "View my praying stats",
+    "Notifications settings": "Notifications settings",
+    "Contact Us": "Contact Us",
+    "Logout": "Logout",
+    "Version: {{ versionNb }}": "Version: {{ versionNb }}"
+  },
+  "profile": {
+    "Change profile picture": "Change profile picture",
+    "Firstname": "Firstname",
+    "Lastname": "Lastname"
+  },
+  "avatar": {
+    "Select an image": "Select an image",
+    "Or pick one below": "Or pick one below"
+  },
+  "friends": {
+    "Friends": "Friends",
+    "Search friends": "Search friends",
+    "Search with mobile or email": "Search with mobile or email",
+    "Request": "Request",
+    "requested": "Requested",
+    "Friends Requests": "Friends Requests",
+    "Decline": "Decline",
+    "Accept": "Accept",
+    "Use the Search button to find friends": "Use the Search button to find friends. Then you'll be able to share your prayer topics with them."
+  },
+  "and": "and",
+  "Save": "Save",
+  "Close": "Close",
+  "Cancel": "Cancel",
+  "Confirm cancel": "Confirm cancel",
+  "Edit": "Edit",
+  "Remove": "Remove",
+  "Confirm remove": "Confirm remove",
+  "Delete": "Delete",
+  "Continue": "Continue",
+  "Back": "Retour",
+  "Search": "Search"
+}

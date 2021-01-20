@@ -19,20 +19,20 @@
 
     <template if.bind="activities.length < 2 && !loadingActivities">
       <img src="images/help-arrow-top-right.png" style="display: block; margin-top: -10px; margin-left: auto; margin-right: 16px;">
-      <p class="help-text" style="transform: scale(0.8); margin-bottom: 32px;">
-        Use this <span class="color: var(--accent-color)">switch</span> to toggle your own activity.
+      <p class="help-text" style="transform: scale(0.8); margin-bottom: 32px;" t="activity.Use this switch to toggle your own activity">
+        Use this switch to toggle your own activity.
       </p>
       <p class="help-text">
         <img style="max-width: 80%;" src="images/stories/activity.svg">
       </p>
-      <p class="help-text">
+      <p class="help-text" t="activity.On this screen you'll find what's happening in your prayer community">
         On this screen you'll find what's happening in your prayer community
       </p>
     </template>
 
     <div class="activities--loading" if.bind="activities.length === 0 && loadingActivities">
       <fast-progress-ring></fast-progress-ring>
-      Loading activities
+      ${'activity.Loading activities' | t}
     </div>
 
     <div class="list-content-list" if.bind="activeTab === 'activity'">

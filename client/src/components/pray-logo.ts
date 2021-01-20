@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-inferrable-types */
 import { attr } from "@microsoft/fast-element";
 import { FASTElement, customElement, html, css } from '@microsoft/fast-element';
-import { accentFillRestBehavior, accentForegroundCutRestBehavior, accentFillHoverBehavior, accentFillActiveBehavior, neutralFocusInnerAccentBehavior, neutralFillRestBehavior, neutralForegroundRestBehavior, neutralFillHoverBehavior, neutralFillActiveBehavior, accentForegroundRestBehavior, accentForegroundHoverBehavior, accentForegroundActiveBehavior } from "@microsoft/fast-components";
+import { accentForegroundRestBehavior } from "@microsoft/fast-components";
 
 const template = html<PrayLogo>`
 <template class="${x => x.size}">sunago</template>`;

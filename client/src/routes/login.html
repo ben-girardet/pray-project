@@ -4,26 +4,29 @@
   <pray-help-container if.bind="screen">
     <template if.bind="screen === 'welcome'">
       <img src="images/stories/welcome.svg">
-      <p class="slogan">Together in prayer. Wherever. Whenever.</p>
-      <fast-anchor appearance="lightweight" style="margin-top: auto;">Terms of use and privacy policy</fast-anchor>
-      <fast-button appearance="accent" click.delegate="continue()">Continue</fast-button>
+      <p class="slogan" t="welcome.slogan">Together in prayer. Wherever. Whenever.</p>
+      <p style="margin-top: auto;">
+        <fast-anchor appearance="lightweight" t="misc.Terms of use">Terms of use</fast-anchor>
+        <br /><fast-anchor appearance="lightweight" t="misc.Privacy Policy">Privacy policy</fast-anchor>
+      </p>
+      <fast-button appearance="accent" click.delegate="continue()" t="Continue">Continue</fast-button>
     </template>
   </pray-help-container>
 
   <div class="welcome__container">
-    <div style="text-align: center">
+    <div style="text-align: center; margin: 64px 0;">
       <pray-logo size="large"></pray-logo>
     </div>
     <form submit.delegate="login($event)">
-      <fast-text-field id="login_username" pattern="[0-9]*" placeholder="Mobile" value.two-way="username" autofocus>
+      <fast-text-field id="login_username" pattern="[0-9]*" placeholder="Mobile" value.two-way="username" autofocus t="[placeholder]fields.Mobile">
         <pray-icon icon="User" size="sm" slot="start"></pray-icon>
       </fast-text-field>
-      <fast-text-field id="login_password" type="password" placeholder="Your password" value.two-way="password">
+      <fast-text-field id="login_password" type="password" placeholder="Your password" value.two-way="password" t="[placeholder]fields.Your password">
         <pray-icon icon="Key" size="sm" slot="start"></pray-icon>
       </fast-text-field>
       <div class="button-row__two">
-        <fast-button appearance="lightweight" load="../register">Create an account</fast-button>
-        <fast-button appearance="accent" type="submit" >Login</fast-button>
+        <fast-button appearance="lightweight" load="../register" t="buttons.Create an account">Create an account</fast-button>
+        <fast-button appearance="accent" type="submit" t="buttons.Login">Login</fast-button>
       </div>
       <div class="welcome__version">VERSIONNB</div>
     </form>

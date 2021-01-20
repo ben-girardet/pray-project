@@ -2,10 +2,10 @@
   <div class="head on-image">
     <span class="head__left" load="../-@detail">
       <pray-icon icon="ArrowLeft" weight="2"></pray-icon>
-      Back
+      ${'Back' | t}
     </span>
     <span class="head__right" load="../topic-form(${topicId})" if.bind="topic.myShare.role === 'owner'">
-      Edit
+      ${'Edit' | t}
       <pray-icon icon="Pencil" weight="2"></pray-icon>
     </span>
     <div class="placeholder" style="background: ${topic.color | gradient};" if.bind="!topic.image.length">
@@ -24,40 +24,42 @@
 
     <h2>${topic.name}</h2>
     <p class="answered-at" if.bind="topic.status === 'answered'">
-      <pray-icon icon="CheckCircle" size="sm"></pray-icon>Answered ${topic.answeredAt | date:'nice'}
+      <pray-icon icon="CheckCircle" size="sm"></pray-icon>
+      <span t="topicDetail.Answered {{ date }}" t-params.bind="{date: niceDate(topic.answeredAt, 'nice')}"></span>
+      <!-- Answered ${topic.answeredAt | date:'nice'} -->
     </p>
 
     <fast-button class="full-width" load="../conversation(topicId=${topicId})" appearance="neutral" style="margin-bottom: 4px;">
       <pray-icon slot="start" icon="ChatAlt"></pray-icon>
-      Messages
+      ${'topicDetail.Messages' | t}
       <!-- <fast-badge if.bind="topic.messages.length" slot="end" fill="secondary" color="white" circular>${topic.messages.length}</fast-badge> -->
       <fast-badge if.bind="nbUnviewed > 0" slot="end" fill="primary" color="white" circular>${nbUnviewed}</fast-badge>
     </fast-button>
 
     <fast-button class="full-width" load="../sharing(${topicId})" appearance="neutral" style="margin-bottom: 4px;" if.bind="topic.myShare.role === 'owner'">
       <pray-icon slot="start" icon="UserGroup"></pray-icon>
-      Shares
+      ${'topicDetail.Shares' | t}
       <fast-badge slot="end" fill="secondary" color="white" circular>${topic.shares.length}</fast-badge>
     </fast-button>
     <fast-button class="full-width" click.delegate="markTopicAs('answered')" appearance="accent" style="margin-bottom: 4px;" if.bind="topic.myShare.role === 'owner' && topic.status === 'active'">
       <pray-icon slot="start" icon="CheckCircle"></pray-icon>
-      Mark as answered
+      ${'topicDetail.Mark as answered' | t}
     </fast-button>
     <fast-button class="full-width" click.delegate="markTopicAs('active')" appearance="neutral" style="margin-bottom: 4px;" if.bind="topic.myShare.role === 'owner' && topic.status === 'answered'">
       <pray-icon slot="start" icon="Sparkles"></pray-icon>
-      Mark as active
+      ${'topicDetail.Mark as active' | t}
     </fast-button>
 
     <div class="button-row__two" style="margin-top: 48px;" if.bind="topic.myShare.role === 'owner'">
       <fast-button click.trigger="markTopicAs('archived')" appearance="lightweight" if.bind="topic.status === 'active'">
         <pray-icon slot="start" icon="Archive"></pray-icon>
-        Archive
+        ${'topicDetail.Archive' | t}
       </fast-button>
       <fast-button click.trigger="markTopicAs('active')" appearance="lightweight" if.bind="topic.status === 'archived'">
         <pray-icon slot="start" icon="Archive"></pray-icon>
-        Make active
+        ${'topicDetail.Make active' | t}
       </fast-button>
-      <fast-button click.trigger="removeTopic()" appearance="lightweight" style="color: red">Remove Topic</fast-button>
+      <fast-button click.trigger="removeTopic()" appearance="lightweight" style="color: red" t="topicDetail.Remove topic">Remove topic</fast-button>
     </div>
   </div>
 

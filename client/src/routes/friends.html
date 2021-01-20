@@ -1,17 +1,17 @@
 <import from="./bottom.css"></import>
 <import from="./friends.css"></import>
 <div class="bottom-headview">
-  <fast-button appearance="lightweight" load="../-@bottom">Close</fast-button>
-  <span>Friends</span>
-  <fast-button appearance="lightweight" load="../add-friend">Search</fast-button>
+  <fast-button appearance="lightweight" load="../-@bottom" t="Close">Close</fast-button>
+  <span t="friends.Friends">Friends</span>
+  <fast-button appearance="lightweight" load="../add-friend" t="Search">Search</fast-button>
 </div>
 
 <div class="bottom-contentview">
 
   <template if.bind="friends.length < 2">
     <img src="images/help-arrow-top-right.png" style="display: block; margin-top: -10px; margin-left: auto; margin-right: 16px;">
-    <p class="help-text">
-      Use the <span class="color: var(--accent-color)">Search</span> button to find friends. Then you'll be able to share your prayer topics with them.
+    <p class="help-text" t="friends.Use the Search button to find friends">
+      Use the Search button to find friends. Then you'll be able to share your prayer topics with them.
     </p>
     <p class="help-text">
       <img style="max-width: 80%;" src="images/stories/friends.svg">
@@ -19,25 +19,25 @@
   </template>
 
   <template if.bind="requests.length">
-    <p>Friend Requests</p>
+    <p t="friends.Friends Requests">Friends Requests</p>
     <div class="user-list">
       <div class="user-list-item" repeat.for="friendship of requests">
         <mini-user style="margin-right: auto;" user-id.bind="friendship.friend.id"></mini-user>
-        <fast-button if.bind="isMyRequest(friendship) && !friendship.removing" appearance="lightweight" click.trigger="requestRemovingFriendship(friendship)">Cancel</fast-button>
-        <fast-button if.bind="isMyRequest(friendship) && friendship.removing" appearance="outline" click.trigger="removeFriendship(friendship.id, 'canceled')">Confirm cancel</fast-button>
-        <fast-button if.bind="!isMyRequest(friendship)" appearance="lightweight" click.trigger="respondToFriendshipRequest(friendship.id, 'declined')">Decline</fast-button>
-        <fast-button style="margin-left: 8px;" if.bind="!isMyRequest(friendship)" appearance="outline" click.trigger="respondToFriendshipRequest(friendship.id, 'accepted')">Accept</fast-button>
+        <fast-button if.bind="isMyRequest(friendship) && !friendship.removing" appearance="lightweight" click.trigger="requestRemovingFriendship(friendship)" t="Cancel">Cancel</fast-button>
+        <fast-button if.bind="isMyRequest(friendship) && friendship.removing" appearance="outline" click.trigger="removeFriendship(friendship.id, 'canceled')" t="Confirm cancel">Confirm cancel</fast-button>
+        <fast-button if.bind="!isMyRequest(friendship)" appearance="lightweight" click.trigger="respondToFriendshipRequest(friendship.id, 'declined')" t="friends.Decline">Decline</fast-button>
+        <fast-button style="margin-left: 8px;" if.bind="!isMyRequest(friendship)" appearance="outline" click.trigger="respondToFriendshipRequest(friendship.id, 'accepted')" t="friends.Accept">Accept</fast-button>
       </div>
     </div>
   </template>
 
   <template if.bind="friends.length">
-    <p>Friends</p>
+    <p t="friends.Friends">Friends</p>
     <div class="user-list">
       <div class="user-list-item" repeat.for="friendship of friends">
         <mini-user user-id.bind="friendship.friend.id"></mini-user>
-        <fast-button if.bind="!friendship.removing" appearance="lightweight" click.trigger="requestRemovingFriendship(friendship)">Remove</fast-button>
-        <fast-button if.bind="friendship.removing" appearance="outline" click.trigger="removeFriendship(friendship.id, 'removed')">Confirm remove</fast-button>
+        <fast-button if.bind="!friendship.removing" appearance="lightweight" click.trigger="requestRemovingFriendship(friendship)" t="Remove">Remove</fast-button>
+        <fast-button if.bind="friendship.removing" appearance="outline" click.trigger="removeFriendship(friendship.id, 'removed')" t="Confirm remove">Confirm remove</fast-button>
       </div>
     </div>
   </template>

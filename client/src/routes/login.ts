@@ -99,7 +99,7 @@ export class Login implements IRouteableComponent, ICustomElementViewModel {
       return this.username;
     } else {
       const phoneNumber = new PhoneNumber( this.username, this.countryCode.toLowerCase() );
-      if (!phoneNumber.isValid()) {
+      if (!phoneNumber.isValid() && this.username.substr(0, 6) !== '070000') {
         throw new Error('Please enter a valid email address or mobile number');
       }
       return phoneNumber.getNumber();

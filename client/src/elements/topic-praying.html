@@ -17,7 +17,7 @@
   </div>
 
   <div class="praying-bottomview" ref="prayingBottom" touchstart.trigger="focusIfNot($event)" touchmove.trigger="stop($event)">
-    <textarea rows="1" placeholder="Write your message" ref="textarea" value.bind="message" input.delegate="messageChanged()"></textarea>
+    <textarea rows="1" placeholder="Write your message" t="[placeholder]praying.Write your message" ref="textarea" value.bind="message" input.delegate="messageChanged()"></textarea>
     <fast-button appearance="lightweight" disabled.bind="!message" click.delegate="sendMessage()" touchstart.trigger="sendMessage()">
       <pray-icon slot="start" icon="Annotation"></pray-icon>
     </fast-button>

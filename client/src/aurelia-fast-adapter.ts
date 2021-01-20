@@ -12,6 +12,7 @@ export class AureliaFastAdapter {
       const nodeObserverLocator = container.get(NodeObserverLocator);
       attrSyntaxTransformer.useTwoWay((el, property) => {
         switch (el.tagName) {
+          case 'FAST-SELECT':
           case 'FAST-SLIDER':
           case 'FAST-TEXT-FIELD':
           case 'FAST-TEXT-AREA':
@@ -37,6 +38,9 @@ export class AureliaFastAdapter {
           value: valuePropertyConfig
         },
         'FAST-RADIO-GROUP': {
+          value: valuePropertyConfig
+        },
+        'FAST-SELECT': {
           value: valuePropertyConfig
         },
         'FAST-SLIDER': {

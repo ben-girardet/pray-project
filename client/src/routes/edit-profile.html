@@ -2,20 +2,20 @@
 <import from="../cropping.css"></import>
 
 <div class="bottom-headview">
-  <fast-button appearance="lightweight" click.trigger="cancel()">Cancel</fast-button>
-  <span>Edit Profile</span>
-  <fast-button appearance="lightweight" click.trigger="save()">Save</fast-button>
+  <fast-button appearance="lightweight" click.trigger="cancel()" t="Cancel">Cancel</fast-button>
+  <span t="account.Edit my profile">Edit Profile</span>
+  <fast-button appearance="lightweight" click.trigger="save()" t="Save">Save</fast-button>
 </div>
 
 <div class="bottom-contentview ${avatar.imageService.cropping ? 'full-height':''}">
   <form class="topic-form">
 
-    <fast-text-field placeholder="Firstname" value.two-way="firstname">
+    <fast-text-field placeholder="Firstname" t="[placeholder]profile.Firstname" value.two-way="firstname">
     </fast-text-field>
-    <fast-text-field placeholder="Lastname" value.two-way="lastname">
+    <fast-text-field placeholder="Lastname" t="[placeholder]profile.Lastname" value.two-way="lastname">
     </fast-text-field>
   
-    <label style="text-align: center;">Change profile picture</label>
+    <label style="text-align: center;" t="profile.Change profile picture">Change profile picture</label>
     <avatar-selection value.bind="profilePic" original.bind="preview" view-model.ref="avatar"></avatar-selection>
     
   </form>

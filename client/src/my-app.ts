@@ -136,7 +136,6 @@ export class MyApp implements ICustomElementViewModel {
         if (prayingInstruction.componentName === 'praying') {
           document.documentElement.classList.add('praying');
           this.eventAggregator.publish(`praying-in`);
-          console.log('here1');
           this.shouldDisplayPrayingHelp();
         } else if (prayingInstruction.componentName === '-') {
           document.documentElement.classList.remove('praying');
@@ -193,11 +192,9 @@ export class MyApp implements ICustomElementViewModel {
   }
 
   public async shouldDisplayPrayingHelp(): Promise<any> {
-    console.log('here2');
     if (!apolloAuth.getUserId()) {
       return null
     }
-    console.log('here3');
     const result = await client.query<{user: {
       id: string,
       helpSeen: HelpId[]}}>({query: gql`query User($userId: String!) {
@@ -206,9 +203,7 @@ export class MyApp implements ICustomElementViewModel {
           helpSeen
         }
       }`, variables: {userId: apolloAuth.getUserId()}, fetchPolicy: 'cache-first'});
-    console.log('here4');
     if (!result.data.user.helpSeen.includes('praying-directions')) {
-      console.log('here5');
       this.prayingHelp = 'welcome';
     }
   }

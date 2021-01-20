@@ -1,10 +1,13 @@
 import { apolloAuth } from './apollo';
-import { EventAggregator, ILogger, IRouter, IPlatform, ViewportInstruction } from 'aurelia';
+import { EventAggregator, ILogger, IRouter, IPlatform, ViewportInstruction, inject } from 'aurelia';
 import { NotificationService } from './services/notification-service';
 import { HelpId } from 'shared/types/user';
 import { helpViewed } from './commands/user';
+import { I18N } from '@aurelia/i18n';
+import moment from 'moment';
 
 const w: any = window;
+@inject(EventAggregator, ILogger, IRouter, IPlatform, NotificationService, I18N)
 export class Global {
 
   private firstRouteIgnored:  -1 | 0 | 1 = -1;
@@ -19,9 +22,32 @@ export class Global {
     @ILogger iLogger: ILogger,
     @IRouter public router: IRouter,
     @IPlatform public platform: IPlatform,
-    public notificationService: NotificationService) {
+    public notificationService: NotificationService,
+    public i18n: I18N) {
     this.logger = iLogger.scopeTo('global');
     this.isCordova = document.documentElement.classList.contains('cordova');
+    this.setMomentLocale();
+    console.log('subscribing to i18n:locale:changed', this.eventAggregator);
+    this.eventAggregator.subscribe('i18n:locale:changed', () => {
+      // at the time of writing this code
+      // the i18n:locale:changed is never received
+      // therefore I've set another event below 'app:locale:changed'
+      // called when changing locale
+      this.setMomentLocale();
+    });
+    this.eventAggregator.subscribe('app:locale:changed', () => {
+      this.setMomentLocale();
+    });
+    this.eventAggregator.subscribe('app:started', () => {
+      this.setMomentLocale();
+    });
+  }
+
+  public setMomentLocale() {
+    console.log('setMomentLocale');
+    const locale = this.i18n.getLocale();
+    console.log('locale', locale);
+    moment.locale(locale);
   }
 
   public isRoutingOK() {
