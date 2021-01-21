@@ -52,6 +52,10 @@ const resolvers: NonEmptyArray<Function> | NonEmptyArray<string> =
         MessageResolver, MessageUserResolver, RegistrationResolver, AuthResolver,
         FriendshipResolver, FriendshipUserResolver];
 
+// Sentry
+import * as Sentry from '@sentry/node';
+import * as Tracing from '@sentry/tracing';
+import { apolloSentryPlugin } from './core/apollo-sentry';
 
 dotenv.config();
 
@@ -108,6 +112,32 @@ mongoose.connect(
         pass: process.env.MONGO_PASSWORD,
     }).then(async () => {
     const app = express();
+
+    Sentry.init({
+        environment: process.env.SENTRY_ENV || 'unset',
+        dsn: process.env.SENTRY_DSN,
+        integrations: [
+            // enable HTTP calls tracing
+            new Sentry.Integrations.Http({ tracing: true }),
+            // enable Express.js middleware tracing
+            new Tracing.Integrations.Express({
+              // to trace all requests to the default router
+              app,
+              // alternatively, you can specify the routes you want to trace:
+              // router: someRouter,
+            }),
+          ],
+        // We recommend adjusting this value in production, or using tracesSampler
+        // for finer control
+        tracesSampleRate: 1.0,
+      });
+
+    app.use(Sentry.Handlers.requestHandler());
+    app.use(Sentry.Handlers.tracingHandler());
+    // maybe be to improve Sentry we must start manual transaction
+    // https://docs.sentry.io/platforms/node/guides/express/performance/
+    // or for perf tracing (graphQL) I can use my perf plugin and plug some Sentry tracing on it
+
     const server = http.createServer(app);
     const io = socket(server);
     const PORT = parseInt(process.env.SERVER_PORT as string) ?? 3000;
@@ -188,7 +218,10 @@ mongoose.connect(
                 };
                 return context;
             },
-            plugins: [apolloPerfPlugin]
+            plugins: [
+                apolloPerfPlugin,
+                apolloSentryPlugin
+            ]
         });
     app.use('/graphql', (req: express.Request, res: express.Response, next: express.NextFunction) => {
         if (!req.header('Authorization')) {
@@ -212,6 +245,8 @@ mongoose.connect(
     // Register our controllers with Express
     app.use(cors(corsOptions));
     registerControllers(controllers, app);
+
+    app.use(Sentry.Handlers.errorHandler());
 
     io.on('connection', (socket) => {
         console.log('a user connected');
