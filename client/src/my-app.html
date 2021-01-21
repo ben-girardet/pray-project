@@ -44,26 +44,26 @@
   <pray-help-container if.bind="prayingHelp" fullscreen.bind="false" class="praying-help">
     <template if.bind="prayingHelp === 'welcome'">
       <img src="images/stories/praying.svg">
-      <p class="slogan">Welcome in the praying screen</p>
-      <fast-button style="margin-top: 32px;" appearance="accent" click.delegate="prayingHelp = 'directions'">Tell me how it works</fast-button>
+      <p class="slogan" t="help.prayingDirections.Welcome in the praying screen"></p>
+      <fast-button style="margin-top: 32px;" appearance="accent" click.delegate="prayingHelp = 'directions'" t="help.prayingDirections.Tell me how it works">Tell me how it works</fast-button>
     </template>
     <template if.bind="prayingHelp === 'directions'">
-      <p class="slogan">
+      <p class="slogan" t="[html]help.prayingDirections.Use your finger and swipe topics">
         Use your finger and <strong>swipe&nbsp;topics</strong>
       </p>
       <div class="praying-help__direction">
         <pray-icon icon="ChevronDoubleUp" class="animate__swipe-up" weight="2"></pray-icon>
-        <p>Swipe up to log a prayer</p>
+        <p t="help.prayingDirections.Swipe up to log a prayer">Swipe up to log a prayer</p>
       </div>
       <div class="praying-help__direction praying-help__left">
         <pray-icon icon="ChevronDoubleLeft" class="animate__swipe-left" weight="2"></pray-icon>
-        <p>Swipe left to skip a topic</p>
+        <p t="help.prayingDirections.Swipe left to skip a topic">Swipe left to skip a topic</p>
       </div>
       <div class="praying-help__direction">
-        <p>Swipe down to close</p>
+        <p t="help.prayingDirections.Swipe down to close">Swipe down to close</p>
         <pray-icon icon="ChevronDoubleDown" class="animate__swipe-bottom" weight="2"></pray-icon> 
       </div>
-      <fast-button appearance="accent" click.delegate="prayingHelpViewed('praying-directions')">Ok, I understand</fast-button>
+      <fast-button appearance="accent" click.delegate="prayingHelpViewed('praying-directions')" t="help.prayingDirections.Ok, I understand">Ok, I understand</fast-button>
     </template>
   </pray-help-container>
 </fast-design-system-provider>

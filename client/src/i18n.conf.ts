@@ -108,6 +108,21 @@ const en = {
     "Accept": "Accept",
     "Use the Search button to find friends": "Use the Search button to find friends. Then you'll be able to share your prayer topics with them."
   },
+  "sharing": {
+    "Sharing": "Sharing",
+    "Share with": "Share with"
+  },
+  "help": {
+    "prayingDirections": {
+      "Welcome in the praying screen": "Welcome in the praying screen",
+      "Tell me how it works": "Tell me how it works",
+      "Use your finger and swipe topics": "Use your finger and <strong>swipe&nbsp;topics</strong>",
+      "Swipe up to log a prayer": "Swipe up to log a prayer",
+      "Swipe left to skip a topic": "Swipe left to skip a topic",
+      "Swipe down to close": "Swipe down to close",
+      "Ok, I understand": "Ok, I understand"
+    }
+  },
   "and": "and",
   "Save": "Save",
   "Close": "Close",
@@ -206,6 +221,21 @@ const fr = {
     "Decline": "Refuser",
     "Accept": "Accepter",
     "Use the Search button to find friends": "Utilise le bouton de recherche pour trouver des amis. Ensuite tu pourra partager tes sujets de prière avec eux."
+  },
+  "sharing": {
+    "Sharing": "Sharing",
+    "Share with": "Share with"
+  },
+  "help": {
+    "prayingDirections": {
+      "Welcome in the praying screen": "Bienvenue sur la vue de prière",
+      "Tell me how it works": "Explique-moi comment ça marche",
+      "Use your finger and swipe topics": "Utiliser ton doigt et <strong>balaie&nbsp;les sujets</strong>",
+      "Swipe up to log a prayer": "Balaie vers le haut pour indiquer que tu as prié",
+      "Swipe left to skip a topic": "Balaie vers la gauche pour passer un sujet",
+      "Swipe down to close": "Balaie vers le bas pour fermer",
+      "Ok, I understand": "Ok, j'ai compris"
+    }
   },
   "and": "et",
   "Save": "Enregistrer",
