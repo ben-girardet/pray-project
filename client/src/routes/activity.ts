@@ -14,6 +14,7 @@ export class Activity implements IRouteableComponent, ICustomElementViewModel {
   private logger: ILogger;
   public loadingActivities = false;
   private limit = 30;
+  public displayedActivities: IActivity[] = [];
 
   public constructor( 
     @ILogger iLogger: ILogger,
@@ -34,10 +35,12 @@ export class Activity implements IRouteableComponent, ICustomElementViewModel {
     this.global.platform.macroTaskQueue.queueTask(async () => {
       await this.getActivities();
       await this.tryToFetchActivities();
+      this.setDisplayedActivities();
       this.loadingActivities = false;
     });
     this.events.push(this.global.eventAggregator.subscribe('praying-out', async () => {
       await this.tryToFetchActivities();
+      this.setDisplayedActivities();
     }));
     this.events.push(this.global.eventAggregator.subscribe('page:foreground:auth', async () => {
       // await this.tryToFetchActivities();
@@ -99,6 +102,16 @@ export class Activity implements IRouteableComponent, ICustomElementViewModel {
     } catch (error) {
       // if error, do nothing
     }
+  }
+
+  private setDisplayedActivities() {
+    const displayedActivities: IActivity[] = [];
+    for (const activity of this.activities) {
+      if (this.global.includeMyActivity || activity.userId !== this.global.apollo.getUserId()) {
+        displayedActivities.push(activity);
+      }
+    }
+    this.displayedActivities = displayedActivities;
   }
 
   public async decryptActivities(activities: IActivity[]): Promise<IActivity[]> {

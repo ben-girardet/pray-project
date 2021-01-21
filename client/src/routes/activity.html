@@ -10,7 +10,7 @@
         </fast-tab-panel>
       </fast-tabs>
       <span class="activities__switch-button">
-        <fast-switch checked.bind="global.includeMyActivity"></fast-switch>
+        <fast-switch checked.bind="global.includeMyActivity" change.delegate="setDisplayedActivities()"></fast-switch>
       </span>
     </div>
   </div>
@@ -38,8 +38,8 @@
     <div class="list-content-list" if.bind="activeTab === 'activity'">
       <activity-preview
         class="content"
-        repeat.for="activity of activities.slice(0, limit)"
-        if.bind="global.includeMyActivity || activity.userId !== global.apollo.getUserId()"
+        repeat.for="activity of displayedActivities.slice(0, limit)"
+        xif.bind="global.includeMyActivity || activity.userId !== global.apollo.getUserId()"
         activity.bind="activity"
         topic.delegate="openTopic(activity.topicId)"
         >
