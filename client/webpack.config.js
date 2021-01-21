@@ -59,7 +59,8 @@ module.exports = function(env, { analyze }) {
     plugins: [
       new HtmlWebpackPlugin({ template: 'index.ejs' }),
       new CopyWebpackPlugin({patterns: [
-        { from: 'static', to: path.resolve(__dirname, 'dist') }
+        { from: 'static', to: path.resolve(__dirname, 'dist') },
+        // { from: 'locales', to: path.resolve(__dirname, 'dist/locales') }
       ]}),
       analyze && new BundleAnalyzerPlugin()
     ].filter(p => p)
