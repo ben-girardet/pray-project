@@ -116,6 +116,7 @@ mongoose.connect(
     Sentry.init({
         environment: process.env.SENTRY_ENV || 'unset',
         dsn: process.env.SENTRY_DSN,
+        debug: true,
         integrations: [
             // enable HTTP calls tracing
             new Sentry.Integrations.Http({ tracing: true }),
