@@ -2,8 +2,8 @@
 <import from="./sharing.css"></import>
 <div class="bottom-headview">
   <fast-button appearance="lightweight"></fast-button>
-  <span>Sharing</span>
-  <fast-button appearance="lightweight" load="../-@bottom">Close</fast-button>
+  <span t="sharing.Sharing">Sharing</span>
+  <fast-button appearance="lightweight" load="../-@bottom" t="Close">Close</fast-button>
 </div>
 
 <div class="bottom-contentview">
@@ -14,7 +14,7 @@
     >
   </topic-preview>
 
-  <p>Share with</p>
+  <p t="sharing.Share with">Share with</p>
   <div class="user-list">
     <div class="user-list-item">
       <mini-user user-id.bind="topic.myShare.userId"></mini-user>
