@@ -66,6 +66,10 @@ console.log('MONGO_DB', process.env.MONGO_DB);
 console.log('REDIS_HOST', process.env.REDIS_HOST);
 console.log('REDIS_PORT', process.env.REDIS_PORT);
 
+console.log('SENTRY_DSN', process.env.SENTRY_DSN);
+console.log('SENTRY_ENV', process.env.SENTRY_ENV);
+console.log('SENTRY_RELEASE', process.env.SENTRY_RELEASE);
+
 const whitelist = ['http://localhost:9000', 'https://sunago.app', 'https://dev.sunago.app', 'https://www.sunago.app'];
 const corsOptions: CorsOptions = {
     origin: function (origin, callback) {
