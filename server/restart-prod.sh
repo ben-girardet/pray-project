@@ -1,1 +1,1 @@
-pm2 restart api
+pm2 restart api --update-env
