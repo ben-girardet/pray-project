@@ -15,6 +15,7 @@ import jwt from 'express-jwt';
 import cors, { CorsOptions } from 'cors';
 import { apolloPerfPlugin } from './core/perf';
 import { filter } from './middleware/filter';
+import { errorHandler } from './middleware/error';
 
 import * as sessionAuth from './middleware/session-auth';
 
@@ -257,14 +258,15 @@ mongoose.connect(
     app.use(cors(corsOptions));
     registerControllers(controllers, app);
 
-    app.use(Sentry.Handlers.errorHandler());
-
     io.on('connection', (socket) => {
         console.log('a user connected');
         socket.on('disconnect', () => {
           console.log('user disconnected');
         });
       });
+
+    app.use(Sentry.Handlers.errorHandler());
+    app.use(errorHandler);
 
     // Start the server
     server.listen(PORT, () => {

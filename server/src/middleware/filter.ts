@@ -7,13 +7,15 @@ import * as Sentry from '@sentry/node';
 // https://www.npmjs.com/package/express-slow-down
 
 export const filter = () => (req: express.Request, res: express.Response, next: express.NextFunction) => {
-
-    const last4 = req.url.substr(0, 4);
-    const last5 = req.url.substr(0, 5);
+    console.log('filter', req.url);
+    const last4 = req.url.substr(-4);
+    const last5 = req.url.substr(-5);
+    console.log('last4', last4);
+    console.log('last5', last5);
     if (last4 === '.php' || last4 === '.txt') {
         const transaction = Sentry.startTransaction({
             op: 'Filter',
-            name: `*.${last4}`
+            name: `*${last4}`
         });
         transaction.setTag('url', req.url);
         Sentry.configureScope(scope => scope.setSpan(transaction));
@@ -22,10 +24,10 @@ export const filter = () => (req: express.Request, res: express.Response, next: 
             next(new Error('Invalid request'))
         }, 2000);
         return;
-    } else if (last5 === '.html') {
+    } else if (last5 === '.html' || last5 === '/html') {
         const transaction = Sentry.startTransaction({
             op: 'Filter',
-            name: `*.${last5}`
+            name: `*${last5}`
         });
         transaction.setTag('url', req.url);
         Sentry.configureScope(scope => scope.setSpan(transaction));
