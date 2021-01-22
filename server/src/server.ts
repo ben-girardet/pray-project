@@ -14,6 +14,7 @@ import contextService from 'request-context';
 import jwt from 'express-jwt';
 import cors, { CorsOptions } from 'cors';
 import { apolloPerfPlugin } from './core/perf';
+import { filter } from './middleware/filter';
 
 import * as sessionAuth from './middleware/session-auth';
 
@@ -74,10 +75,13 @@ const whitelist = ['http://localhost:9000', 'https://sunago.app', 'https://dev.s
 const corsOptions: CorsOptions = {
     origin: function (origin, callback) {
         if (origin === undefined || origin === null || origin === 'null') {
+            // TODO: add a header that must be present here
+            // to confirm the request is coming from a mobile app
           callback(null, true)
         } else if (whitelist.indexOf(origin) !== -1) {
           callback(null, true)
         } else {
+            // TODO: log this in Sentry
           console.log('Origin not allowed by CORS', origin, typeof origin);
           callback(new Error('Not allowed by CORS'))
         }
@@ -146,6 +150,8 @@ mongoose.connect(
     const server = http.createServer(app);
     const io = socket(server);
     const PORT = parseInt(process.env.SERVER_PORT as string) ?? 3000;
+
+    app.use(filter())
 
     app.use(helmet({
         contentSecurityPolicy: {
