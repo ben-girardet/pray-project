@@ -142,17 +142,16 @@ mongoose.connect(
         tracesSampleRate: 1.0,
       });
 
-    app.use(Sentry.Handlers.requestHandler());
-    app.use(Sentry.Handlers.tracingHandler());
-    // maybe be to improve Sentry we must start manual transaction
-    // https://docs.sentry.io/platforms/node/guides/express/performance/
-    // or for perf tracing (graphQL) I can use my perf plugin and plug some Sentry tracing on it
+
 
     const server = http.createServer(app);
     const io = socket(server);
     const PORT = parseInt(process.env.SERVER_PORT as string) ?? 3000;
 
-    app.use(filter())
+    app.use(filter());
+
+    app.use(Sentry.Handlers.requestHandler());
+    app.use(Sentry.Handlers.tracingHandler());
 
     app.use(helmet({
         contentSecurityPolicy: {
