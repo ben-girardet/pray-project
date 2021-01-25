@@ -26,6 +26,7 @@
     "http-server": "^0.12.3",
     "i18next-fetch-backend": "^3.0.0",
     "image-blob-reduce": "^2.2.0",
+    "js-weighted-list": "^0.1.1",
     "lodash-es": "^4.17.20",
     "moment": "^2.29.1",
     "nanoid": "^3.1.20",

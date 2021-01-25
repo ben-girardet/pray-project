@@ -88,7 +88,7 @@ export class Activity implements IRouteableComponent, ICustomElementViewModel {
 
   public async getActivities(): Promise<void> {
     try {
-      const activities = await getActivities();
+      const activities = await getActivities(null);
       this.activities = await this.decryptActivities(activities);
     } catch (error) {
       this.logger.error(error);
@@ -97,7 +97,7 @@ export class Activity implements IRouteableComponent, ICustomElementViewModel {
 
   public async tryToFetchActivities(): Promise<void> {
     try {
-      const activities = await getActivities('network-only');
+      const activities = await getActivities(null, 'network-only');
       this.activities = await this.decryptActivities(activities);
     } catch (error) {
       // if error, do nothing

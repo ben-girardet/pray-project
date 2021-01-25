@@ -1,3 +1,4 @@
+import { Activity } from 'shared/types/activity';
 import { CryptingService } from './../services/crypting-service';
 import { AppNotification } from './../components/app-notification';
 import { Topic as ITopic } from 'shared/types/topic';
@@ -7,6 +8,10 @@ import { ICustomElementViewModel, ILogger, IDisposable, IRouter } from 'aurelia'
 import { getTopics, pray } from '../commands/topic';
 import { createColorPalette, parseColorString } from "@microsoft/fast-components";
 import { Global } from '../global';
+import { getActivities } from '../commands/activity';
+import moment from 'moment';
+import jwl from 'js-weighted-list';
+console.log('jwl', jwl);
 
 const neutral = '#16615F';
 const accent = '#3AC3BD';
@@ -93,9 +98,7 @@ export class Praying implements IRouteableComponent, ICustomElementViewModel {
   }
 
   public load(parameters: {topicId: string}): void {
-    this.logger.debug('load', parameters);
     this.startWithTopicId = parameters.topicId;
-    this.logger.debug('startWithTopicId', this.startWithTopicId);
   }
 
   public async binding(): Promise<void> {
@@ -136,10 +139,22 @@ export class Praying implements IRouteableComponent, ICustomElementViewModel {
   }
 
   public async getTopics(): Promise<void> {
-    this.logger.debug('getTopics', this.startWithTopicId);
     try {
-      const activeTopics = [].concat(await getTopics({field: 'updatedAt', order: -1}, 'active'));
-      shuffleArray(activeTopics);
+      let activeTopics = [].concat(await getTopics({field: 'updatedAt', order: -1}, 'active'));
+      let activities: Activity[] = [];
+      try {
+        const recentActivities = await getActivities(moment().subtract(2, 'weeks').toISOString(), 'network-only');
+        activities = recentActivities;
+      } catch (error) {
+        // no error
+        try {
+          activities = await getActivities(null, 'cache-only');
+        } catch (error) {
+          // no error
+        }
+      }
+      // shuffleArray(activeTopics, activites);
+      activeTopics = this.weightRandomShuffleTopics(activeTopics, activities);
       if (this.startWithTopicId) {
         const topic = activeTopics.find(t => t.id === this.startWithTopicId);
         this.logger.debug('topic', topic);
@@ -337,9 +352,56 @@ export class Praying implements IRouteableComponent, ICustomElementViewModel {
       // TODO: log end of playlist
     }
   }
+
+  public weightRandomShuffleTopics(topics: (ITopic & {key?: string, weight?: number})[], activities: Activity[]) {
+
+    console.log('before shuffle', topics.map(t => t.id).join(', '));
+
+    const nbDaysSinceLastPrayerByTopic: {[key: string]: number} = {};
+    for (const topic of topics) {
+      nbDaysSinceLastPrayerByTopic[topic.id] = 15;
+    }
+    const momentNow = moment();
+    for (const activity of activities) {
+      if (activity.action === 'prayed' && activity.topicId && nbDaysSinceLastPrayerByTopic[activity.topicId]) {
+        let nbDays = Math.abs(momentNow.diff(moment(activity.date), 'days'));
+        if (nbDays === 0) {
+          nbDays = Math.abs(momentNow.diff(moment(activity.date), 'hours')) / 24;
+        }
+        if (nbDays === 0) {
+          nbDays = Math.abs(momentNow.diff(moment(activity.date), 'minutes')) / 24 / 60;
+        }
+        if (nbDays === 0) {
+          nbDays = 1 / 24 / 3600;
+        }
+        if (nbDaysSinceLastPrayerByTopic[activity.topicId] > nbDays) {
+          nbDaysSinceLastPrayerByTopic[activity.topicId] = nbDays;
+        }
+      }
+    }
+    for (const topic of topics) {
+      topic.key = topic.id;
+      topic.weight = nbDaysSinceLastPrayerByTopic[topic.id] || 15;
+    }
+    console.log('topics weights', topics.map(t => t.weight));
+    
+    const wl = new jwl();
+    for (const topic of topics) {
+      // console.log('topic.id', topic.id);
+      // console.log('topic.weight', topic.weight);
+      wl.push([topic.id, topic.weight, topic]);
+    }
+    // console.log('wl', wl);
+    (window as any).wl = wl;
+    const shuffled = wl.shuffle();
+    // console.log('shuffled', shuffled);
+
+    console.log('after shuffle weight', shuffled.map(t => t.data.weight).join(', '));
+    return shuffled.map(l => l.data);
+  }
 }
 
-function shuffleArray(array) {
+function shuffleArray(array, activites: Activity[]) {
   for (let i = array.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
       [array[i], array[j]] = [array[j], array[i]];
