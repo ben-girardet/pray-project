@@ -27,7 +27,6 @@ export class Global {
     this.logger = iLogger.scopeTo('global');
     this.isCordova = document.documentElement.classList.contains('cordova');
     this.setMomentLocale();
-    console.log('subscribing to i18n:locale:changed', this.eventAggregator);
     this.eventAggregator.subscribe('i18n:locale:changed', () => {
       // at the time of writing this code
       // the i18n:locale:changed is never received
@@ -44,9 +43,7 @@ export class Global {
   }
 
   public setMomentLocale() {
-    console.log('setMomentLocale');
     const locale = this.i18n.getLocale();
-    console.log('locale', locale);
     moment.locale(locale);
   }
 

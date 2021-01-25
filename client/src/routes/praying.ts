@@ -11,7 +11,6 @@ import { Global } from '../global';
 import { getActivities } from '../commands/activity';
 import moment from 'moment';
 import jwl from 'js-weighted-list';
-console.log('jwl', jwl);
 
 const neutral = '#16615F';
 const accent = '#3AC3BD';
@@ -355,7 +354,6 @@ export class Praying implements IRouteableComponent, ICustomElementViewModel {
 
   public weightRandomShuffleTopics(topics: (ITopic & {key?: string, weight?: number})[], activities: Activity[]) {
 
-    console.log('before shuffle', topics.map(t => t.id).join(', '));
 
     const nbDaysSinceLastPrayerByTopic: {[key: string]: number} = {};
     for (const topic of topics) {
@@ -383,20 +381,14 @@ export class Praying implements IRouteableComponent, ICustomElementViewModel {
       topic.key = topic.id;
       topic.weight = nbDaysSinceLastPrayerByTopic[topic.id] || 15;
     }
-    console.log('topics weights', topics.map(t => t.weight));
     
     const wl = new jwl();
     for (const topic of topics) {
-      // console.log('topic.id', topic.id);
-      // console.log('topic.weight', topic.weight);
       wl.push([topic.id, topic.weight, topic]);
     }
-    // console.log('wl', wl);
     (window as any).wl = wl;
     const shuffled = wl.shuffle();
-    // console.log('shuffled', shuffled);
 
-    console.log('after shuffle weight', shuffled.map(t => t.data.weight).join(', '));
     return shuffled.map(l => l.data);
   }
 }
