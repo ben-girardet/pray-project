@@ -3,8 +3,8 @@ import { client } from '../apollo';
 import { Activity } from 'shared/types/activity';
 
 export const getActivitiesQuery = gql`
-query Activities {
-  activities {
+query Activities($since: String) {
+  activities(since: $since) {
     id,
     userId,
     topicId,
@@ -17,12 +17,15 @@ query Activities {
   }
 }`;
 
-export async function getActivities(fetchPolicy: FetchPolicy = 'cache-first'): Promise<Activity[]> {
+export async function getActivities(since: string | null = null, fetchPolicy: FetchPolicy = 'cache-first'): Promise<Activity[]> {
   interface Res {
     activities: Activity[]
   }
   const result = await client.query<Res>({
     query: getActivitiesQuery, 
+    variables: {
+      since
+    },
     fetchPolicy});
   return result.data.activities;
 }
