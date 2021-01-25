@@ -17,18 +17,30 @@ export class TopicResolver {
 
   @Authorized(['user'])
   @Query(() => [Topic])
-  public async topics(@Ctx() context: Context, @Arg('sort', {nullable: true}) sort: SortBy, @Arg('status', {nullable: true}) status: String) {
+  public async topics(
+      @Ctx() context: Context,
+      @Arg('sort', {nullable: true}) sort: SortBy,
+      @Arg('status', {nullable: true}) status: String,
+      @Arg('since', {nullable: true}) since: String) {
     // Add a test of what is happening when login fails
     const userId = new mongoose.Types.ObjectId(context.user.userId);
     const userIdString = userId.toString();
     const cacheKey = `status:${status};sort:${JSON.stringify(sort)}`;
     const cacheValue = await getModelItems(TopicResolver.computeTopicsCacheKey(userIdString, cacheKey));
     if (cacheValue) {
-        return cacheValue.map((cv) => {
+        const objects = cacheValue.map((cv) => {
             const obj = new TopicModel(cv);
             obj.myShare = cv.myShare;
             return obj.toObjectWithMyShare();
         });
+        if (since && moment(since.toString()).isValid()) {
+            const sinceM = moment(since.toString());
+            const sinceObjects = objects.filter(a => {
+                return moment(a.date).isAfter(sinceM);
+            });
+            return sinceObjects;
+        }
+        return objects;
     }
     const sortBy = {}
     if (sort) {
@@ -53,6 +65,13 @@ export class TopicResolver {
     }).map(t => t.toObjectWithMyShare());
     await saveModelItems(TopicResolver.computeTopicsCacheKey(userIdString, cacheKey), objects, {time: 60 * 30});
     await TopicResolver.registerTopicsCacheKeyForUser(userIdString, cacheKey);
+    if (since && moment(since.toString()).isValid()) {
+        const sinceM = moment(since.toString());
+        const sinceObjects = objects.filter(a => {
+            return moment(a.date).isAfter(sinceM);
+        });
+        return sinceObjects;
+    }
     return objects;
   }
 
