@@ -8,7 +8,11 @@
   },
   "license": "UNLICENSED",
   "dependencies": {
-    "aurelia": "dev"
+    "@microsoft/fast-components": "^1.14.1",
+    "@microsoft/fast-element": "^0.21.1",
+    "aurelia": "dev",
+    "copy-webpack-plugin": "^7.0.0",
+    "lodash-es": "^4.17.20"
   },
   "devDependencies": {
     "eslint": "^7.18.0",

@@ -1,0 +1,26 @@
+/*********************/
+/*    04. Header     */
+/*********************/
+.header {
+	background-color: #fff;
+}
+
+.header .header-content {
+	padding-top: 8rem;
+	padding-bottom: 4rem;
+	text-align: center;
+}
+
+.header .text-container {
+	margin-bottom: 4rem;
+}
+
+.header h1 {
+	margin-bottom: 1.125rem;
+	font-size: 2.5rem;
+	line-height: 3.125rem;
+}
+
+.header .p-large {
+	margin-bottom: 1.875rem;
+}

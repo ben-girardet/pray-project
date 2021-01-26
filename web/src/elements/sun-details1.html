@@ -1,0 +1,66 @@
+<!-- Details 1 -->
+<require from="./lightbox.css"></require>
+<require from="./dialog.css"></require>
+<div class="basic-1">
+  <div class="container">
+      <div class="row">
+          <div class="col-lg-6 order-2 order-lg-1">
+              <div class="text-container">
+                  <h2>End to end encryption and Privacy by design</h2>
+                  <p>Sunago has only one mission: help you connect with God and your friends. We are not interested in your data and work hard to keep them safe and secure.</p>
+                  <a tabindex class="btn-solid-reg popup-with-move-anim" click.delegate="toggleDialog()">Learn more</a>
+              </div> <!-- end of text-container -->
+          </div> <!-- end of col -->
+          <div class="col-lg-6 order-1 order-lg-2">
+              <div class="image-container">
+                  <!-- <img class="img-fluid" src="images/details-1-office-worker.svg" alt="alternative"> -->
+                  <img class="img-fluid" src="images/walking.svg" alt="alternative">
+              </div> <!-- end of image-container -->
+          </div> <!-- end of col -->
+      </div> <!-- end of row -->
+  </div> <!-- end of container -->
+</div> <!-- end of basic-1 -->
+<!-- end of details 1 -->
+
+<fast-dialog aria-label="Pricacy Policy Details" modal="true" hidden ref="dialog">
+  <div class="container lightbox-basic dialog-container">
+    <div class="row">
+        <button tabindex title="Close (Esc)" type="button" class="mfp-close x-button" click.delegate="toggleDialog()">×</button>
+        <div class="col-lg-5 col-sm-4 order-2 order-lg-1">
+            <div class="image-container">
+                <img class="img-fluid" src="images/list-screen.jpg" alt="alternative">
+            </div> <!-- end of image-container -->
+        </div> <!-- end of col -->
+        <div class="col-lg-7 col-sm-8 order-1 order-lg-2">
+          <h3>Your data belongs to you</h3>
+          <hr>
+          <h5>Privacy by design*</h5>
+          <p>While developing Sunago we make everything we can to keep your data on your devices and not on our servers.</p>
+          <ul class="list-unstyled li-space-lg">
+              <li class="media">
+                  <i class="fas fa-check"></i><div class="media-body">We only keep on our servers the minimum data required to make the application work</div>
+              </li>
+              <li class="media">
+                  <i class="fas fa-check"></i><div class="media-body">Your identity and all your content is end-to-end encrypted</div>
+              </li>
+              <li class="media">
+                  <i class="fas fa-check"></i><div class="media-body">You can download a copy of your data at any time</div>
+              </li>
+              <li class="media">
+                  <i class="fas fa-check"></i><div class="media-body">You can edit and delete anything and once you do, it will be gone.</div>
+              </li>
+              <li class="media">
+                  <i class="fas fa-check"></i><div class="media-body">Quick formatting tools</div>
+              </li>
+              <li class="media">
+                  <i class="fas fa-check"></i><div class="media-body">Fast email checking</div>
+              </li>
+          </ul>
+          <a tabindex class="btn-outline-reg mfp-close as-button" click.delegate="toggleDialog()">Close</a>
+        </div> <!-- end of col -->
+        <div class="col-12 order-3">
+          <p style="color: #aaa;">*We are currently in our beta phase. It means that some of these features are still being developed. In order to provide a great user experience and quickly learn from user feedback, during the beta phase we tend to keep more data that we'll do in the long end. When you agree to be part of the beta program you agree that some of your data are kept on our servers and not all the data is end-to-end encrypted yet.</p>
+        </div>
+    </div> <!-- end of row -->
+</div> <!-- end of container -->
+</fast-dialog>

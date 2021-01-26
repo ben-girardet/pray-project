@@ -1,0 +1,55 @@
+/************************/
+/*     06. Services     */
+/************************/
+.cards-1 {
+	padding-top: 4rem;
+	padding-bottom: 1.625rem;
+	text-align: center;
+}
+
+.cards-1 h2 {
+	margin-bottom: 1rem;
+}
+
+.cards-1 .card {
+	max-width: 21rem;
+	margin-right: auto;
+	margin-bottom: 4.5rem;
+	margin-left: auto;
+	padding: 3.25rem 2rem 2rem 2rem;
+	border: 1px solid #c4d8dc;
+	border-radius: 0.5rem;
+	background: transparent;
+}
+
+.cards-1 .card {
+	border: none;
+}
+.cards-1 .card-image {
+	width: 6rem;
+	height: 6rem;
+	margin-right: auto;
+	margin-bottom: 2rem;
+	margin-left: auto;
+}
+.card-image-container {
+	width: 100%;
+	padding-top: 100%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+.card-image-container .card-image {
+	width: 100%;
+	height: auto;
+	position: absolute;
+	transform: translateY(-50%);
+}
+
+.cards-1 .card-title {
+	margin-bottom: 0.875rem;
+}
+
+.cards-1 .card-body {
+	padding: 0;
+}

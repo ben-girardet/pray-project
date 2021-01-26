@@ -2,6 +2,7 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const {BundleAnalyzerPlugin} = require('webpack-bundle-analyzer');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 const cssLoader = 'css-loader';
 
@@ -32,7 +33,7 @@ module.exports = function(env, { analyze }) {
     devServer: {
       historyApiFallback: true,
       open: !process.env.CI,
-      port: 9000,
+      port: 9001,
       lazy: false
     },
     module: {
@@ -48,6 +49,9 @@ module.exports = function(env, { analyze }) {
     },
     plugins: [
       new HtmlWebpackPlugin({ template: 'index.ejs' }),
+      new CopyWebpackPlugin({patterns: [
+        { from: 'static', to: path.resolve(__dirname, 'dist') },
+      ]}),
       analyze && new BundleAnalyzerPlugin()
     ].filter(p => p)
   }

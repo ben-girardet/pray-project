@@ -1,0 +1,29 @@
+/***********************/
+/*     11. Request     */
+/***********************/
+.form-1 {
+	padding-top: 6.875rem;
+	padding-bottom: 6.25rem;
+	background-color: #f9fafc;
+}
+
+.form-1 h2 {
+	margin-bottom: 1.25rem;
+}
+
+.form-1 .list-unstyled {
+	margin-top: 1.375rem;
+}
+
+.form-1 .list-unstyled .fas {
+	color: var(--accent);
+	line-height: 1.375rem;
+}
+
+.form-1 .list-unstyled .media-body {
+	margin-left: 0.625rem;
+}
+
+.form-1 .text-container {
+	margin-bottom: 3.5rem;
+}

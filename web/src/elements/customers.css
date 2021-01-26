@@ -1,0 +1,19 @@
+/*************************/
+/*     05. Customers     */
+/*************************/
+.slider-1 {
+	padding-top: 2.25rem;
+	padding-bottom: 2.125rem;
+	text-align: center;
+}
+
+.slider-1 h5 {
+	margin-bottom: 0.75rem;
+}
+
+.slider-1 .slider-container {
+	padding-top: 2.75rem;
+	padding-bottom: 2.75rem;
+	border-radius: 0.5rem;
+	background-color: #f7fcfd;
+}

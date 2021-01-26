@@ -1,0 +1,69 @@
+/****************************/
+/*     13. Testimonials     */
+/****************************/
+.slider-2 {
+	padding-top: 7.5rem;
+	padding-bottom: 7rem;
+	background: url('../images/testimonials-background.jpg') center center no-repeat;
+	background-size: cover; 
+}
+
+.slider-2 .image-container {
+	margin-bottom: 4rem;
+}
+
+.slider-2 h2 {
+	margin-bottom: 2.5rem;
+	text-align: center;
+}
+
+.slider-2 .slider-container {
+	position: relative;
+}
+
+.slider-2 .swiper-container {
+	position: static;
+	width: 90%;
+	text-align: center;
+}
+
+.slider-2 .swiper-button-prev:focus,
+.slider-2 .swiper-button-next:focus {
+	/* even if you can't see it chrome you can see it on mobile device */
+	outline: none;
+}
+
+.slider-2 .swiper-button-prev {
+	left: -0.5rem;
+	background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20viewBox%3D'0%200%2028%2044'%3E%3Cpath%20d%3D'M0%2C22L22%2C0l2.1%2C2.1L4.2%2C22l19.9%2C19.9L22%2C44L0%2C22L0%2C22L0%2C22z'%20fill%3D'%23626262'%2F%3E%3C%2Fsvg%3E");
+	background-size: 1.125rem 1.75rem;
+}
+
+.slider-2 .swiper-button-next {
+	right: -0.5rem;
+	background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20viewBox%3D'0%200%2028%2044'%3E%3Cpath%20d%3D'M27%2C22L27%2C22L5%2C44l-2.1-2.1L22.8%2C22L2.9%2C2.1L5%2C0L27%2C22L27%2C22z'%20fill%3D'%23626262'%2F%3E%3C%2Fsvg%3E");
+	background-size: 1.125rem 1.75rem;
+}
+
+.slider-2 .card {
+	position: relative;
+	border: none;
+	background-color: transparent;
+}
+
+.slider-2 .card-image {
+	width: 7rem;
+	height: 7rem;
+	margin-right: auto;
+	margin-bottom: 0.25rem;
+	margin-left: auto;
+	border-radius: 50%;
+}
+
+.slider-2 .card-body {
+	padding-bottom: 0;
+}
+
+.slider-2 .testimonial-author {
+	margin-bottom: 0;
+}

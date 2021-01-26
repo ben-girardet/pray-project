@@ -1,0 +1,55 @@
+<!-- Details 2 -->
+<div class="basic-2">
+  <div class="container">
+      <div class="row">
+          <div class="col-lg-6">
+              <div class="image-container">
+                  <!-- <img class="img-fluid" src="images/details-2-office-team-work.svg" alt="alternative"> -->
+                  <img class="img-fluid" src="images/out-of-the-way.svg" alt="alternative">
+              </div> <!-- end of image-container -->
+          </div> <!-- end of col -->
+          <div class="col-lg-6">
+              <div class="text-container">
+                  <h2>Helping you - and getting out of the way</h2>
+                  <p>With Sunago we want that you connect with God - not with an App. The idea behind Sunago is to place your content (topics, picture) front and center and only provide meaningful features that trully help you in your prayer time.</p>
+                  <a tabindex class="btn-solid-reg popup-with-move-anim" click.delegate="toggleDialog()">See the tips</a>
+              </div> <!-- end of text-container -->
+          </div> <!-- end of col -->
+      </div> <!-- end of row -->
+  </div> <!-- end of container -->
+</div> <!-- end of basic-2 -->
+<!-- end of details 2 -->
+
+  <!-- Details Lightbox 2 -->
+<fast-dialog aria-label="Pricacy Policy Details" modal="true" hidden ref="dialog" style="--dialog-height: 550px;">
+  <div class="container lightbox-basic dialog-container">
+      <div class="row">
+          <button title="Close (Esc)" type="button" class="mfp-close x-button" click.delegate="toggleDialog()">×</button>
+          <div class="col-lg-5 col-sm-4">
+              <div class="image-container">
+                  <img class="img-fluid" src="images/detail-screen-top.jpg" alt="alternative">
+              </div> <!-- end of image-container -->
+          </div> <!-- end of col -->
+          <div class="col-lg-7 col-sm-8">
+              <h3>Beautiful and engaging</h3>
+              <hr>
+              <h5>Our tips for a great user experience</h5>
+              <ul class="list-unstyled li-space-lg">
+                  <li class="media">
+                      <i class="fas fa-check"></i><div class="media-body">Add pictures. Really, make the effort to have images related to your topics.</div>
+                  </li>
+                  <li class="media">
+                      <i class="fas fa-check"></i><div class="media-body">Write short and specific prayer topics.</div>
+                  </li>
+                  <li class="media">
+                      <i class="fas fa-check"></i><div class="media-body">Share topics with friends and family</div>
+                  </li>
+                  <li class="media">
+                      <i class="fas fa-check"></i><div class="media-body">Take time to listen to God while you pray and write what you hear, think, how you feel.</div>
+                  </li>
+              </ul>
+              <a tabindex class="btn-outline-reg mfp-close as-button" click.delegate="toggleDialog()">Close</a>
+          </div> <!-- end of col -->
+      </div> <!-- end of row -->
+  </div> <!-- end of container -->
+</fast-dialog>
