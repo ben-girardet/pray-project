@@ -47,12 +47,13 @@ import { ActivityMessageResolver } from './resolvers/activity.messages';
 import { ActivityTopicResolver } from './resolvers/activity.topic';
 import { RegistrationResolver } from './resolvers/registration';
 import { AuthResolver, customAuthChecker } from './resolvers/auth';
+import { CustomerRequestResolver } from './resolvers/customer-request';
 const resolvers: NonEmptyArray<Function> | NonEmptyArray<string> =
     [UserResolver, UserMessagesResolver, TopicResolver, TopicMessagesResolver,
         TopicPrayersResolver, TopicUserResolver, PrayerUserResolver,
         ActivityResolver, ActivityMessageResolver, ActivityTopicResolver, ActivityUserResolver,
         MessageResolver, MessageUserResolver, RegistrationResolver, AuthResolver,
-        FriendshipResolver, FriendshipUserResolver];
+        FriendshipResolver, FriendshipUserResolver, CustomerRequestResolver];
 
 // Sentry
 import * as Sentry from '@sentry/node';
@@ -72,7 +73,7 @@ console.log('SENTRY_DSN', process.env.SENTRY_DSN);
 console.log('SENTRY_ENV', process.env.SENTRY_ENV);
 console.log('SENTRY_RELEASE', process.env.SENTRY_RELEASE);
 
-const whitelist = ['http://localhost:9000', 'https://sunago.app', 'https://dev.sunago.app', 'https://www.sunago.app'];
+const whitelist = ['http://localhost:9000', 'http://localhost:9001', 'https://sunago.app', 'https://dev.sunago.app', 'https://www.sunago.app'];
 const corsOptions: CorsOptions = {
     origin: function (origin, callback) {
         if (origin === undefined || origin === null || origin === 'null') {
