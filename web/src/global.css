@@ -3,6 +3,10 @@
 	--accent: #3AC3BD;
 }
 
+[id] {
+  scroll-margin-top: 2em;
+}
+
 body,
 html {
   width: 100%;

@@ -47,9 +47,51 @@
 }
 
 .cards-1 .card-title {
+  margin-top: 0.875rem;
 	margin-bottom: 0.875rem;
 }
 
 .cards-1 .card-body {
 	padding: 0;
+}
+
+@media (min-width: 768px) {
+	
+	.cards-1 .card {
+		display: inline-block;
+		max-width: 17.125rem;
+		vertical-align: top;
+	}
+
+	.cards-1 .col-lg-12 div.card:nth-child(3n+2) {
+		margin-right: 2rem;
+		margin-left: 2rem;
+  }
+}
+
+@media (min-width: 992px) {
+	
+	.cards-1 .card {
+		display: inline-block;
+		max-width: 17.125rem;
+		vertical-align: top;
+	}
+
+	.cards-1 .col-lg-12 div.card:nth-child(3n+2) {
+		margin-right: 2rem;
+		margin-left: 2rem;
+  }
+}
+
+@media (min-width: 1200px) {
+
+	.cards-1 .card {
+		max-width: 21rem;
+	}
+
+	.cards-1 .col-lg-12 div.card:nth-child(3n+2) {
+		margin-right: 2.875rem;
+		margin-left: 2.875rem;
+	}
+
 }

@@ -7,39 +7,41 @@
   
   <!-- Mobile Menu Toggle Button -->
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-awesome fas fa-bars"></span>
-      <span class="navbar-toggler-awesome fas fa-times"></span>
+      <!-- <span class="navbar-toggler-awesome fas fa-bars"></span>
+      <span class="navbar-toggler-awesome fas fa-times"></span> -->
+      <pray-icon weight="2" icon="MenuAlt1" class="navbar-toggler-p-icon fas fa-bars"></pray-icon>
+      <pray-icon weight="2" icon="X" class="navbar-toggler-p-icon fas fa-times"></pray-icon>
   </button>
   <!-- end of mobile menu toggle button -->
 
   <div class="collapse navbar-collapse" id="navbarsExampleDefault">
       <ul class="navbar-nav ml-auto">
           <li class="nav-item">
-              <a class="nav-link page-scroll" href="#header">Home <span class="sr-only">(current)</span></a>
+              <a class="nav-link" tabindex click.delegate="home()">Home <span class="sr-only">(current)</span></a>
           </li>
           <li class="nav-item" style="display: none;">
-              <a class="nav-link page-scroll" href="#services">Services</a>
+              <a class="nav-link" tabindex click.delegate="goto('#services')">Services</a>
           </li>
           <li class="nav-item" style="display: none;">
-              <a class="nav-link page-scroll" href="#pricing">Pricing</a>
+              <a class="nav-link" tabindex click.delegate="goto('#pricing')">Pricing</a>
           </li>
           <li class="nav-item">
-              <a class="nav-link page-scroll" href="#request">Join the Beta</a>
+              <a class="nav-link" tabindex click.delegate="goto('#request')">Join the Beta</a>
           </li>
 
           <!-- Dropdown Menu -->          
           <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle page-scroll" href="#about" id="navbarDropdown" role="button" aria-haspopup="true" aria-expanded="false">About</a>
+              <a class="nav-link dropdown-toggle" tabindex id="navbarDropdown" role="button" aria-haspopup="true" aria-expanded="false">About</a>
               <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                  <a class="dropdown-item" href="terms-conditions.html"><span class="item-text">Terms Conditions</span></a>
+                  <a class="dropdown-item" tabindex load="../terms"><span class="item-text">Terms Conditions</span></a>
                   <div class="dropdown-items-divide-hr"></div>
-                  <a class="dropdown-item" href="privacy-policy.html"><span class="item-text">Privacy Policy</span></a>
+                  <a class="dropdown-item" tabindex load="../privacy"><span class="item-text">Privacy Policy</span></a>
               </div>
           </li>
           <!-- end of dropdown menu -->
 
           <li class="nav-item">
-              <a class="nav-link page-scroll" href="#contact">Contact</a>
+              <a class="nav-link" tabindex click.delegate="goto('#contact')">Contact</a>
           </li>
       </ul>
       <span class="nav-item social-icons" style="display: none;">

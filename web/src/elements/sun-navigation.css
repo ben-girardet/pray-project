@@ -36,7 +36,8 @@
 	padding: 0.625rem 0.75rem 0.625rem 0.75rem;
 	color: #393939;
 	text-decoration: none;
-	transition: all 0.2s ease;
+  transition: all 0.2s ease;
+  cursor: pointer;
 }
 
 .navbar-custom .nav-item .nav-link:hover,
@@ -109,19 +110,19 @@
 	font-size: 2rem;
 }
 
-.navbar-custom button[aria-expanded='false'] .navbar-toggler-awesome.fas.fa-times{
+.navbar-custom button[aria-expanded='false'] .navbar-toggler-p-icon[icon=X]{
 	display: none;
 }
 
-.navbar-custom button[aria-expanded='false'] .navbar-toggler-awesome.fas.fa-bars{
+.navbar-custom button[aria-expanded='false'] .navbar-toggler-p-icon[icon=MenuAlt1]{
 	display: inline-block;
 }
 
-.navbar-custom button[aria-expanded='true'] .navbar-toggler-awesome.fas.fa-bars{
+.navbar-custom button[aria-expanded='true'] .navbar-toggler-p-icon[icon=MenuAlt1]{
 	display: none;
 }
 
-.navbar-custom button[aria-expanded='true'] .navbar-toggler-awesome.fas.fa-times{
+.navbar-custom button[aria-expanded='true'] .navbar-toggler-p-icon[icon=X]{
 	display: inline-block;
 	margin-right: 0.125rem;
 }
