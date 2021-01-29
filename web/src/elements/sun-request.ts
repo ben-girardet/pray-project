@@ -1,4 +1,5 @@
 import { inject, HttpClient, json } from 'aurelia';
+import conf from '../config';
 
 @inject(HttpClient)
 export class SunRequest {
@@ -17,10 +18,7 @@ export class SunRequest {
 
   public constructor(private http: HttpClient) {
     http.configure((config) => {
-      // config.withBaseUrl(conf.apiHost);
-      config.withBaseUrl('http://localhost:3000/graphql');
-      // TODO: interceptors  ?
-      // TODO: implement retry ?
+      config.withBaseUrl(`${conf.apiHost}/graphql`);
       return config;
     });
   }
@@ -45,6 +43,13 @@ mutation CreateCustomerRequest($name: String!, $email: String, $mobile: String, 
     }});
     const data = await result.json();
     console.log('data', data);
+    if (data && data.errors) {
+      throw new Error(`Error: ${data.errors[0].message}`);
+    } 
+    if (data.data.createCustomerRequest) {
+      return true;
+    }
+    throw new Error('Unknown error'); 
   }
 
   public async post(event: Event) {
