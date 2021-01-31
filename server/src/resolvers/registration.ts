@@ -68,6 +68,67 @@ export class RegistrationResolver {
         return response.toObject();
     }
 
+    @Mutation(() => Token)
+    public async requestMobileCode(@Arg('data') data: RegisterInput) {
+        if (!data.mobile) {
+            throw new Error('Registration requires a mobile');
+        }
+        if (data.mobile.substr(0, 1) !== '+') {
+            throw new Error('Mobile must be sent in internation format starting with a plus sign');
+        }
+        const smsapi = new SMSAPI({ oauth: {
+            accessToken: process.env.SMSAPI_TOKEN
+        }});
+        const token = new TokenModel();
+        token.setToken();
+        token.data = data;
+
+        const isTestAccount = data.mobile.substr(0, 8) === '+4170000';
+        if (isTestAccount) {
+            token.code = process.env.TEST_CODE || '001122';
+        }
+
+        const response = await token.save();
+
+        if (!isTestAccount) {
+            await smsapi.message
+                .sms()
+                //.from(app.name)
+                .from('Info')
+                .to(data.mobile)
+                .message('Sunago registration code: ' + token.code)
+                .execute(); // return Promise
+        }
+        return response.toObject();
+    }
+
+    @Mutation(() => User)
+    public async validateCode(@Arg('data') data: ValidateRegistrationInput) {
+        const token = await TokenModel.findValid(data.token, data.code);
+        if (data.type === 'mobile' && !token.data.mobile) {
+            throw new Error('Token mobile is empty');
+        }
+        const existingUser = await UserModel.findOne({$or: [{email: token.data.email, emailValidated: true}, {mobile: token.data.mobile, mobileValidated: true}]});
+        if (existingUser) {
+            return existingUser.toObject();
+        }
+        const newUser = new UserModel();
+        newUser.firstname = token.data.firstname || '';
+        newUser.lastname = token.data.lastname || '';
+        newUser.email = token.data.email;
+        newUser.mobile = token.data.mobile;
+        newUser.roles = ['user'];
+        const pair = await this.generatePair();
+        newUser.privateKey = pair.epriv;
+        newUser.publicKey = pair.epub;
+        newUser.state = 0;
+        newUser.mobileValidated = true;
+        const createdUser = await newUser.save();
+        token.used = true;
+        await token.save();
+        return createdUser.toObject();
+    }
+
     @Mutation(() => User)
     public async validateRegistration(@Arg('data') data: ValidateRegistrationInput) {
         if (data.type !== 'email' && data.type !== 'mobile') {

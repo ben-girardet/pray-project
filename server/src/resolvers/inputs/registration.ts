@@ -25,9 +25,13 @@ export class ValidateRegistrationInput {
     @Field()
     code: string;
 
-    @Field()
+    // TODO: once the process of login is finished to go only with SMS
+    // then we won't need this anymore
+    @Field({nullable: true})
     type: 'email' | 'mobile';
 
-    @Field()
+    // TODO: once the process of login is finished to go only with SMS
+    // then we won't need this anymore
+    @Field({nullable: true})
     password: string;
 }
