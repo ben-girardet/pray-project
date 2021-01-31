@@ -1,0 +1,57 @@
+<!-- Request Form -->
+<div class="form-container" style="margin-top: 64px;">
+  <form submit.delegate="post($event)" id="requestForm" data-toggle="validator" data-focus="false">
+      <div class="form-group" if.bind="visibleFields.includes('name')">
+          <input value.bind="name" type="text" class="form-control-input ${name ? 'notEmpty':''}" id="${formName}-name" required>
+          <label class="label-control" for="${formName}-name">Full name</label>
+          <div class="help-block with-errors"></div>
+      </div>
+      <div class="form-group" if.bind="visibleFields.includes('email')">
+          <input value.bind="email" type="email" class="form-control-input ${email ? 'notEmpty':''}" id="${formName}-email">
+          <label class="label-control" for="${formName}-email">Email</label>
+          <div class="help-block with-errors"></div>
+          <small class="form-text text-muted">
+            We'll never share your email with anyone else.
+          </small>
+      </div>
+      <div class="form-group" if.bind="visibleFields.includes('mobile')">
+          <input value.bind="mobile" type="text" class="form-control-input ${mobile ? 'notEmpty':''}" id="${formName}-mobile">
+          <label class="label-control" for="${formName}-mobile">Phone</label>
+          <div class="help-block with-errors"></div>
+      </div>
+      <div class="form-group" if.bind="requestTypes.length > 1 && visibleFields.includes('type')">
+          <select class="form-control-select" id="${formName}-select">
+              <option class="select-option" value="" disabled selected>Interested in...</option>
+              <option class="select-option" value="Personal Loan">Starter</option>
+              <option class="select-option" value="Car Loan">Medium</option>
+              <option class="select-option" value="House Loan">Complete</option>
+          </select>
+          <div class="help-block with-errors"></div>
+      </div>
+      <div class="form-group" if.bind="visibleFields.includes('message')">
+        <textarea value.bind="message" class="form-control-textarea ${message ? 'notEmpty':''}" id="${formName}-message" required></textarea>
+        <label class="label-control" for="${formName}-message">${messageLabel}</label>
+        <div class="help-block with-errors"></div>
+        <small class="form-text text-muted" if.bind="messageHelper">
+          ${messageHelper}
+        </small>
+    </div>
+      <div class="form-group checkbox">
+          <input checked.bind="acceptTerms" type="checkbox" id="${formName}-terms" value="Agreed-to-Terms" name="rterms" required>I agree with Sunago's stated <a tabindex load="../privacy">Privacy Policy</a> and <a tabindex load="../terms">Terms & Conditions</a>
+          <div class="help-block with-errors"></div>
+      </div>
+      <div class="form-group">
+          <button type="submit" class="form-control-submit-button">${submitText}</button>
+      </div>
+  </form>
+</div> <!-- end of form-container -->
+
+<fast-dialog style="--dialog-width:auto;--dialog-height: auto;" aria-label="Pricacy Policy Details" modal="true" hidden ref="dialog">
+  <div class="sun-form__dialog">
+    <p>${dialogMessage}</p>
+    <p>
+      <a tabindex class="btn-outline-reg as-button" click.delegate="toggleDialog()">${dialogButtonText}</a>
+    </p>
+  </div>
+</fast-dialog>
+<!-- end of request form -->

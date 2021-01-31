@@ -1,4 +1,5 @@
 <!-- Contact -->
+<require from="./sun-form"></require>
 <style type="text/css">
   .form-2 {
     background: url('../images/contact-background.jpg') center center no-repeat;
@@ -18,8 +19,19 @@
           <div class="col-lg-3"></div>
           <div class="col-lg-6">
               
+              <sun-form
+                form-name="contact",
+                request-types.bind="['question', 'feedback']"
+                visible-fields.bind="['name', 'email', 'message']",
+                message-label="Your message"
+                message-helper=""
+                submit-text="Send"
+              >
+
+              </sun-form>
+
               <!-- Contact Form -->
-              <form id="contactForm" data-toggle="validator" data-focus="false">
+              <form if.bind="false" id="contactForm" data-toggle="validator" data-focus="false">
                   <div class="form-group">
                       <input type="text" class="form-control-input" id="cname" required>
                       <label class="label-control" for="cname">Name</label>

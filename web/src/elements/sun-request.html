@@ -1,5 +1,6 @@
 <!-- Request -->
 <require from="./forms.css"></require>
+<require from="./sun-form"></require>
 <div id="request" class="form-1">
   <div class="container">
       <div class="row">
@@ -9,15 +10,15 @@
                   <p>We are working hard to make Sunago the best possible companion for your prayer life. While we are not quite ready for public launch, you can already join our Beta phase and enjoy this beautiful app.</p>
                   <ul class="list-unstyled li-space-lg">
                       <li class="media">
-                          <i class="fas fa-check"></i>
+                          <pray-icon weight="2" style="color:var(--accent);" icon="Check" size="small"></pray-icon>
                           <div class="media-body"><strong class="blue">Available on iPhone</strong> with <a href="https://testflight.apple.com" target="_blank">Testflight</a></div>
                       </li>
                       <li class="media">
-                          <i class="fas fa-check"></i>
+                          <pray-icon weight="2" style="color:var(--accent);" icon="Check" size="small"></pray-icon>
                           <div class="media-body"><strong class="blue">Give us your feedbacks</strong> of both what you love and hate</div>
                       </li>
                       <li class="media">
-                          <i class="fas fa-check"></i>
+                          <pray-icon weight="2" style="color:var(--accent);" icon="Check" size="small"></pray-icon>
                           <div class="media-body"><strong class="blue">Please understand</strong> that not all features are already finished*</div>
                       </li>
                   </ul>
@@ -25,62 +26,25 @@
           </div> <!-- end of col -->
           <div class="col-lg-6">
 
-              <!-- Request Form -->
-              <div class="form-container" style="margin-top: 64px;">
-                  <form submit.delegate="post($event)" id="requestForm" data-toggle="validator" data-focus="false">
-                      <div class="form-group">
-                          <input value.bind="name" type="text" class="form-control-input ${name ? 'notEmpty':''}" id="rname" name="rname" required>
-                          <label class="label-control" for="rname">Full name</label>
-                          <div class="help-block with-errors"></div>
-                      </div>
-                      <div class="form-group">
-                          <input value.bind="email" type="email" class="form-control-input ${email ? 'notEmpty':''}" id="remail" name="remail" required>
-                          <label class="label-control" for="remail">Email</label>
-                          <div class="help-block with-errors"></div>
-                          <small class="form-text text-muted">
-                            We'll never share your email with anyone else. We need it to send you the Testflight invitation
-                          </small>
-                      </div>
-                      <!-- <div class="form-group">
-                          <input value.bind="mobile" type="text" class="form-control-input ${mobile ? 'notEmpty':''}" id="rphone" name="rphone">
-                          <label class="label-control" for="rphone">Phone</label>
-                          <div class="help-block with-errors"></div>
-                      </div> -->
-                      <div class="form-group" style="display: none;">
-                          <select class="form-control-select" id="rselect">
-                              <option class="select-option" value="" disabled selected>Interested in...</option>
-                              <option class="select-option" value="Personal Loan">Starter</option>
-                              <option class="select-option" value="Car Loan">Medium</option>
-                              <option class="select-option" value="House Loan">Complete</option>
-                          </select>
-                          <div class="help-block with-errors"></div>
-                      </div>
-                      <div class="form-group">
-                        <textarea value.bind="message" class="form-control-textarea ${message ? 'notEmpty':''}" id="cmessage" required></textarea>
-                        <label class="label-control" for="cmessage">What is the reason you want to join the Beta</label>
-                        <div class="help-block with-errors"></div>
-                        <small class="form-text text-muted">
-                          Please tell us one or more reason why you're interested in testing and using Sunago.
-                        </small>
-                    </div>
-                      <div class="form-group checkbox">
-                          <input checked.bind="acceptTerms" type="checkbox" id="rterms" value="Agreed-to-Terms" name="rterms" required>I agree with Sunago's stated <a tabindex load="../privacy">Privacy Policy</a> and <a tabindex load="../terms">Terms & Conditions</a>
-                          <div class="help-block with-errors"></div>
-                      </div>
-                      <div class="form-group">
-                          <button type="submit" class="form-control-submit-button">REQUEST</button>
-                      </div>
-                      <div class="form-message">
-                          <div id="rmsgSubmit" class="${formMessageClasses}" ref="formMessageElement">${formMessage}</div>
-                      </div>
-                  </form>
-              </div> <!-- end of form-container -->
-              <!-- end of request form -->
+              <sun-form
+                form-name="request-beta",
+                request-types.bind="['request-beta']"
+                visible-fields.bind="['name', 'email', 'message']",
+                message-label="What is the reason you want to join the Beta"
+                message-helper="Please tell us one or more reason why you're interested in Sunago."
+                submit-text="Request"
+              >
 
-              <p style="color: #aaa;"><sup>1</sup> As part of the beta program you understant that some features are still being developed. In order to provide a great user experience and quickly learn from user feedback, during the beta phase we tend to keep more data on our servers that we'll do in the long end. Also not all data are yet end-to-end encrypted. By participating to the Beta program you agree to share more informations than usual. We trust that you'll enjoy this app and we thank you so much for being a part of this journey with us.</p>
+              </sun-form>
 
-          </div> <!-- end of col -->
-      </div> <!-- end of row -->
+              
+            </div> <!-- end of col -->
+            <div class="col-lg-12">
+              <div class="text-container">
+                <p style="color: #aaa;"><sup>1</sup> As part of the beta program you understant that some features are still being developed. In order to provide a great user experience and quickly learn from user feedback, during the beta phase we tend to keep more data on our servers that we'll do in the long end. Also not all data are yet end-to-end encrypted. By participating to the Beta program you agree to share more informations than usual. We trust that you'll enjoy this app and we thank you so much for being a part of this journey with us.</p>
+              </div>
+            </div>
+          </div> <!-- end of row -->
   </div> <!-- end of container -->
 </div> <!-- end of form-1 -->
 <!-- end of request -->

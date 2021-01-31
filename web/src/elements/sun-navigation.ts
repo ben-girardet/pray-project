@@ -62,9 +62,6 @@ export class SunNavigation {
       this.pageScroll(anchorSelector);
     } else {
       await this.router.load(`../home(${anchorSelector})`);
-      this.platform.domReadQueue.queueTask(() => {
-        // this.pageScroll(anchorSelector);
-      });
     }
   }
 

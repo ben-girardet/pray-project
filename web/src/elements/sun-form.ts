@@ -1,8 +1,15 @@
-import { inject, HttpClient, json } from 'aurelia';
+import { inject, HttpClient, json, bindable } from 'aurelia';
 import conf from '../config';
 
 @inject(HttpClient)
-export class SunRequest {
+export class SunForm {
+
+  @bindable formName: string = '';
+  @bindable requestTypes: string[] = [];
+  @bindable visibleFields: string[] = ['name', 'email', 'mobile', 'message', 'type'];
+  @bindable messageLabel: string = 'Message';
+  @bindable messageHelper: string = '';
+  @bindable submitText: string = 'Send';
 
   public name: string;
   public email: string;
@@ -10,9 +17,10 @@ export class SunRequest {
   public message: string;
   public type: string = 'request-beta';
   public acceptTerms: boolean = true;
-  public formMessageElement: HTMLElement;
-  public formMessage: string = '';
-  public formMessageClasses: string = '';
+
+  public dialog: HTMLElement;
+  public dialogMessage: string = '';
+  public dialogButtonText: string = 'Close';
 
   public constructor(private http: HttpClient) {
     http.configure((config) => {
@@ -40,7 +48,6 @@ mutation CreateCustomerRequest($name: String!, $email: String, $mobile: String, 
       "content-type": "application/json"
     }});
     const data = await result.json();
-    console.log('data', data);
     if (data && data.errors) {
       throw new Error(`Error: ${data.errors[0].message}`);
     } 
@@ -55,7 +62,9 @@ mutation CreateCustomerRequest($name: String!, $email: String, $mobile: String, 
     if (this.acceptTerms) {
       try {
         await this.postCustomerRequest(this.name, this.email, this.mobile, this.message, this.type);
-        this.success('Thanks you for your request. We\'ll get back to you shortly');
+        this.success(`Thanks you so much for your interest in Sungao. We can't wait for you to discover this app.
+        <br><br>We'll get back to you very soon with details on how to get access to the beta. And please remember: we love your feedbacks. Good and bad. They all help us to make Sunago better.
+        <br><br>Till soon.`);
         this.name = '';
         this.email = '';
         this.mobile = '';
@@ -70,28 +79,22 @@ mutation CreateCustomerRequest($name: String!, $email: String, $mobile: String, 
   }
 
   public error(msg: string) {
-    this.formMessageClasses = 'h3 text-center';
-    this.formMessageClasses = 'h3 text-center tada animated';
-    this.formMessageElement.addEventListener('animationend', () => {
-      this.formMessageClasses = 'h3 text-center';
-    }, {once: true});
-    this.formMessage = msg;
-    this.formMessageElement.scrollIntoView({
-      behavior: 'smooth',
-      block: 'center',
-      inline: 'center'
-    });
+    this.dialogMessage = msg;
+    this.dialogButtonText = 'OK';
+    this.toggleDialog();
+  }
+
+  public toggleDialog() {
+    if (this.dialog.hasAttribute('hidden')) {
+      this.dialog.removeAttribute('hidden');
+    } else {
+      this.dialog.setAttribute('hidden', 'hidden');
+    }
   }
 
   public success(msg: string) {
-    this.formMessageClasses = '';
-    this.formMessageClasses = 'h3 text-center';
-    this.formMessage = msg;
-    this.formMessageElement.scrollIntoView({
-      behavior: 'smooth',
-      block: 'center',
-      inline: 'center'
-    });
+    this.dialogMessage = msg;
+    this.dialogButtonText = 'Close';
+    this.toggleDialog();
   }
-
 }

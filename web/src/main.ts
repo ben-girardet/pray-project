@@ -17,7 +17,8 @@ import { 
 PrayIcon;
 
 Aurelia
-  .register(RouterConfiguration)
+  // .register(RouterConfiguration)
+  .register(RouterConfiguration.customize({ useUrlFragmentHash: false }))
   // .register(LoggerConfiguration.create({$console: console, level: LogLevel.debug, colorOptions: ColorOptions.noColors}))
   .app(MyApp)
   .start();
