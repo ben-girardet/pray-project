@@ -1,0 +1,47 @@
+
+<div class="start start-welcome start--current">
+  <pray-help-container>
+    <img src="images/stories/welcome.svg">
+    <p class="slogan" t="welcome.slogan">Together in prayer. Wherever. Whenever.</p>
+    <p style="margin-top: auto;">
+      <fast-anchor appearance="lightweight" t="misc.Terms of use">Terms of use</fast-anchor>
+      <br /><fast-anchor appearance="lightweight" t="misc.Privacy Policy">Privacy policy</fast-anchor>
+    </p>
+    <fast-button appearance="accent" click.delegate="next('mobile')" t="Continue">Continue</fast-button>
+  </pray-help-container>
+</div>
+
+<div class="start start-mobile">
+  <h2>Start by entering your mobile number</h2>
+  <fast-select placeholder="Your country" value.bind="regionCode" change.delegate="countryChanged()">
+    <fast-option value="ch">Suisse</fast-option>
+    <fast-option value="fr">France</fast-option>
+  </fast-select>
+  <fast-text-field placeholder="Mobile Number" value.bind="mobile" pattern="[0-9]*" autofocus change.delegate="mobileChanged()" keyup.delegate="mobileChanged()">
+    <span class="start__region-code" slot="start">+${countryCode}</span>
+  </fast-text-field>
+  <fast-button disabled.bind="!isMobileValid" appearance="accent" click.delegate="requestMobileCode()" t="Continue">Continue</fast-button>
+</div>
+
+<div class="start start-validation">
+  <h2>Enter the code received on your mobile</h2>
+  <fast-text-field placeholder="The code" value.bind="validationCode" pattern="[0-9]*" autofocus change.delegate="codeChanged()" keyup.delegate="codeChanged()"></fast-text-field>
+  <fast-button disabled.bind="validationCode.length !== 6" appearance="accent" click.delegate="validateCode()" t="Continue">Continue</fast-button>
+  <fast-anchor appearance="lightweight" style="margin-top: 64px;" click.delegate="prev('mobile')">Wrong number ?</fast-anchor>
+</div>
+
+<div class="start start-identity">
+  <h2>Welcome in Sunago !</h2>
+  <p>Setup your profile and enjoy...</p>
+  <fast-text-field placeholder="Firstname" value.bind="firstname">
+    <!-- <pray-icon icon="User" size="sm" slot="start"></pray-icon> -->
+  </fast-text-field>
+  <fast-text-field placeholder="Lastname" value.bind="lastname">
+    <!-- <pray-icon icon="Key" size="sm" slot="start"></pray-icon> -->
+  </fast-text-field>
+
+  <label style="text-align: center; margin-top: 24px; margin-bottom: 16px; color: var(--accent-color);">You're profile picture</label>
+  <avatar-selection value.bind="profilePic" original.bind="preview" view-model.ref="avatar"></avatar-selection>
+
+  <fast-button appearance="accent" click.trigger="setIdentity()">Next</fast-button>
+</div>

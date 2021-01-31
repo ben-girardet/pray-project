@@ -20,19 +20,19 @@ export class Token implements IToken {
     @prop()
     public token: string;
 
-    @Field(() => String)
+    // @Field(() => String)
     @prop()
-    public code: string;
+    public code?: string;
 
     @prop({nullable: true, select: true})
-    public data: any;
+    public data?: any;
 
     @Field(() => Date)
     @prop()
     public expires: Date;
 
     @prop()
-    public used: boolean;
+    public used?: boolean;
 
     public setToken() {
         this.token = crypto.randomBytes(16).toString('hex');

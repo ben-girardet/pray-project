@@ -32,7 +32,7 @@ export class AuthResolver {
             || context.req.hostname === 'localhost'
             || (!origin.includes('localhost') && origin !== 'null');
 
-        this.sendRefreshToken(context.res, refreshTokenData, sameSite);
+            AuthResolver.sendRefreshToken(context.res, refreshTokenData, sameSite);
         const jwtString = jwt.sign({userId: user.id, roles: user.roles}, process.env.JWT_SECRET_OR_KEY as string, { expiresIn: process.env.JWT_TOKEN_EXPIRATION, algorithm: 'HS256' });
         // this.setJWTCookie(context.res, jwtString);
         const login = new Login();
@@ -68,7 +68,7 @@ export class AuthResolver {
         const sameSite = (context.req.hostname.includes('api.sunago.app') && origin !== 'null')
             || context.req.hostname === 'localhost'
             || (!origin.includes('localhost') && origin !== 'null');
-        this.sendRefreshToken(context.res, refreshTokenData, sameSite);
+        AuthResolver.sendRefreshToken(context.res, refreshTokenData, sameSite);
         const jwtString = jwt.sign({userId: foundUser.id, roles: foundUser.roles}, process.env.JWT_SECRET_OR_KEY as string, { expiresIn: process.env.JWT_TOKEN_EXPIRATION, algorithm: 'HS256'});
         // this.setJWTCookie(context.res, jwtString);
         const login = new Login();
@@ -84,7 +84,7 @@ export class AuthResolver {
         return login;
     }
 
-    private sendRefreshToken(res: Response, refreshTokenData: RefreshTokenData, sameSite = true) {
+    public static sendRefreshToken(res: Response, refreshTokenData: RefreshTokenData, sameSite = true) {
         res.cookie('refreshToken', refreshTokenData.refreshToken, {
             path: '/graphql',
             httpOnly: true,
@@ -115,7 +115,7 @@ export class AuthResolver {
             }
         }
         // clear the refreshToken coookie
-        this.sendRefreshToken(context.res, {refreshToken: '', hash: '', expiry: new Date()});
+        AuthResolver.sendRefreshToken(context.res, {refreshToken: '', hash: '', expiry: new Date()});
         return true;
     }
 }

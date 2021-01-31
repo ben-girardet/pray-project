@@ -84,8 +84,8 @@ export class MyApp implements ICustomElementViewModel {
     if (!(await apolloAuth.isAuthenticated())) {
       const vp = this.router.getViewport('main');
       const componentName = vp.content.content.componentName;
-      if (!['login', 'register'].includes(componentName)) {
-        this.router.load('login');
+      if (!['login', 'start', 'register'].includes(componentName)) {
+        this.router.load('start');
       }
       return false;
     }
@@ -104,8 +104,8 @@ export class MyApp implements ICustomElementViewModel {
       // User is not logged in, so redirect them back to login page
       const mainInstruction = instructions.find(i => i.viewportName === 'main');
       if (mainInstruction && !(await apolloAuth.isAuthenticated())) {
-        if (!['login', 'register'].includes(mainInstruction.componentName)) {
-          return [this.router.createViewportInstruction('login', mainInstruction.viewport)];
+        if (!['login', 'start', 'register'].includes(mainInstruction.componentName)) {
+          return [this.router.createViewportInstruction('start', mainInstruction.viewport)];
         }
       }
       if (!this.started) {

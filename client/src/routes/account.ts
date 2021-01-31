@@ -74,7 +74,7 @@ user(id: $userId) {
       await logout();
       apolloAuth.logout();
       this.global.eventAggregator.publish('logout');
-      this.router.load('login');
+      this.router.load('start');
     } catch (error) {
       AppNotification.notify(error.message, 'error');
     }

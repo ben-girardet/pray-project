@@ -191,16 +191,19 @@ Login is now pretty well in place. Now is the time to improve the topic experien
 # 20.1.2020 - Internationalization
 - [x] Translation i18n
 
+# 30.1.2020 - Internationalization
+- [x] Web client ready in english
+
 ## Next 
-- [ ] Contact page
+- [ ] Create SMS API account
+- [ ] Add a client version checker (for API) in order to inform user of out-of date client version and require update
 - [ ] Ackknoledgment (incl. illustrations)
-- [ ] Privacy Policy and Terms of Use
 - [ ] Change password / no password, only SMS
+- [ ] Improve Apple / Demo user account with new mobile only system
 - [ ] Backups every night
 - [ ] Diminish the number of refresh tokens available per user
 - [ ] Avoid REDIS to crash
 - [ ] Add a version from GIT in API ? Or use the build version ?
-- [ ] Add a client version checker (for API) in order to inform user of out-of date client version and require update
 - [ ] Work on the TODO's
 - [ ] Ensure a nice register process
 - [ ] Stack AppNotifications (so we can see several)

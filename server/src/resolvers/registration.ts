@@ -1,9 +1,15 @@
+import { AuthResolver } from './auth';
+import { DocumentType } from '@typegoose/typegoose';
 import { User, UserModel } from "../models/user";
 import { Token, TokenModel } from "../models/token";
-import { Resolver, Mutation, Query, Arg } from "type-graphql";
+import { Login } from "../models/login";
+import { Resolver, Mutation, Query, Arg, Ctx } from "type-graphql";
 import { RegisterInput, ValidateRegistrationInput } from './inputs/registration';
 import SMSAPI from 'smsapicom';
+import moment from 'moment';
+import jwt from 'jsonwebtoken';
 import Gun from 'gun';
+import { Context } from './context-interface';
 import 'gun/sea';
 
 export interface SeaPair {
@@ -102,31 +108,58 @@ export class RegistrationResolver {
         return response.toObject();
     }
 
-    @Mutation(() => User)
-    public async validateCode(@Arg('data') data: ValidateRegistrationInput) {
+    @Mutation(() => Login)
+    public async validateCode(@Arg('data') data: ValidateRegistrationInput, @Ctx() context: Context) {
         const token = await TokenModel.findValid(data.token, data.code);
         if (data.type === 'mobile' && !token.data.mobile) {
             throw new Error('Token mobile is empty');
         }
-        const existingUser = await UserModel.findOne({$or: [{email: token.data.email, emailValidated: true}, {mobile: token.data.mobile, mobileValidated: true}]});
+
+        let user: DocumentType<User>;
+        const existingUser = await UserModel.findOne(
+            {mobile: token.data.mobile, mobileValidated: true}
+            ).select('refreshTokens salt hash roles privateKey state');
         if (existingUser) {
-            return existingUser.toObject();
+            user = existingUser;
+        } else {
+            const newUser = new UserModel();
+            newUser.firstname = token.data.firstname || '';
+            newUser.lastname = token.data.lastname || '';
+            newUser.email = token.data.email;
+            newUser.mobile = token.data.mobile;
+            newUser.roles = ['user'];
+            const pair = await this.generatePair();
+            newUser.privateKey = pair.epriv;
+            newUser.publicKey = pair.epub;
+            newUser.state = 0;
+            newUser.mobileValidated = true;
+            newUser.refreshTokens = [];
+            const createdUser = await newUser.save();
+            user = new UserModel(createdUser);
         }
-        const newUser = new UserModel();
-        newUser.firstname = token.data.firstname || '';
-        newUser.lastname = token.data.lastname || '';
-        newUser.email = token.data.email;
-        newUser.mobile = token.data.mobile;
-        newUser.roles = ['user'];
-        const pair = await this.generatePair();
-        newUser.privateKey = pair.epriv;
-        newUser.publicKey = pair.epub;
-        newUser.state = 0;
-        newUser.mobileValidated = true;
-        const createdUser = await newUser.save();
-        token.used = true;
-        await token.save();
-        return createdUser.toObject();
+
+        const refreshTokenData = user.generateRefreshToken();
+        await user.save();
+        const origin = context.req.get('origin') || '';
+        const sameSite = (context.req.hostname.includes('api.sunago.app') && origin !== 'null')
+            || context.req.hostname === 'localhost'
+            || (!origin.includes('localhost') && origin !== 'null');
+
+        AuthResolver.sendRefreshToken(context.res, refreshTokenData, sameSite);
+        const jwtString = jwt.sign({userId: user.id, roles: user.roles}, process.env.JWT_SECRET_OR_KEY as string, { expiresIn: process.env.JWT_TOKEN_EXPIRATION, algorithm: 'HS256' });
+        // this.setJWTCookie(context.res, jwtString);
+        const login = new Login();
+        login.token = jwtString;
+        if (context.req.header('sunago-source') === 'ios-mobile-app') {
+            login.refreshToken = refreshTokenData.refreshToken;
+            login.refreshTokenExpiry = moment(refreshTokenData.expiry).toISOString();
+        }
+        login.expires = moment().add(15, 'minutes').toDate(); // TODO: fix this by using the env variable
+        login.userId = user._id.toString();
+        login.privateKey = user.privateKey;
+        login.state = user.state;
+        return login;
+
     }
 
     @Mutation(() => User)

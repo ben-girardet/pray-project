@@ -26,6 +26,10 @@ export class AvatarSelection {
   }
 
   public bound(): void {
+    this.originalChanged();
+  }
+
+  public originalChanged() {
     if (this.original) {
       this.avatar = 'original';
     }
@@ -36,6 +40,11 @@ export class AvatarSelection {
     this.imageService.croppieElement = this.croppieElement;
   }
 
+  public imagesDialog: HTMLElement;
+  public toggleDialog() {
+    this.imagesDialog.toggleAttribute('hidden');
+  }
+
   public selectImage(): void {
     this.imageService.selectImage();
   }
@@ -44,8 +53,11 @@ export class AvatarSelection {
     this.imageService.removeImage();
     this.selectAvatar('liquid1');
   }
-
+  
   public selectAvatar(avatar: string): void {
     this.avatar = avatar;
+    this.original = '';
+    // this.imageService.cancelImage();
+    this.imagesDialog.toggleAttribute('hidden', true);
   }
 }

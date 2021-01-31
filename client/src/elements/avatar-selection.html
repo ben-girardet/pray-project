@@ -1,47 +1,53 @@
 <import from="../cropping.css"></import>
 
-<div class="avatar-selection__buttons">
-  <!-- <fast-button>
-    <pray-icon appearance="accent" icon="Camera" size="lg"></pray-icon>
-  </fast-button> -->
-  <fast-button  click.delegate="selectImage()">
-    <pray-icon appearance="accent" icon="Photograph" size="lg" slot="start"></pray-icon>
-    ${'avatar.Select an image' | t}
-  </fast-button>
-  <label t="avatar.Or pick one below">Or pick one below</label>
+
+<div class="abc" click.delegate="selectImage()">
+  <img if.bind="avatar === 'original'" src="${original | file}" />
+  <img if.bind="avatar === 'image' && imageService.mediumB64" src.bind="imageService.mediumB64" />
+  <img if.bind="avatar !== 'original' && avatar !== 'image' && avatar" src="images/avatars/${avatar}.gif" />
+  <pray-icon appearance="accent" icon="Photograph" size="lg"></pray-icon>
 </div>
 
-<div class="avatar-selection">
-  <span class="${avatar === 'original' ? 'selected':''}" if.bind="original">
-    <img src="${original | file}" click.delegate="selectAvatar('original')" />
-  </span>
-  <span class="${avatar === 'image' ? 'selected':''}" if.bind="imageService.mediumB64">
-    <img src.bind="imageService.mediumB64" click.delegate="selectAvatar('image')">
-  </span>
-  <span class="${avatar === 'liquid1' ? 'selected':''}">
-    <img src="images/avatars/liquid1.gif" click.delegate="selectAvatar('liquid1')">
-  </span>
-  <span class="${avatar === 'liquid2' ? 'selected':''}">
-    <img src="images/avatars/liquid2.gif" click.delegate="selectAvatar('liquid2')">
-  </span>
-  <span class="${avatar === 'liquid3' ? 'selected':''}">
-    <img src="images/avatars/liquid3.gif" click.delegate="selectAvatar('liquid3')">
-  </span>
-  <span class="${avatar === 'shape1' ? 'selected':''}">
-    <img src="images/avatars/shape1.gif" click.delegate="selectAvatar('shape1')">
-  </span>
-  <span class="${avatar === 'shape2' ? 'selected':''}">
-    <img src="images/avatars/shape2.gif" click.delegate="selectAvatar('shape2')">
-  </span>
-  </span>
-  <span class="${avatar === 'shape3' ? 'selected':''}">
-    <img src="images/avatars/shape3.gif" click.delegate="selectAvatar('shape3')">
-  </span>
-  </span>
-  <span class="${avatar === 'shape4' ? 'selected':''}">
-    <img src="images/avatars/shape4.gif" click.delegate="selectAvatar('shape4')">
-  </span>
-</div>
+<p>Upload a picture of your choice <a click.delegate="toggleDialog()">or use a pre-defined image.</a></p>
+
+<fast-dialog hidden ref="imagesDialog">
+  <div class="avatar-selection">
+    <span class="${avatar === 'original' ? 'selected':''}" if.bind="original">
+      <img src="${original | file}" click.delegate="selectAvatar('original')" />
+    </span>
+    <span class="${avatar === 'image' ? 'selected':''}" if.bind="imageService.mediumB64">
+      <img src.bind="imageService.mediumB64" click.delegate="selectAvatar('image')">
+    </span>
+    <span class="${avatar === 'liquid1' ? 'selected':''}">
+      <img src="images/avatars/liquid1.gif" click.delegate="selectAvatar('liquid1')">
+    </span>
+    <span class="${avatar === 'liquid2' ? 'selected':''}">
+      <img src="images/avatars/liquid2.gif" click.delegate="selectAvatar('liquid2')">
+    </span>
+    <span class="${avatar === 'liquid3' ? 'selected':''}">
+      <img src="images/avatars/liquid3.gif" click.delegate="selectAvatar('liquid3')">
+    </span>
+    <span class="${avatar === 'shape1' ? 'selected':''}">
+      <img src="images/avatars/shape1.gif" click.delegate="selectAvatar('shape1')">
+    </span>
+    <span class="${avatar === 'shape2' ? 'selected':''}">
+      <img src="images/avatars/shape2.gif" click.delegate="selectAvatar('shape2')">
+    </span>
+    </span>
+    <span class="${avatar === 'shape3' ? 'selected':''}">
+      <img src="images/avatars/shape3.gif" click.delegate="selectAvatar('shape3')">
+    </span>
+    </span>
+    <span class="${avatar === 'shape4' ? 'selected':''}">
+      <img src="images/avatars/shape4.gif" click.delegate="selectAvatar('shape4')">
+    </span>
+  </div>
+  <p>
+    <fast-button appearance="accent" click.delegate="toggleDialog()">Close</fast-button>
+  </p>
+</fast-dialog>
+
+
 
 <div class="input-file-container" ref="inputFileContainer"></div>
 
