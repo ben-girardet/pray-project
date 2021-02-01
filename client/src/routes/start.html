@@ -12,38 +12,52 @@
 </div>
 
 <div class="start start-mobile">
-  <h2>Start by entering your mobile number</h2>
-  <fast-select placeholder="Your country" value.bind="regionCode" change.delegate="countryChanged()">
-    <fast-option value="ch">Suisse</fast-option>
-    <fast-option value="fr">France</fast-option>
-  </fast-select>
-  <fast-text-field placeholder="Mobile Number" value.bind="mobile" pattern="[0-9]*" autofocus change.delegate="mobileChanged()" keyup.delegate="mobileChanged()">
-    <span class="start__region-code" slot="start">+${countryCode}</span>
-  </fast-text-field>
-  <fast-button disabled.bind="!isMobileValid" appearance="accent" click.delegate="requestMobileCode()" t="Continue">Continue</fast-button>
+  <form submit.delegate="requestMobileCode($event)">
+    <h2>Start by entering your mobile number</h2>
+    <fast-select placeholder="Your country" value.bind="regionCode" change.delegate="countryChanged()">
+      <fast-option value="ch">Suisse</fast-option>
+      <fast-option value="fr">France</fast-option>
+    </fast-select>
+    <fast-text-field placeholder="Mobile Number" value.bind="mobile" pattern="[0-9]*" autofocus change.delegate="mobileChanged()" keyup.delegate="mobileChanged()">
+      <span class="start__region-code" slot="start">+${countryCode}</span>
+    </fast-text-field>
+    <fast-button disabled.bind="!isMobileValid" appearance="accent" type="submit">
+      <fast-progress-ring slot="start" if.bind="loading"></fast-progress-ring>
+      <span t="Continue"></span>
+    </fast-button>
+  </form>
 </div>
 
 <div class="start start-validation">
-  <h2>Enter the code received on your mobile</h2>
-  <fast-text-field placeholder="The code" value.bind="validationCode" pattern="[0-9]*" autofocus change.delegate="codeChanged()" keyup.delegate="codeChanged()" class="${validationCode ? 'has-value':''}"></fast-text-field>
-  <fast-button disabled.bind="validationCode.length !== 6" appearance="accent" click.delegate="validateCode()" t="Continue">Continue</fast-button>
-  <fast-anchor if.bind="invalidCode" appearance="lightweight" style="margin-top: 32px;" click.delegate="requestMobileCode(true)">Send the code again ?</fast-anchor>
-  <fast-anchor appearance="lightweight" style="margin-top: 64px;" click.delegate="prev('mobile')">Wrong number ?</fast-anchor>
-
+  <form submit.delegate="validateCode($event)">
+    <h2>Enter the code received on your mobile</h2>
+    <fast-text-field placeholder="The code" value.bind="validationCode" pattern="[0-9]*" autofocus change.delegate="codeChanged()" keyup.delegate="codeChanged()" class="${validationCode ? 'has-value':''}"></fast-text-field>
+    <fast-button disabled.bind="validationCode.length !== 6" appearance="accent" type="submit">
+      <fast-progress-ring slot="start" if.bind="loading"></fast-progress-ring>
+      <span t="Continue"></span>
+    </fast-button>
+    <fast-anchor if.bind="invalidCode" appearance="lightweight" style="margin-top: 32px;" click.delegate="requestMobileCode(null, true)">Send the code again ?</fast-anchor>
+    <fast-anchor appearance="lightweight" style="margin-top: 64px;" click.delegate="prev('mobile')">Wrong number ?</fast-anchor>
+  </form>
 </div>
 
 <div class="start start-identity">
-  <h2>Welcome in Sunago !</h2>
-  <p>Setup your profile and enjoy...</p>
-  <fast-text-field placeholder="Firstname" value.bind="firstname">
-    <!-- <pray-icon icon="User" size="sm" slot="start"></pray-icon> -->
-  </fast-text-field>
-  <fast-text-field placeholder="Lastname" value.bind="lastname">
-    <!-- <pray-icon icon="Key" size="sm" slot="start"></pray-icon> -->
-  </fast-text-field>
+  <form submit.delegate="setIdentity($event)">
+    <h2>Welcome in Sunago !</h2>
+    <p>Setup your profile and enjoy...</p>
+    <fast-text-field placeholder="Firstname" value.bind="firstname">
+      <!-- <pray-icon icon="User" size="sm" slot="start"></pray-icon> -->
+    </fast-text-field>
+    <fast-text-field placeholder="Lastname" value.bind="lastname">
+      <!-- <pray-icon icon="Key" size="sm" slot="start"></pray-icon> -->
+    </fast-text-field>
 
-  <label style="text-align: center; margin-top: 24px; margin-bottom: 16px; color: var(--accent-color);">You're profile picture</label>
-  <avatar-selection value.bind="profilePic" original.bind="preview" view-model.ref="avatar"></avatar-selection>
+    <label style="text-align: center; margin-top: 24px; margin-bottom: 16px; color: var(--accent-color);">You're profile picture</label>
+    <avatar-selection value.bind="profilePic" original.bind="preview" view-model.ref="avatar"></avatar-selection>
 
-  <fast-button appearance="accent" click.trigger="setIdentity()">Next</fast-button>
+    <fast-button appearance="accent" type="submit">
+      <fast-progress-ring slot="start" if.bind="loading"></fast-progress-ring>
+        <span t="Continue"></span>
+    </fast-button>
+  </form>
 </div>

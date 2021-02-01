@@ -74,3 +74,12 @@
   font-family: var(--content-font);
   margin-right: 8px;
 }
+
+
+.praying-bottomview pray-icon {
+  background: var(--accent-color);
+  border-radius: 100%;
+  width: 30px;
+  height: 30px;
+  color: white;
+}

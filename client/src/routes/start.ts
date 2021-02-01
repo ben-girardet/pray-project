@@ -6,8 +6,7 @@ import { IRouteableComponent } from '@aurelia/router';
 import { ICustomElementViewModel, IRouter, ILogger } from 'aurelia';
 import { AppNotification } from '../components/app-notification';
 import PhoneNumber from 'awesome-phonenumber';
-import { register, validateRegistration, requestMobileCode, validateCode } from '../commands/register';
-import { login } from '../commands/login';
+import { requestMobileCode, validateCode } from '../commands/register';
 import { editMe } from '../commands/user';
 // TODO: remove all instances of /server/ in shared or client
 import { Image } from '../../../server/src/models/image';
@@ -27,18 +26,14 @@ export class Start implements IRouteableComponent, ICustomElementViewModel {
   private lastname = '';
   public preview: string;
 
-  // public username = '';
-  // public password = '';
-
-  private logger: ILogger;
-
-  // private type: 'email' | 'mobile';
   private token: Token;
-  // private code = '';
   private userId: string;
-
+  
   private avatar: AvatarSelection;
   private apolloAuth = apolloAuth;
+  private loading = false;
+  
+  private logger: ILogger;
 
   public constructor(
     @IRouter private router: IRouter, 
@@ -48,9 +43,11 @@ export class Start implements IRouteableComponent, ICustomElementViewModel {
     this.logger = iLogger.scopeTo('register route');
   }
 
-  public async beforeBind(): Promise<void> {
-    if (apolloAuth.authenticated) {
+  public async binding(): Promise<void> {
+    if (apolloAuth.authenticated && apolloAuth.getState() === 1) {
       this.router.load('topics');
+    } else {
+      client.clearStore();
     }
   }
 
@@ -165,7 +162,14 @@ export class Start implements IRouteableComponent, ICustomElementViewModel {
     this.isMobileValid = new PhoneNumber(this.mobile, this.regionCode).isValid();
   }
 
-  public async requestMobileCode(again = false): Promise<void> {
+  public async requestMobileCode(event: Event | null, again = false): Promise<any> {
+    if (event) {
+      event.preventDefault();
+    }
+    if (this.loading) {
+      return false;
+    }
+    this.loading = true;
     if (!this.mobile) {
       AppNotification.notify('Please enter a valid mobile number', 'info');
       return;
@@ -187,15 +191,24 @@ export class Start implements IRouteableComponent, ICustomElementViewModel {
       }
       AppNotification.notify(error.message, 'info');
     }
+    this.loading = false;
+    return false;
   }
 
   public codeChanged() {
-    if (this.validateCode.length === 6) {
-      this.validateCode(true);
+    if (this.validationCode.length === 6) {
+      this.validateCode(null, true);
     }
   }
 
-  public async validateCode(silent = false): Promise<void> {
+  public async validateCode(event: Event | null, silent = false): Promise<any> {
+    if (event) {
+      event.preventDefault();
+    }
+    if (this.loading) {
+      return false;
+    }
+    this.loading = true;
     try {
       if (this.validationCode.length !== 6) {
         throw new Error('Validation code must have 6 digits');
@@ -206,14 +219,14 @@ export class Start implements IRouteableComponent, ICustomElementViewModel {
     } catch (error) {
       if (!silent) {
         if (error.message.includes('Token not found')) {
-          console.log('contains token not found')
           error = new Error('Invalid code');
           this.invalidCode = true;
         }
-        console.log('error now', error);
         AppNotification.notify(error.message, 'info');
       }
     }
+    this.loading = false;
+    return false;
   }
 
   public async getIdentity(): Promise<void> {
@@ -239,15 +252,20 @@ export class Start implements IRouteableComponent, ICustomElementViewModel {
       }`, variables: {userId: apolloAuth.getUserId()}, fetchPolicy: 'network-only'});
       this.firstname = result.data.user.firstname;
       this.lastname = result.data.user.lastname;
-      console.log('get identity', result.data.user.picture);
       this.preview = result.data.user.picture && result.data.user.picture.length ? result.data.user.picture.find(i => i.height > 50 && i.width > 50).fileId : '';
-      console.log('this.preview', this.preview);
     } catch (error) {
       // do nothing
     }
   }
 
-  public async setIdentity(): Promise<void> {
+  public async setIdentity(event: Event | null): Promise<any> {
+    if (event) {
+      event.preventDefault();
+    }
+    if (this.loading) {
+      return false;
+    }
+    this.loading = true;
     try {
       const editUserData: {firstname?: string, lastname?: string, picture?: Image[]} = {};
       editUserData.firstname = this.firstname;
@@ -275,5 +293,7 @@ export class Start implements IRouteableComponent, ICustomElementViewModel {
     } catch (error) {
       AppNotification.notify(error.message, 'info');
     }
+    this.loading = false;
+    return false;
   }
 }

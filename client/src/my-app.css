@@ -117,6 +117,12 @@ form label {
   height: 20px;
 }
 
+fast-button fast-progress-ring {
+  margin: 0;
+  width: 20px;
+  height: 20px;
+}
+
 fast-badge {
   --badge-fill-primary: var(--accent-color);
   --badge-fill-secondary: var(--meta-content-color);
@@ -209,4 +215,17 @@ fast-button.full-width::part(end) {
   85% {
     transform: translateY(00px);
   }
+}
+
+pray-notification:nth-of-type(2) {
+  margin-top: 50px;
+}
+pray-notification:nth-of-type(3) {
+  margin-top: 100px;
+}
+pray-notification:nth-of-type(4) {
+  margin-top: 150px;
+}
+pray-notification:nth-of-type(5) {
+  margin-top: 200px;
 }

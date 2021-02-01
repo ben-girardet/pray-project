@@ -175,7 +175,7 @@ Login is now pretty well in place. Now is the time to improve the topic experien
 - [x] Start pray from messages view must start with current topic
 
 
-## 9.1.2020 - Improve frienship flow
+## 9.1.2021 - Improve frienship flow
 - [x] Add little helps along the process
 - [x] Improve wording
 - [x] Only display notification for friends requests, not friends waiting for reply
@@ -183,30 +183,31 @@ Login is now pretty well in place. Now is the time to improve the topic experien
 - [x] Search for friends by phone number
 - [x] When removing a friendship: also remove all shares from (in both directions)
 
-## 11.1.2020 - Improve UX with help screens and illustrations
+## 11.1.2021 - Improve UX with help screens and illustrations
 
 - [x] Ensure the screen looks amazing even without content (after first registration)
 - [x] Help tooltips
 
-# 20.1.2020 - Internationalization
+# 20.1.2021 - Internationalization
 - [x] Translation i18n
 
-# 30.1.2020 - Internationalization
+# 30.1.2021 - Internationalization
 - [x] Web client ready in english
 
+# 1.2.2021 - Many things
+- [x] Add a client version checker (for API) in order to inform user of out-of date client version and require update
+- [x] Change password / no password, only SMS
+- [x] Ensure a nice register process
+- [x] Diminish the number of refresh tokens available per user
+- [x] Add a version from GIT in API ? Or use the build version ?
+- [x] Improve Apple / Demo user account with new mobile only system
+- [x] Stack AppNotifications (so we can see several)
 ## Next 
 - [ ] Create SMS API account
-- [ ] Add a client version checker (for API) in order to inform user of out-of date client version and require update
 - [ ] Ackknoledgment (incl. illustrations)
-- [ ] Change password / no password, only SMS
-- [ ] Improve Apple / Demo user account with new mobile only system
 - [ ] Backups every night
-- [ ] Diminish the number of refresh tokens available per user
 - [ ] Avoid REDIS to crash
-- [ ] Add a version from GIT in API ? Or use the build version ?
 - [ ] Work on the TODO's
-- [ ] Ensure a nice register process
-- [ ] Stack AppNotifications (so we can see several)
 - [ ] Optimize bundles with code splitting (https://webpack.js.org/guides/code-splitting/)
 - [ ] Create tests with image upload (if not yet)
 - [ ] Create more realistic tests scenario including user registration and increased users friendships

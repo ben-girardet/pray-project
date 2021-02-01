@@ -86,6 +86,8 @@ export class TopicPraying implements ICustomElementViewModel {
       const cryptedMessage = await CryptingService.encryptNewMessage(this.topic, this.message);
       await createMessageInTopic(this.topicId, cryptedMessage);
       this.message = '';
+      this.messageChanged();
+      this.textarea.blur();
       document.body.focus();
       AppNotification.notify('Message sent', 'success');
     } catch (error) {

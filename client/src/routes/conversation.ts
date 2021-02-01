@@ -154,6 +154,7 @@ export class Conversation implements IRouteableComponent, ICustomElementViewMode
       const cryptedMessage = await CryptingService.encryptNewMessage(this.topic, this.message);
       await createMessageInTopic(this.topicId, cryptedMessage);
       this.message = '';
+      this.messageChanged();
       // TODO: optimize this thing when a conversation has lots of messages
       // await this.getTopic();
       await this.tryToFetchTopic();

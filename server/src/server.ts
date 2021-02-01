@@ -223,7 +223,6 @@ mongoose.connect(
         });
     app.use('/graphql', (req: express.Request, res: express.Response, next: express.NextFunction) => {
         const clientVersion = req.header('sunago-version');
-        console.log('req.method', req.method);
         if (req.method !== 'OPTIONS' && clientVersion) {
             res.setHeader('Access-Control-Allow-Origin', '*');
             const digits = clientVersion.split('.').map(v => parseInt(v, 10));

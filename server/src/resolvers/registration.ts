@@ -142,6 +142,9 @@ export class RegistrationResolver {
             user = new UserModel(createdUser);
         }
 
+        // by reseting the refreshTokens here, we ensure
+        // that only one device can be logged in at a time
+        user.refreshTokens = [];
         const refreshTokenData = user.generateRefreshToken();
         await user.save();
         const origin = context.req.get('origin') || '';

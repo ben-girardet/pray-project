@@ -180,12 +180,6 @@ const client = new ApolloClient({
         }
       }));
     }
-    operation.setContext(context => ({
-      headers: {
-          ...context.headers,
-          "sunago-version": "1.0.0"
-      }
-    }));
     if (operation.operationName !== 'Login' && operation.operationName !== 'RefreshToken' && !apolloAuth.isTokenValid() && apolloAuth.getUserId()) {
         await refreshToken();
     }

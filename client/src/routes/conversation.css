@@ -74,6 +74,14 @@
   margin-right: 8px;
 }
 
+.conversation-bottomview pray-icon {
+  background: var(--accent-color);
+  border-radius: 100%;
+  width: 30px;
+  height: 30px;
+  color: white;
+}
+
 .group-day__date {
   text-align: center;
   margin: 32px 8px 8px;

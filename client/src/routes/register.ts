@@ -40,7 +40,7 @@ export class Register implements IRouteableComponent, ICustomElementViewModel {
     this.logger = iLogger.scopeTo('register route');
   }
 
-  public async beforeBind(): Promise<void> {
+  public async binding(): Promise<void> {
     if (apolloAuth.authenticated) {
       this.router.load('topics');
     }

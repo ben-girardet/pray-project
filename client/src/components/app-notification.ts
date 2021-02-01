@@ -16,6 +16,7 @@ const styles = css`
     contain: content;
     position: fixed;
     top: 16px;
+    top: calc(16px + env(safe-area-inset-top));
     left: 50%;
     transform: translateX(-50%);
     border-radius: calc(var(--corner-radius) * 1px);

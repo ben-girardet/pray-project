@@ -26,12 +26,10 @@ export class AvatarSelection {
   }
 
   public bound(): void {
-    console.log('bound', this.original);
     this.originalChanged();
   }
 
   public originalChanged() {
-    console.log('original changed', this.original);
     if (this.original) {
       this.avatar = 'original';
     }
