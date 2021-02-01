@@ -89,9 +89,13 @@ export class RegistrationResolver {
         token.setToken();
         token.data = data;
 
-        const isTestAccount = data.mobile.substr(0, 8) === '+4170000';
+        const TEST_NUMBERS = (process.env.TEST_NUMBERS || '').split(',');
+        const TEST_CODES = (process.env.TEST_CODES || '').split(',');
+        const TEST_INDEX = TEST_NUMBERS.indexOf(data.mobile);
+
+        const isTestAccount = TEST_INDEX !== -1;
         if (isTestAccount) {
-            token.code = process.env.TEST_CODE || '001122';
+            token.code = TEST_CODES[TEST_INDEX];
         }
 
         const response = await token.save();
