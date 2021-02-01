@@ -174,24 +174,26 @@ mongoose.connect(
     app.use(contextService.middleware('request'));
 
     app.get('/version', (req, res) => {
-        console.log('/version');
-        console.log('reading', path.join(__dirname, '../../.git/HEAD'));
         const rev = fs.readFileSync(path.join(__dirname, '../../.git/HEAD')).toString();
-        console.log('rev', rev);
+        const origHash = fs.readFileSync(path.join(__dirname, '../../.git/ORIG_HEAD')).toString().trim();
         let hash: string = '';
         let branch: string = '';
         if (rev.indexOf(':') === -1) {
             hash = rev.trim();
         } else {
             branch = rev.substring(5).trim();
-            console.log('branch', branch);
-            console.log('reading', path.join(__dirname, '../../.git/' + branch))
-            hash = fs.readFileSync(path.join(__dirname, '../../.git/' + branch)).toString().trim()
+            try {
+                hash = fs.readFileSync(path.join(__dirname, '../../.git/' + branch)).toString().trim()
+            } catch (error) {
+                // do nothing
+            }
         }
         res.setHeader('content-type', 'application/json');
         res.send({
             branch,
-            hash
+            hash,
+            origHash,
+            v: '1.0.1'
         });
     });
 
