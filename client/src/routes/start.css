@@ -5,22 +5,27 @@
   width: 100%;
   height: 100%;
   overflow: hidden;
+  background-color: var(--body-color);
+  color: var(--main-content-color);
 }
 .start {
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
-  height: 100%;
+  bottom: 0;
+  bottom: env(safe-area-inset-bottom);
   overflow-y: auto;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   z-index: 0;
-  background-color: white;
+  background-color: var(--body-color);
   transition: transform ease-in-out 150ms;
   padding: 16px;
+  padding-top: calc(16px + env(safe-area-inset-top));
+  padding-bottom: calc(16px + env(safe-area-inset-bottom));
 }
 .start.start--next {
   z-index: 1;
@@ -53,8 +58,6 @@
   --density: 4;
 }
 
-
-
 .start-mobile fast-button,
 .start-validation fast-button {
   margin-top: 64px;
@@ -71,6 +74,13 @@
   justify-content: flex-start;
 }
 
+.start-validation fast-text-field::part(control) {
+  text-align: center;
+}
+.start-validation fast-text-field.has-value::part(control) {
+  letter-spacing: 5px;
+  font-size: 150%;
+}
 .start-validation fast-anchor {
   margin: 24px 0;
 }

@@ -91,7 +91,7 @@ user(id: $userId) {
             {fileId: imageData.large, width: 1000, height: 1000},
           ]
         }
-      } else {
+      } else if (this.avatar.avatar !== 'original') {
         editUserData.picture = [
           {fileId: `static:${this.avatar.avatar}.gif`, width: 40, height: 40},
           {fileId: `static:${this.avatar.avatar}.gif`, width: 100, height: 100},

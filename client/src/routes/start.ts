@@ -22,6 +22,7 @@ export class Start implements IRouteableComponent, ICustomElementViewModel {
   private isMobileValid = false;
   private countryCode: number;
   private validationCode: string = '';
+  private invalidCode = false;
   private firstname = '';
   private lastname = '';
   public preview: string;
@@ -70,9 +71,6 @@ export class Start implements IRouteableComponent, ICustomElementViewModel {
       (starts[0] as HTMLElement).style.display = 'none';
     }
     start.classList.add('start-container');
-    setTimeout(() => {
-      this.next('validation');
-    }, 500);
   }
 
   private transitioning = false;
@@ -167,7 +165,7 @@ export class Start implements IRouteableComponent, ICustomElementViewModel {
     this.isMobileValid = new PhoneNumber(this.mobile, this.regionCode).isValid();
   }
 
-  public async requestMobileCode(): Promise<void> {
+  public async requestMobileCode(again = false): Promise<void> {
     if (!this.mobile) {
       AppNotification.notify('Please enter a valid mobile number', 'info');
       return;
@@ -178,8 +176,15 @@ export class Start implements IRouteableComponent, ICustomElementViewModel {
         throw new Error('Please enter a valid mobile number');
       }
       this.token = await requestMobileCode(pn.getNumber());
-      this.next('validation');
+      if (!again) {
+        this.next('validation');
+      } else {
+        AppNotification.notify('The code has been sent again', 'success');
+      }
     } catch (error) {
+      if (error.message.includes('No correct phone numbers')) {
+        error = new Error('Invalid phone number');
+      }
       AppNotification.notify(error.message, 'info');
     }
   }
@@ -200,6 +205,12 @@ export class Start implements IRouteableComponent, ICustomElementViewModel {
       this.next('identity');
     } catch (error) {
       if (!silent) {
+        if (error.message.includes('Token not found')) {
+          console.log('contains token not found')
+          error = new Error('Invalid code');
+          this.invalidCode = true;
+        }
+        console.log('error now', error);
         AppNotification.notify(error.message, 'info');
       }
     }
@@ -228,7 +239,9 @@ export class Start implements IRouteableComponent, ICustomElementViewModel {
       }`, variables: {userId: apolloAuth.getUserId()}, fetchPolicy: 'network-only'});
       this.firstname = result.data.user.firstname;
       this.lastname = result.data.user.lastname;
+      console.log('get identity', result.data.user.picture);
       this.preview = result.data.user.picture && result.data.user.picture.length ? result.data.user.picture.find(i => i.height > 50 && i.width > 50).fileId : '';
+      console.log('this.preview', this.preview);
     } catch (error) {
       // do nothing
     }
@@ -249,7 +262,7 @@ export class Start implements IRouteableComponent, ICustomElementViewModel {
               {fileId: imageData.large, width: 1000, height: 1000},
             ]
           }
-        } else {
+        } else if (this.avatar.avatar !== 'original') {
           editUserData.picture = [
             {fileId: `static:${this.avatar.avatar}.gif`, width: 40, height: 40},
             {fileId: `static:${this.avatar.avatar}.gif`, width: 100, height: 100},
