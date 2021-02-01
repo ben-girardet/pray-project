@@ -14,6 +14,7 @@
 <import from="./routes/topics"></import>
 <import from="./routes/conversation"></import>
 <import from="./routes/missing"></import>
+<import from="./routes/out-of-date"></import>
 <import from="./routes/login"></import>
 <import from="./routes/register"></import>
 <import from="./routes/start"></import>
@@ -67,4 +68,5 @@
       <fast-button appearance="accent" click.delegate="prayingHelpViewed('praying-directions')" t="help.prayingDirections.Ok, I understand">Ok, I understand</fast-button>
     </template>
   </pray-help-container>
+  <out-of-date if.bind="apolloAuth.isOutOfDate"></out-of-date>
 </fast-design-system-provider>

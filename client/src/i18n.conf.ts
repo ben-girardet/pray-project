@@ -30,7 +30,9 @@ const en = {
   },
   "misc": {
     "Terms of use": "Terms of use",
-    "Privacy Policy": "Privacy Policy"
+    "Privacy Policy": "Privacy Policy",
+    "Please update your version of Sunago": "Please update your version of Sunago",
+    "You have an old version of Sunago installed on your device": "You have an old version of Sunago installed on your device. You can find the latest version on the App Store or Google Play"
   },
   "fields": {
     "Mobile": "Mobile",
@@ -144,7 +146,9 @@ const fr = {
   },
   "misc": {
     "Terms of use": "Conditions d'utilisations",
-    "Privacy Policy": "Politique de confidentialité"
+    "Privacy Policy": "Politique de confidentialité",
+    "Please update your version of Sunago": "Vous devez mettre à jour Sunago",
+    "You have an old version of Sunago installed on your device": "Vous avez une ancienne version de Sunago installée sur votre appareil. Vous trouverez la dernière version sur l'App Store ou Google Play."
   },
   "fields": {
     "Mobile": "N° de Mobile",

@@ -32,8 +32,10 @@ import { ImageController } from './controllers/image';
 const controllers = [AdminController, AuthController, ImageController];
 
 import { registerControllers } from './core/framework';
+import { getVersion } from './core/version';
 
 // Resolvers
+import { VersionResolver } from './resolvers/version';
 import { UserResolver } from './resolvers/user';
 import { UserMessagesResolver } from './resolvers/user.messages';
 import { TopicResolver } from './resolvers/topic';
@@ -49,7 +51,7 @@ import { RegistrationResolver } from './resolvers/registration';
 import { AuthResolver, customAuthChecker } from './resolvers/auth';
 import { CustomerRequestResolver } from './resolvers/customer-request';
 const resolvers: NonEmptyArray<Function> | NonEmptyArray<string> =
-    [UserResolver, UserMessagesResolver, TopicResolver, TopicMessagesResolver,
+    [VersionResolver, UserResolver, UserMessagesResolver, TopicResolver, TopicMessagesResolver,
         TopicPrayersResolver, TopicUserResolver, PrayerUserResolver,
         ActivityResolver, ActivityMessageResolver, ActivityTopicResolver, ActivityUserResolver,
         MessageResolver, MessageUserResolver, RegistrationResolver, AuthResolver,
@@ -60,6 +62,9 @@ import * as Sentry from '@sentry/node';
 import * as Tracing from '@sentry/tracing';
 import { apolloSentryPlugin } from './core/apollo-sentry';
 
+const lastClientMajor = 1;
+const lastClientMinor = 0;
+const lastClientPath = 0;
 dotenv.config();
 
 console.log('ENV preview');
@@ -174,27 +179,8 @@ mongoose.connect(
     app.use(contextService.middleware('request'));
 
     app.get('/version', (req, res) => {
-        const rev = fs.readFileSync(path.join(__dirname, '../../.git/HEAD')).toString();
-        const origHash = fs.readFileSync(path.join(__dirname, '../../.git/ORIG_HEAD')).toString().trim();
-        let hash: string = '';
-        let branch: string = '';
-        if (rev.indexOf(':') === -1) {
-            hash = rev.trim();
-        } else {
-            branch = rev.substring(5).trim();
-            try {
-                hash = fs.readFileSync(path.join(__dirname, '../../.git/' + branch)).toString().trim()
-            } catch (error) {
-                // do nothing
-            }
-        }
         res.setHeader('content-type', 'application/json');
-        res.send({
-            branch,
-            hash,
-            origHash,
-            v: '1.0.1'
-        });
+        res.send(getVersion());
     });
 
     app.get('/', (req, res) => {
@@ -236,6 +222,23 @@ mongoose.connect(
             ]
         });
     app.use('/graphql', (req: express.Request, res: express.Response, next: express.NextFunction) => {
+        const clientVersion = req.header('sunago-version');
+        console.log('req.method', req.method);
+        if (req.method !== 'OPTIONS' && clientVersion) {
+            res.setHeader('Access-Control-Allow-Origin', '*');
+            const digits = clientVersion.split('.').map(v => parseInt(v, 10));
+            if (
+                digits[0] > lastClientMajor
+                || digits[0] === lastClientMajor && digits[1] > lastClientMinor
+                || digits[0] === lastClientMajor && digits[1] === lastClientMinor && digits[2] >= lastClientPath
+            ) {
+                // all good
+            } else {
+                return cors(corsOptions)(req, res, () => {
+                    return next(new Error('Out of date client'));
+                });
+            }
+        }
         if (!req.header('Authorization')) {
             // if not Authorization header, check in cookie
             const { jwt } = req.cookies;

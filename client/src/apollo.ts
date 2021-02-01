@@ -30,6 +30,8 @@ class ApolloAuth {
 
     private refreshToken?: string;
     private refreshTokenExpiry?: moment.Moment;
+
+    public isOutOfDate = false;
     
     public setLogin(login: {token: string, userId: string, expires: string, privateKey: string, state: number}) {
       if (typeof login.expires === 'string') {
@@ -173,10 +175,17 @@ const client = new ApolloClient({
       operation.setContext(context => ({
         headers: {
             ...context.headers,
+            "sunago-version": "VERSIONNB",
             "sunago-source": `${w.device.platform.toLowerCase()}-mobile-app`
         }
       }));
     }
+    operation.setContext(context => ({
+      headers: {
+          ...context.headers,
+          "sunago-version": "1.0.0"
+      }
+    }));
     if (operation.operationName !== 'Login' && operation.operationName !== 'RefreshToken' && !apolloAuth.isTokenValid() && apolloAuth.getUserId()) {
         await refreshToken();
     }
@@ -199,6 +208,11 @@ const client = new ApolloClient({
     }
   },
   onError: (error: ErrorResponse) => {
+    const networkError: any = error.networkError;
+    if (networkError?.result?.error === 'Out of date client') {
+      apolloAuth.isOutOfDate = true;
+      return;
+    }
     const hiddenMessages = [
       'Invalid refresh token',
       'No refresh token',
