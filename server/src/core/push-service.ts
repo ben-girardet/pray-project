@@ -1,8 +1,9 @@
 import { DocumentType } from '@typegoose/typegoose';
 import path from 'path';
 import PushNotifications from 'node-pushnotifications';
-import { PushNotification } from '../models/push-notification';
+import { PushNotification, PushNotificationModel } from '../models/push-notification';
 import { PushPlayerModel } from '../models/push-player';
+import express from 'express';
 let debug = require('debug')('app:push');
 
 const privatePath = path.join(__dirname, `../../private/`);
@@ -110,7 +111,7 @@ export class PushService {
         notification.sentToRegIds = successRegId;
         notification.sent = true;
         notification.sentAt = new Date();
-        await notification.save();
+        return await notification.save();
     }
 
 }
@@ -118,3 +119,31 @@ export class PushService {
 const pushService = new PushService();
 
 export { pushService };
+
+function testPush(req: express.Request, res: express.Response, next: express.NextFunction) {
+    new Promise(async (resolve, reject) => {
+        try {
+            const players = await PushPlayerModel.find({active: true, tags: {$in: ['test']}});
+            const regIds = players.map(p => p.regId);
+
+            const notification = new PushNotificationModel();
+            notification.regIds = regIds;
+            notification.title = 'Test notification title';
+            notification.message = 'Test notification message';
+
+            const notificationDocument = await notification.save();
+            const createdNotification = new PushNotificationModel(notificationDocument);
+
+            const sentNotification = await pushService.send(createdNotification);
+
+
+            res.send(new PushPlayerModel(sentNotification).toObject());
+            resolve(null);
+        } catch (error) {
+            reject(error);
+        }
+    }).then(next).catch(next);
+
+}
+
+export { testPush };

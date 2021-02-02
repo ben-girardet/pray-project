@@ -27,10 +27,8 @@ export class PushPlayer {
     @prop({type: String})
     public uuid: string;
 
-    // TODO: I don't know if this is still necessary
-    // and if yes how to set it
     @prop({type: String})
-    public type: 'fcm' | 'apn'
+    public type: 'fcm' | 'apn';
 
     @Authorized(['me'])
     @Field(() => [String], {nullable: false})

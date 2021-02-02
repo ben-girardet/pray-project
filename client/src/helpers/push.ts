@@ -7,6 +7,7 @@ export class Push {
   public push: PhonegapPluginPush.PushNotification;
   public permission: boolean | undefined = undefined;
   public regId: string;
+  public regType: 'apn' | 'fcm';
   private logger: ILogger
 
   public constructor(private eventAggregator: EventAggregator, @ILogger logger: ILogger) {
@@ -48,6 +49,7 @@ export class Push {
     this.push.on('registration', (data) => {
       this.logger.debug('registration', data);
       this.regId = data.registrationId;
+      this.regType = (data as any).registrationType === 'APNS' ? 'apn' : 'fcm';
       this.eventAggregator.publish('push:registration', data);
     });
 

@@ -3,8 +3,8 @@ import { apolloAuth, client } from '../apollo';
 import { User, HelpId } from 'shared/types/user';
 
 const editMeMutation = gql`
-mutation EditMe($firstname: String, $lastname: String, $picture: [ImageInput!], $regId: String, $pushTags: [String!], $pushActive: Boolean) {
-  editMe(data: {firstname: $firstname, lastname: $lastname, picture: $picture, regId: $regId, pushTags: $pushTags, pushActive: $pushActive})
+mutation EditMe($firstname: String, $lastname: String, $picture: [ImageInput!], $regId: String, $pushType: String, $pushTags: [String!], $pushActive: Boolean) {
+  editMe(data: {firstname: $firstname, lastname: $lastname, picture: $picture, regId: $regId, pushType: $pushType, pushTags: $pushTags, pushActive: $pushActive})
   {
     id,
     firstname,
@@ -23,11 +23,12 @@ export async function editMe(
   lastname: string | undefined, 
   picture: {fileId: string, width: number, height: number}[] | undefined,
   regId?: string | undefined,
+  pushType?: 'apn' | 'fcm' | undefined,
   pushTags?: string[] | undefined,
   pushActive?: boolean | undefined): Promise<User> {
   const result = await client.mutate({
     mutation: editMeMutation, 
-    variables: {firstname, lastname, picture, regId, pushTags, pushActive}, 
+    variables: {firstname, lastname, picture, regId, pushType, pushTags, pushActive}, 
     fetchPolicy: 'no-cache'}) as ApolloQueryResult<{editMe: User}>;
   if (typeof result.data.editMe.state === 'number') {
     apolloAuth.setState(result.data.editMe.state);

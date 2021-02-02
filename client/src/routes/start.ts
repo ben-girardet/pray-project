@@ -3,7 +3,7 @@ import { apolloAuth, client } from './../apollo';
 import { gql } from 'apollo-boost';
 import { AvatarSelection } from './../elements/avatar-selection';
 import { IRouteableComponent } from '@aurelia/router';
-import { ICustomElementViewModel, IRouter, ILogger } from 'aurelia';
+import { ICustomElementViewModel, IRouter, ILogger, IDisposable } from 'aurelia';
 import { AppNotification } from '../components/app-notification';
 import PhoneNumber from 'awesome-phonenumber';
 import { requestMobileCode, validateCode } from '../commands/register';
@@ -312,6 +312,7 @@ export class Start implements IRouteableComponent, ICustomElementViewModel {
   public notificationAnswer = true;
   public notificationMessage = false;  
   private notificationsTags: string[] = [];
+  private regSub: IDisposable;
 
   public async setNotification(event: Event) {
     if (event) {
@@ -337,13 +338,18 @@ export class Start implements IRouteableComponent, ICustomElementViewModel {
       // TODO: here we must add a listener for 'push-registration'
       // from there we get the registrationId and we can set the right
       // tags to the player, linked to the userId
-      this.push.init();
       console.log('setting a subscribeOnce event');
-      this.global.eventAggregator.subscribeOnce('push:registration', async (data: PhonegapPluginPush.RegistrationEventResponse) => {
+      if (this.regSub) {
+        this.regSub.dispose();
+        delete this.regSub;
+      }
+      this.regSub = this.global.eventAggregator.subscribeOnce('push:registration', async (data: PhonegapPluginPush.RegistrationEventResponse) => {
         console.log('receiving push:registration event', data);
-        await editMe(undefined, undefined, undefined, data.registrationId, this.notificationsTags);
+        await editMe(undefined, undefined, undefined, data.registrationId, this.push.regType, this.notificationsTags);
         console.log('end editMe');
       });
+      this.push.init();
+      console.log('Call for hasPermission')
       const enabled = await this.push.hasPermission();
       if (enabled === true) {
         // if enabled => we set the user/player/regid
@@ -356,10 +362,17 @@ export class Start implements IRouteableComponent, ICustomElementViewModel {
         console.log('Push disabled', this.push);
       } else {
         // if unknown, let's see what we can do ?
+        // probably wait for registration
         console.log('Push unsure', this.push);
       }
     } else {
       console.log('no notif selected');
+      if (this.regSub) {
+        this.regSub.dispose();
+        delete this.regSub;
+      }
+      await editMe(undefined, undefined, undefined, '', undefined, [], false);
+      this.router.load('topics');
     }
 
     // this.router.load('topics');
@@ -367,6 +380,10 @@ export class Start implements IRouteableComponent, ICustomElementViewModel {
   }
 
   public skipNotifications() {
+    if (this.regSub) {
+      this.regSub.dispose();
+      delete this.regSub;
+    }
     this.router.load('topics');
   }
 }

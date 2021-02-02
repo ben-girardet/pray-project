@@ -138,12 +138,14 @@ export class UserResolver {
             existingPlayer.regId = data.regId ? data.regId : existingPlayer.regId;
             existingPlayer.tags = data.pushTags ? data.pushTags : existingPlayer.tags;
             existingPlayer.active = data.pushActive !== undefined ? data.pushActive : existingPlayer.active;
+            existingPlayer.type = data.pushType ? data.pushType : existingPlayer.type;
             await existingPlayer.save();
         } else {
             const newPlayer = new PushPlayerModel();
             newPlayer.regId = data.regId;
             newPlayer.tags = data.pushTags;
             newPlayer.active = data.pushActive !== undefined ? data.pushActive : true;
+            newPlayer.type = data.pushType || 'apn';
             await newPlayer.save();
         }
     }
@@ -207,6 +209,7 @@ export class UserResolver {
 
     return result;
   }
+
 }
 @ObjectType()
 export class UnviewedTopic implements IUnviewedTopic {

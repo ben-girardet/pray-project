@@ -63,7 +63,7 @@ import * as Tracing from '@sentry/tracing';
 import { apolloSentryPlugin } from './core/apollo-sentry';
 
 // Push Service
-import { pushService } from './core/push-service';
+import { pushService, testPush } from './core/push-service';
 pushService.connect();
 
 const lastClientMajor = 1;
@@ -262,6 +262,7 @@ mongoose.connect(
 
     // Register our controllers with Express
     app.use(cors(corsOptions));
+    app.use('/push/test', testPush);
     registerControllers(controllers, app);
 
     io.on('connection', (socket) => {

@@ -20,6 +20,9 @@ export class EditMeInput {
     @Field(() => String, {nullable: true})
     regId?: string;
 
+    @Field(() => String, {nullable: true})
+    pushType?: 'apn' | 'fcm';
+
     @Field(() => [String], {nullable: true})
     pushTags?: string[];
 
