@@ -30,7 +30,7 @@ export class PushService {
                         keyId: process.env.APN_KEYID,
                         teamId: process.env.APN_TEAMID
                     },
-                    production: false
+                    production: true
                 }
             };
             this.push = new PushNotifications(settings);
