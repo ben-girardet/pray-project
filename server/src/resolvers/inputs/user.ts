@@ -20,7 +20,7 @@ export class EditMeInput {
     @Field(() => String, {nullable: true})
     regId?: string;
 
-    @Field(() => [String], {nullable: false})
+    @Field(() => [String], {nullable: true})
     pushTags?: string[];
 
     @Field({nullable: true})

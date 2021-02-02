@@ -3,7 +3,7 @@ import { apolloAuth, client } from '../apollo';
 import { User, HelpId } from 'shared/types/user';
 
 const editMeMutation = gql`
-mutation EditMe($firstname: String, $lastname: String, $picture: [ImageInput!], $regId: String, $pushTags: [String], $pushActive: Boolean) {
+mutation EditMe($firstname: String, $lastname: String, $picture: [ImageInput!], $regId: String, $pushTags: [String!], $pushActive: Boolean) {
   editMe(data: {firstname: $firstname, lastname: $lastname, picture: $picture, regId: $regId, pushTags: $pushTags, pushActive: $pushActive})
   {
     id,
