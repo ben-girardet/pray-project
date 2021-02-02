@@ -1,6 +1,6 @@
 import { Token } from 'shared/types/token';
 import { apolloAuth, client } from './../apollo';
-import { ApolloQueryResult, gql } from 'apollo-boost';
+import { gql } from 'apollo-boost';
 import { AvatarSelection } from './../elements/avatar-selection';
 import { IRouteableComponent } from '@aurelia/router';
 import { ICustomElementViewModel, IRouter, ILogger } from 'aurelia';
@@ -11,7 +11,7 @@ import { editMe } from '../commands/user';
 // TODO: remove all instances of /server/ in shared or client
 import { Image } from '../../../server/src/models/image';
 import { Global } from '../global';
-import Phone from 'src/icons/outline/Phone';
+import { Push } from '../helpers/push';
 
 export class Start implements IRouteableComponent, ICustomElementViewModel {
 
@@ -38,7 +38,8 @@ export class Start implements IRouteableComponent, ICustomElementViewModel {
   public constructor(
     @IRouter private router: IRouter, 
     @ILogger iLogger: ILogger,
-    private global: Global
+    private global: Global,
+    private push: Push
     ) {
     this.logger = iLogger.scopeTo('register route');
   }
@@ -55,6 +56,9 @@ export class Start implements IRouteableComponent, ICustomElementViewModel {
     if (parameters[0] === 'identity') {
       this.step = 'identity';
     }
+    setTimeout(() => {
+      // this.next('notification');
+    }, 500);
   }
 
   public async attached() {
@@ -201,6 +205,7 @@ export class Start implements IRouteableComponent, ICustomElementViewModel {
     }
   }
 
+  public validationField: HTMLElement;
   public async validateCode(event: Event | null, silent = false): Promise<any> {
     if (event) {
       event.preventDefault();
@@ -214,6 +219,7 @@ export class Start implements IRouteableComponent, ICustomElementViewModel {
         throw new Error('Validation code must have 6 digits');
       }
       await validateCode(this.token.token, this.validationCode);
+      this.validationField.blur();
       await this.getIdentity();
       this.next('identity');
     } catch (error) {
@@ -289,11 +295,78 @@ export class Start implements IRouteableComponent, ICustomElementViewModel {
         }
       }
       await editMe(editUserData.firstname, editUserData.lastname, editUserData.picture);
-      this.router.load('topics');
+      const w: any = window;
+      if (w.device.platform === 'iOS') {
+        this.next('notification');
+      } else {
+        this.router.load('topics');
+      }
     } catch (error) {
       AppNotification.notify(error.message, 'info');
     }
     this.loading = false;
     return false;
+  }
+
+  public notificationPrayer = true;
+  public notificationAnswer = true;
+  public notificationMessage = false;  
+  private notificationsTags: string[] = [];
+
+  public async setNotification(event: Event) {
+    if (event) {
+      event.preventDefault();
+    }
+
+    console.log('setNotification');
+
+    if (this.notificationPrayer) {
+      this.notificationsTags.push('prayer');
+    }
+    if (this.notificationAnswer) {
+      this.notificationsTags.push('answer');
+    }
+    if (this.notificationMessage) {
+      this.notificationsTags.push('message');
+    }
+
+    if (this.notificationsTags.length) {
+      console.log('some notif selected', this.notificationsTags);
+      // this should trigger a request from the app
+      
+      // TODO: here we must add a listener for 'push-registration'
+      // from there we get the registrationId and we can set the right
+      // tags to the player, linked to the userId
+      this.push.init();
+      console.log('setting a subscribeOnce event');
+      this.global.eventAggregator.subscribeOnce('push:registration', async (data: PhonegapPluginPush.RegistrationEventResponse) => {
+        console.log('receiving push:registration event', data);
+        await editMe(undefined, undefined, undefined, data.registrationId, this.notificationsTags);
+        console.log('end editMe');
+      });
+      const enabled = await this.push.hasPermission();
+      if (enabled === true) {
+        // if enabled => we set the user/player/regid
+        console.log('Push enabled', this.push);
+      } else if (enabled === false) {
+        // here we should display a screen/info
+        // explaining that notifications have been disabled for
+        // this app and that the user should go
+        // in the settings to enable them again
+        console.log('Push disabled', this.push);
+      } else {
+        // if unknown, let's see what we can do ?
+        console.log('Push unsure', this.push);
+      }
+    } else {
+      console.log('no notif selected');
+    }
+
+    // this.router.load('topics');
+    return false;
+  }
+
+  public skipNotifications() {
+    this.router.load('topics');
   }
 }

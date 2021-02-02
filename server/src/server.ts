@@ -62,6 +62,10 @@ import * as Sentry from '@sentry/node';
 import * as Tracing from '@sentry/tracing';
 import { apolloSentryPlugin } from './core/apollo-sentry';
 
+// Push Service
+import { pushService } from './core/push-service';
+pushService.connect();
+
 const lastClientMajor = 1;
 const lastClientMinor = 0;
 const lastClientPath = 0;

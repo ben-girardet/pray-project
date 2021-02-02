@@ -103,6 +103,7 @@ dist
 # TernJS port file
 .tern-port
 server/uploads/
+server/private/
 server/tests/artillery/_data/tokens.txt
 server/src/seeds/images/
 sunago.cordova

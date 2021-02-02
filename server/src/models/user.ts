@@ -1,14 +1,15 @@
 import crypto from 'crypto';
 import { User as IUser, HelpId } from "shared/types/user";
-import { ObjectType, Field, Authorized, FieldResolver, Ctx, Root } from "type-graphql";
+import { ObjectType, Field, Authorized, FieldResolver, Ctx, Root, Resolver } from "type-graphql";
 import { prop, Ref, getModelForClass } from "@typegoose/typegoose";
 import mongoose from 'mongoose';
-import { config, RoleType } from '../core/config';
+import { RoleType } from '../core/config';
 import moment from 'moment';
 import { Image } from './image';
 import { Context } from '../resolvers/context-interface';
 import { FriendshipModel, Friendship } from "./friendship";
 import { saveModelItem, getModelItem } from '../core/redis';
+import { PushPlayerModel, PushPlayer } from './push-player';
 
 export interface RefreshTokenData {
   refreshToken: string;
@@ -25,6 +26,7 @@ export class RefreshToken {
 }
 
 @ObjectType()
+@Resolver(of => User)
 export class User implements IUser {
 
   // @prop()
@@ -160,6 +162,16 @@ export class User implements IUser {
     }
     return context.locals.friendships[this.id.toString()];
   }
+
+  @Authorized(['me'])
+  @FieldResolver(() => PushPlayer, {nullable: true})
+    public async player(@Root() user: User) {
+        const player = await PushPlayerModel.findOne({user: user._id});
+        if (!player) {
+            return null;
+        }
+        return player.toObject()
+    }
 
   public hashPassword(password: string) {
     this.salt = crypto.randomBytes(16).toString('hex');

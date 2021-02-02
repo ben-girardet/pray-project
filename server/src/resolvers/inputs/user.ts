@@ -16,4 +16,13 @@ export class EditMeInput {
 
     @Field(() => String, {nullable: true})
     viewedHelpId?: HelpId;
+
+    @Field(() => String, {nullable: true})
+    regId?: string;
+
+    @Field(() => [String], {nullable: false})
+    pushTags?: string[];
+
+    @Field({nullable: true})
+    pushActive?: boolean;
 }

@@ -9,6 +9,7 @@
   "license": "UNLICENSED",
   "dependencies": {
     "@aurelia/i18n": "dev",
+    "@havesource/cordova-plugin-push": "github:havesource/cordova-plugin-push",
     "@microsoft/fast-animation": "^4.1.1",
     "@microsoft/fast-components": "^1.14.1",
     "@microsoft/fast-element": "^0.21.1",

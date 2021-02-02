@@ -12,6 +12,7 @@ import { MessageModel } from "../models/message";
 import { PrayerModel } from "../models/prayer";
 import { UnviewedTopic as IUnviewedTopic } from 'shared/types/unviewed-topic';
 import PhoneNumber from 'awesome-phonenumber';
+import { PushPlayerModel } from '../models/push-player';
 
 @Resolver()
 export class UserResolver {
@@ -23,9 +24,6 @@ export class UserResolver {
     if (search.length < 3) {
         throw new Error('users query is only allowed for 3+ search word');
     }
-
-
-
 
     query.$or = [
         {email: search},
@@ -133,6 +131,23 @@ export class UserResolver {
     removeModelItem('user', user._id.toString());
     const updatedUser = await user.save();
     const updatedUserInstance = new UserModel(updatedUser);
+
+    if (data.regId && data.pushTags) {
+        const existingPlayer = await PushPlayerModel.findOne({user: updatedUserInstance._id});
+        if (existingPlayer) {
+            existingPlayer.regId = data.regId ? data.regId : existingPlayer.regId;
+            existingPlayer.tags = data.pushTags ? data.pushTags : existingPlayer.tags;
+            existingPlayer.active = data.pushActive !== undefined ? data.pushActive : existingPlayer.active;
+            await existingPlayer.save();
+        } else {
+            const newPlayer = new PushPlayerModel();
+            newPlayer.regId = data.regId;
+            newPlayer.tags = data.pushTags;
+            newPlayer.active = data.pushActive !== undefined ? data.pushActive : true;
+            await newPlayer.save();
+        }
+    }
+
     return updatedUserInstance.toObject();
   }
 

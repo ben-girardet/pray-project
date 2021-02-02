@@ -31,7 +31,7 @@
 <div class="start start-validation">
   <form submit.delegate="validateCode($event)">
     <h2>Enter the code received on your mobile</h2>
-    <fast-text-field placeholder="The code" value.bind="validationCode" pattern="[0-9]*" autofocus change.delegate="codeChanged()" keyup.delegate="codeChanged()" class="${validationCode ? 'has-value':''}"></fast-text-field>
+    <fast-text-field placeholder="The code" value.bind="validationCode" pattern="[0-9]*" autofocus change.delegate="codeChanged()" keyup.delegate="codeChanged()" class="${validationCode ? 'has-value':''}" ref="validationField"></fast-text-field>
     <fast-button disabled.bind="validationCode.length !== 6" appearance="accent" type="submit">
       <fast-progress-ring slot="start" if.bind="loading"></fast-progress-ring>
       <span t="Continue"></span>
@@ -59,5 +59,35 @@
       <fast-progress-ring slot="start" if.bind="loading"></fast-progress-ring>
         <span t="Continue"></span>
     </fast-button>
+  </form>
+</div>
+
+<div class="start start-notification">
+  <form submit.delegate="setNotification($event)">
+    <h2>Be encouraged !</h2>
+    <p>Would you like to be encouraged when someone prays for you or when God answered a topic for which you prayed ?</p>
+
+    <label>Select notifications</label>
+    <div>
+      <div class="switch-row">
+        When someone prays for me
+        <fast-switch checked.bind="notificationPrayer"></fast-switch>  
+      </div>
+      <div class="switch-row">
+        When a friends topic is answered
+        <fast-switch checked.bind="notificationAnswer"></fast-switch>  
+      </div>
+      <div class="switch-row">
+        When I receive a message
+        <fast-switch checked.bind="notificationMessage"></fast-switch>  
+      </div>
+    </div>
+
+    <fast-button appearance="accent" type="submit">
+      <fast-progress-ring slot="start" if.bind="loading"></fast-progress-ring>
+        <span t="Confirm"></span>
+    </fast-button>
+
+    <fast-button appearance="lightweight" click.delegate="skipNotifications()">Skip</fast-button>
   </form>
 </div>
