@@ -116,7 +116,7 @@ export class PushNotification {
             return;
         }
         const userIds = topic.shares.map(s => s.userId).filter(id => !id.equals(fromUser._id));
-        const players = await PushPlayerModel.find({active: true, tags: {$in: ['answered']}, user: {$in: userIds}});
+        const players = await PushPlayerModel.find({active: true, tags: {$in: ['answer']}, user: {$in: userIds}});
         const regIds = players.map(p => p.regId);
 
         const notification = new PushNotificationModel();
