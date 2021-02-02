@@ -11,6 +11,8 @@ import { SortBy, SortOrder } from './inputs/sorting';
 import { Prayer, PrayerModel } from "../models/prayer";
 import moment from 'moment';
 import { ActivityModel } from '../models/activity';
+import { UnviewedTopicModel } from '../models/unviewed-topic';
+import { PushNotification } from './../models/push-notification';
 
 @Resolver()
 export class TopicResolver {
@@ -123,9 +125,10 @@ export class TopicResolver {
     share.encryptedContentKey = data.encryptedContentKey;
     share.role = 'owner';
     newTopic.shares.push(share);
-    newTopic.viewedBy = [userId.toString()];
+    // newTopic.viewedBy = [userId.toString()];
     const createdTopic = await newTopic.save();
     const createdTopicInstance = new TopicModel(createdTopic);
+    await UnviewedTopicModel.add(userId, createdTopic._id);
     await saveModelItem('topic', createdTopicInstance.toObject());
     createdTopicInstance.setMyShare(userId);
     await TopicResolver.clearTopicsCacheKeyForUser(userId.toString());
@@ -135,7 +138,7 @@ export class TopicResolver {
 
   @Authorized(['user'])
   @Mutation(() => Topic)
-  public async editTopic(@Ctx() context: Context, @Arg('id') id: string, @Arg('data') data: EditTopicInput) {
+  public async editTopic(@Ctx() context: Context, @Arg('id') id: string, @Arg('data') data: EditTopicInput, @Arg('topicExcerpt', {nullable: true}) topicExcerpt: string) {
     const user = context.user;
     const userId = new mongoose.Types.ObjectId(user.userId);
     const topicId = new mongoose.Types.ObjectId(id);
@@ -169,6 +172,9 @@ export class TopicResolver {
     }
     if (editingStatus) {
         await ActivityModel.topicStatus(userId, topicId, data.status as 'answered' | 'active' | 'archived');
+        if (data.status === 'answered') {
+            await PushNotification.sendAnsweredNotification(topicId, topicExcerpt);
+        }
     }
     return updatedTopicInstance.toObjectWithMyShare();
   }
@@ -205,22 +211,24 @@ export class TopicResolver {
     const removeShareUserId = new mongoose.Types.ObjectId(userId);
     const topicId = new mongoose.Types.ObjectId(id);
     const originalTopic = await TopicModel.findOneAndCheckRole(topicId, loggedInUserId, true);
-    originalTopic.removeShare(removeShareUserId);
+    await originalTopic.removeShare(removeShareUserId);
     originalTopic.updatedBy = loggedInUserId;
     const updatedTopic = await originalTopic.save();
     const updatedTopicInstance = new TopicModel(updatedTopic);
     await saveModelItem('topic', updatedTopicInstance.toObject());
     // we decide not to update REDIS cache for this updates below
     // as it does not interfere witch anything special, it's more a cleaning purpose
-    await MessageModel.updateMany({topicId}, {$pull: {viewedBy: removeShareUserId.toString()}});
-    await PrayerModel.updateMany({topicId}, {$pull: {viewedBy: removeShareUserId.toString()}});
+    await UnviewedTopicModel.deleteMany({topicId, userId: removeShareUserId});
+    await delAsync(`unviewed:${removeShareUserId.toString()}`);
+    // await MessageModel.updateMany({topicId}, {$pull: {viewedBy: removeShareUserId.toString()}});
+    // await PrayerModel.updateMany({topicId}, {$pull: {viewedBy: removeShareUserId.toString()}});
     updatedTopicInstance.setMyShare(loggedInUserId);
     for (const share of updatedTopicInstance.shares) {
         await TopicResolver.clearTopicsCacheKeyForUser(share.userId.toString());
     }
     // clear `unviewed:_____` REDIS cache of the use who
     // now have access to this topic
-    await delAsync(`unviewed:${removeShareUserId}`);
+    // await delAsync(`unviewed:${removeShareUserId}`);
     await ActivityModel.topicShare(loggedInUserId, topicId, 'remove', removeShareUserId);
     return updatedTopicInstance.toObjectWithMyShare();
   }
@@ -248,14 +256,14 @@ export class TopicResolver {
 
   @Authorized(['user'])
   @Mutation(() => Prayer)
-  public async pray(@Ctx() context: Context, @Arg('topicId') topicId: string) {
+  public async pray(@Ctx() context: Context, @Arg('topicId') topicId: string, @Arg('topicExcerpt', {nullable: true}) topicExcerpt: string) {
     const user = context.user;
     const userId = new mongoose.Types.ObjectId(user.userId);
     const topic = await TopicModel.findOneAndCheckRole(new mongoose.Types.ObjectId(topicId), userId, false);
     const newPrayer = new PrayerModel();
     newPrayer.topicId = topic._id;
     newPrayer.createdBy = new mongoose.Types.ObjectId(context.user.userId);
-    newPrayer.viewedBy = [userId.toString()];
+    // newPrayer.viewedBy = [userId.toString()];
     const createdPrayer = await newPrayer.save();
     const prayerObject = createdPrayer.toObject();
     const exists = await existsAsync(`topic-prayers:${topicId.toString()}`)
@@ -263,12 +271,14 @@ export class TopicResolver {
         await lpushAsync(`topic-prayers:${topicId.toString()}`, JSON.stringify(prayerObject));
     }
     for (const share of topic.shares) {
+        await UnviewedTopicModel.add(share.userId, topic._id, undefined, newPrayer._id);
         await TopicResolver.clearTopicsCacheKeyForUser(share.userId.toString());
         // clear `unviewed:_____` REDIS cache of all users
         // who have access to this topic
         await delAsync(`unviewed:${share.userId.toString()}`);
     }
     await ActivityModel.prayed(userId, topic._id, createdPrayer._id);
+    await PushNotification.sendPrayerNotification(userId, topic._id, topicExcerpt);
     return prayerObject;
   }
 
@@ -277,26 +287,23 @@ export class TopicResolver {
   public async viewed(@Ctx() ctx: Context, @Arg('date', {nullable: true}) date: string, @Arg('context') context: string, @Arg('topicId', {nullable: false}) topicId: string) {
     const user = ctx.user;
     const userId = new mongoose.Types.ObjectId(user.userId);
-    const dateMoment = moment(date);
-    if (!dateMoment.isValid()) {
-        throw new Error('Invalid date');
-    }
+    // const dateMoment = moment(date);
+    // if (!dateMoment.isValid()) {
+    //     throw new Error('Invalid date');
+    // }
     if (context === 'topic') {
-        await TopicModel.updateOne({
-            _id: new mongoose.Types.ObjectId(topicId)
-        }, {$addToSet: {viewedBy: userId.toString()}});
+        await UnviewedTopicModel.updateMany({userId, topicId: new mongoose.Types.ObjectId(topicId)}, {$set: {isViewed: true}});
+        // we removed the idea of unviewed topic
+        // but rather focus on unviewed messages and prayers in a topic
+        // await TopicModel.updateOne({
+        //     _id: new mongoose.Types.ObjectId(topicId)
+        // }, {$addToSet: {viewedBy: userId.toString()}});
     } else if (context === 'messages') {
-        if (!date) {
-            throw new Error('Missing date');
-        }
-        const result1 = await MessageModel.updateMany({
-            createdAt: {$lte: dateMoment.add(1, 'second').toDate()},
-            topicId: new mongoose.Types.ObjectId(topicId)
-        }, {$addToSet: {viewedBy: userId.toString()}});
-        await PrayerModel.updateMany({
-            createdAt: {$lte: dateMoment.add(1, 'second').toDate()},
-            topicId: new mongoose.Types.ObjectId(topicId)
-        }, {$addToSet: {viewedBy: userId.toString()}});
+        // if (!date) {
+        //     throw new Error('Missing date');
+        // }
+        await UnviewedTopicModel.deleteMany({userId, topicId: new mongoose.Types.ObjectId(topicId)});
+        await delAsync(`unviewed:${userId.toString()}`);
     }
     return true;
   }

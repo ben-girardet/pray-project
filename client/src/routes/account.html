@@ -18,7 +18,6 @@
     <fast-menu-item load="../edit-profile">
       <pray-icon icon="User" slot="start"></pray-icon>
       ${'account.Edit my profile' | t}
-      <fast-badge slot="end" fill="primary" color="white" circular if.bind="global.notificationService.requestedFriendshipIds.length > 0">${global.notificationService.requestedFriendshipIds.length}</fast-badge>
     </fast-menu-item>
     <fast-menu-item disabled>
       <pray-icon icon="Key" slot="start"></pray-icon>

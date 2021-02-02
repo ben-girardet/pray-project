@@ -71,10 +71,6 @@ export class Activity implements IRouteableComponent, ICustomElementViewModel {
     }
   }
 
-  public detached() {
-    
-  }
-
   public detaching(): void {
     const vp = document.querySelector('au-viewport[name=main]');
     if (vp) {

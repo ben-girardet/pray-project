@@ -35,8 +35,8 @@ export class Prayer implements IPrayer {
     @prop()
     public updatedAt: Date;
 
-    @prop({type: () => [String], _id: false, index: true})
-    public viewedBy?: string[] = [];
+    // @prop({type: () => [String], _id: false, index: true})
+    // public viewedBy?: string[] = [];
 
     public static async findTopicPrayersWithCache(topicId: any) {
         if (!topicId) {

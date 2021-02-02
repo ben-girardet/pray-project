@@ -122,7 +122,7 @@ export class Praying implements IRouteableComponent, ICustomElementViewModel {
     this.playlistContainer.addEventListener('touchend', this.handleTouchStop);
   }
 
-  public detached() {
+  public unload() {
     this.playlistContainer.removeEventListener('touchstart', this.handleTouchStart);
     this.playlistContainer.removeEventListener('touchmove', this.handleTouchMove);
     this.playlistContainer.removeEventListener('touchend', this.handleTouchStop);

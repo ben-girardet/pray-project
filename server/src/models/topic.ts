@@ -1,3 +1,4 @@
+import { delAsync } from './../core/redis';
 import { Topic as ITopic } from "shared/types/topic";
 import { User } from "./user";
 import { ObjectType, Field } from "type-graphql";
@@ -6,6 +7,7 @@ import mongoose from 'mongoose';
 import { identity } from './middleware/identity';
 import { Share } from './share';
 import { Image } from './image';
+import { UnviewedTopicModel } from "./unviewed-topic";
 
 @ObjectType()
 export class Topic implements ITopic {
@@ -61,8 +63,8 @@ export class Topic implements ITopic {
     @Field({nullable: true})
     public myShare?: Share;
 
-    @prop({type: () => [String], _id: false, index: true})
-    public viewedBy?: string[] = [];
+    // @prop({type: () => [String], _id: false, index: true})
+    // public viewedBy?: string[] = [];
 
     public setMyShare(userId: mongoose.Types.ObjectId) {
         this.myShare = undefined;
@@ -108,10 +110,11 @@ export class Topic implements ITopic {
                 encryptedContentKey,
                 role: owner ? 'owner' : 'member'
             });
+            UnviewedTopicModel.add(userId, this._id, undefined, undefined, false);
         }
     }
 
-    public removeShare(userId: mongoose.Types.ObjectId) {
+    public async removeShare(userId: mongoose.Types.ObjectId) {
         for (let index = 0; index < this.shares.length; index++) {
             const share = this.shares[index];
             if (share.userId.equals(userId)) {
@@ -119,10 +122,12 @@ export class Topic implements ITopic {
                 return;
             }
         }
-        const indexOfViewedBy = (this.viewedBy || []).indexOf(userId.toString());
-        if (indexOfViewedBy !== -1) {
-            this.viewedBy = this.viewedBy?.splice(indexOfViewedBy, 1);
-        }
+        await UnviewedTopicModel.deleteMany({topicId: this._id, userId: userId});
+        await delAsync(`unviewed:${userId.toString()}`);
+        // const indexOfViewedBy = (this.viewedBy || []).indexOf(userId.toString());
+        // if (indexOfViewedBy !== -1) {
+        //     this.viewedBy = this.viewedBy?.splice(indexOfViewedBy, 1);
+        // }
         return;
     }
 }

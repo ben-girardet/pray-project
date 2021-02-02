@@ -7,6 +7,8 @@ import { Resolver, Arg, Authorized, Ctx, Mutation, Query } from "type-graphql";
 import { Context } from "./context-interface";
 import { mongoose } from "@typegoose/typegoose";
 import { TopicResolver } from './topic';
+import { UnviewedTopicModel } from '../models/unviewed-topic';
+import { PushNotification } from './../models/push-notification';
 
 @Resolver()
 export class MessageResolver {
@@ -46,7 +48,7 @@ export class MessageResolver {
 
   @Authorized(['user'])
   @Mutation(() => Message)
-  public async createMessageInTopic(@Ctx() context: Context, @Arg('data') data: CreateMessageInTopicInput) {
+  public async createMessageInTopic(@Ctx() context: Context, @Arg('data') data: CreateMessageInTopicInput, @Arg('topicExcerpt', {nullable: true}) topicExcerpt: string, @Arg('messageExcerpt', {nullable: true}) messageExcerpt: string) {
     const user = context.user;
     const userId = new mongoose.Types.ObjectId(user.userId);
     const topicId = new mongoose.Types.ObjectId(data.topicId);
@@ -56,7 +58,7 @@ export class MessageResolver {
     newMessage.updatedBy = userId;
     newMessage.text = data.text;
     newMessage.topicId = topicId;
-    (newMessage.viewedBy as any).addToSet(userId.toString());
+    // (newMessage.viewedBy as any).addToSet(userId.toString());
 
     const createdMessage = await newMessage.save();
     const createdMessageInstance = new MessageModel(createdMessage);
@@ -67,12 +69,14 @@ export class MessageResolver {
         await lpushAsync(`topic-messages:${topicId.toString()}`, JSON.stringify(messageObject));
     }
     for (const share of topic.shares) {
+        await UnviewedTopicModel.add(share.userId, topicId, messageObject._id);
         await TopicResolver.clearTopicsCacheKeyForUser(share.userId.toString());
         // clear `unviewed:_____` REDIS cache of all users
         // who have access to this topic
-        await delAsync(`unviewed:${share.userId.toString()}`);
+        // await delAsync(`unviewed:${share.userId.toString()}`);
     }
     await ActivityModel.message(userId, topic._id, createdMessage._id, 'create');
+    await PushNotification.sendMessageNotification(userId, topic._id, topicExcerpt, messageExcerpt);
     return messageObject;
   }
 

@@ -1,5 +1,5 @@
 export interface UnviewedTopic {
-  id: string;
+  topicId: string | any;
   isViewed: boolean;
   messages: string[];
   prayers: string[];

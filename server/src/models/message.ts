@@ -43,8 +43,8 @@ export class Message implements IMessage {
     @prop()
     public updatedAt: Date;
 
-    @prop({type: () => [String], _id: false, index: true})
-    public viewedBy?: string[] = [];
+    // @prop({type: () => [String], _id: false, index: true})
+    // public viewedBy?: string[] = [];
 
     public static async findTopicMessagesWithCache(topicId: any) {
       if (!topicId) {

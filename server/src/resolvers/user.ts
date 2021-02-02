@@ -1,4 +1,4 @@
-import { setAsync, client } from './../core/redis';
+import { setAsync, client, getAsync } from './../core/redis';
 import { User, UserModel } from "../models/user";
 import { Resolver, Query, Arg, Ctx, Mutation, Authorized, ObjectType, Field } from "type-graphql";
 import { FilterQuery } from 'mongoose';
@@ -10,7 +10,7 @@ import { removeModelItem } from "../core/redis";
 import { TopicModel } from "../models/topic";
 import { MessageModel } from "../models/message";
 import { PrayerModel } from "../models/prayer";
-import { UnviewedTopic as IUnviewedTopic } from 'shared/types/unviewed-topic';
+import { UnviewedTopic, UnviewedTopicModel } from '../models/unviewed-topic';
 import PhoneNumber from 'awesome-phonenumber';
 import { PushPlayerModel } from '../models/push-player';
 
@@ -158,72 +158,73 @@ export class UserResolver {
   @Query(() => [UnviewedTopic])
   public async unviewed(@Ctx() context: Context) {
     const userIdString = context.user.userId;
+
+    const cacheValue = await getAsync(`unviewed:${userIdString}`);
+    if (cacheValue) {
+        try {
+            console.log('cacheValue', cacheValue);
+            const result = JSON.parse(cacheValue);
+            return result;
+        } catch (error) {
+            // do nothing
+        }
+    }
+
     const userId = new mongoose.Types.ObjectId(context.user.userId);
 
     // fetch all topics so that
     // - we can identify those unviewed
     // - AND we can fetch messages and prayers related to "my" topis
-    const topics = await TopicModel.find({"shares.userId": userId}).select('_id viewedBy');
-    const topicsIds = topics.map(t => t._id);
-    const unviewedMessages = await MessageModel.find({"topicId": {$in: topicsIds}, viewedBy: {$nin: [userIdString]}}).select('_id topicId');
-    const unviewedPrayers = await PrayerModel.find({"topicId": {$in: topicsIds}, viewedBy: {$nin: [userIdString]}}).select('_id topicId');
+    const topics = await TopicModel.find({"shares.userId": userId}).select('_id');
+    const unviewedTopics = await UnviewedTopicModel.find({userId: userId, topicId: {$in: topics.map(t => t._id)}});
+    const result = unviewedTopics.map(o => o.toObject());
 
-    // build the output for "unviewed"
-    const result: UnviewedTopic[] = [];
-    const unviewedMessagesByTopic: {[key: string]: string[]} = {};
-    const unviewedPrayersByTopic: {[key: string]: string[]} = {};
-    for (const unviewedMessage of unviewedMessages) {
-        if (!unviewedMessage.topicId) {
-            continue;
-        }
-        const topicIdString = unviewedMessage.topicId.toString();
-        if (!Array.isArray(unviewedMessagesByTopic[topicIdString])) {
-            unviewedMessagesByTopic[topicIdString] = [];
-        }
-        unviewedMessagesByTopic[topicIdString].push(unviewedMessage._id.toString());
-    }
-    for (const unviewedPrayer of unviewedPrayers) {
-        if (!unviewedPrayer.topicId) {
-            continue;
-        }
-        const topicIdString = unviewedPrayer.topicId.toString();
-        if (!Array.isArray(unviewedPrayersByTopic[topicIdString])) {
-            unviewedPrayersByTopic[topicIdString] = [];
-        }
-        unviewedPrayersByTopic[topicIdString].push(unviewedPrayer._id.toString());
-    }
-    for (const topic of topics) {
-        const unviewedTopic = new UnviewedTopic();
-        const topicIdString = topic._id.toString();
-        unviewedTopic.id = topicIdString;
-        unviewedTopic.isViewed = (topic.viewedBy || []).includes(userIdString);
-        unviewedTopic.messages = unviewedMessagesByTopic[topicIdString] || [];
-        unviewedTopic.prayers = unviewedPrayersByTopic[topicIdString] || [];
-        if (!unviewedTopic.isViewed || unviewedTopic.messages.length > 0 || unviewedTopic.prayers.length > 0) {
-            result.push(unviewedTopic);
-        }
-    }
+    // const topicsIds = topics.map(t => t._id);
+    // const unviewedMessages = await MessageModel.find({"topicId": {$in: topicsIds}, viewedBy: {$nin: [userIdString]}}).select('_id topicId');
+    // const unviewedPrayers = await PrayerModel.find({"topicId": {$in: topicsIds}, viewedBy: {$nin: [userIdString]}}).select('_id topicId');
+
+    // // build the output for "unviewed"
+    // const result: UnviewedTopic[] = [];
+    // const unviewedMessagesByTopic: {[key: string]: string[]} = {};
+    // const unviewedPrayersByTopic: {[key: string]: string[]} = {};
+    // for (const unviewedMessage of unviewedMessages) {
+    //     if (!unviewedMessage.topicId) {
+    //         continue;
+    //     }
+    //     const topicIdString = unviewedMessage.topicId.toString();
+    //     if (!Array.isArray(unviewedMessagesByTopic[topicIdString])) {
+    //         unviewedMessagesByTopic[topicIdString] = [];
+    //     }
+    //     unviewedMessagesByTopic[topicIdString].push(unviewedMessage._id.toString());
+    // }
+    // for (const unviewedPrayer of unviewedPrayers) {
+    //     if (!unviewedPrayer.topicId) {
+    //         continue;
+    //     }
+    //     const topicIdString = unviewedPrayer.topicId.toString();
+    //     if (!Array.isArray(unviewedPrayersByTopic[topicIdString])) {
+    //         unviewedPrayersByTopic[topicIdString] = [];
+    //     }
+    //     unviewedPrayersByTopic[topicIdString].push(unviewedPrayer._id.toString());
+    // }
+    // for (const topic of topics) {
+    //     const unviewedTopic = new UnviewedTopic();
+    //     const topicIdString = topic._id.toString();
+    //     unviewedTopic.id = topicIdString;
+    //     unviewedTopic.isViewed = (topic.viewedBy || []).includes(userIdString);
+    //     unviewedTopic.messages = unviewedMessagesByTopic[topicIdString] || [];
+    //     unviewedTopic.prayers = unviewedPrayersByTopic[topicIdString] || [];
+    //     if (!unviewedTopic.isViewed || unviewedTopic.messages.length > 0 || unviewedTopic.prayers.length > 0) {
+    //         result.push(unviewedTopic);
+    //     }
+    // }
 
     // cache the result
     await setAsync(`unviewed:${userIdString}`, JSON.stringify(result));
-    client.expire(`unviewed:${userIdString}`, 3600 * 12);
+    client.expire(`unviewed:${userIdString}`, 60 * 20);
 
     return result;
   }
 
 }
-@ObjectType()
-export class UnviewedTopic implements IUnviewedTopic {
 
-    @Field()
-    public id: string;
-
-    @Field()
-    public isViewed: boolean;
-
-    @Field(() => [String])
-    public messages: string[];
-
-    @Field(() => [String])
-    public prayers: string[];
-}

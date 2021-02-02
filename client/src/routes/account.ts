@@ -34,7 +34,7 @@ export class Account implements IRouteableComponent, ICustomElementViewModel {
     this.language = this.global.i18n.getLocale();
   }
 
-  public detached(): void {
+  public unload(): void {
     for (const event of this.events) {
       event.dispose();
     }

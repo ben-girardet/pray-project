@@ -296,7 +296,7 @@ export class Start implements IRouteableComponent, ICustomElementViewModel {
       }
       await editMe(editUserData.firstname, editUserData.lastname, editUserData.picture);
       const w: any = window;
-      if (w.device.platform === 'iOS') {
+      if (w.device?.platform === 'iOS') {
         this.next('notification');
       } else {
         this.router.load('topics');
@@ -318,62 +318,74 @@ export class Start implements IRouteableComponent, ICustomElementViewModel {
     if (event) {
       event.preventDefault();
     }
-
-    console.log('setNotification');
-
-    if (this.notificationPrayer) {
-      this.notificationsTags.push('prayer');
+    if (this.loading) {
+      return false;
     }
-    if (this.notificationAnswer) {
-      this.notificationsTags.push('answer');
-    }
-    if (this.notificationMessage) {
-      this.notificationsTags.push('message');
-    }
+    this.loading = true;
+    try {
 
-    if (this.notificationsTags.length) {
-      console.log('some notif selected', this.notificationsTags);
-      // this should trigger a request from the app
-      
-      // TODO: here we must add a listener for 'push-registration'
-      // from there we get the registrationId and we can set the right
-      // tags to the player, linked to the userId
-      console.log('setting a subscribeOnce event');
-      if (this.regSub) {
-        this.regSub.dispose();
-        delete this.regSub;
+      console.log('setNotification');
+  
+      if (this.notificationPrayer) {
+        this.notificationsTags.push('prayer');
       }
-      this.regSub = this.global.eventAggregator.subscribeOnce('push:registration', async (data: PhonegapPluginPush.RegistrationEventResponse) => {
-        console.log('receiving push:registration event', data);
-        await editMe(undefined, undefined, undefined, data.registrationId, this.push.regType, this.notificationsTags);
-        console.log('end editMe');
-      });
-      this.push.init();
-      console.log('Call for hasPermission')
-      const enabled = await this.push.hasPermission();
-      if (enabled === true) {
-        // if enabled => we set the user/player/regid
-        console.log('Push enabled', this.push);
-      } else if (enabled === false) {
-        // here we should display a screen/info
-        // explaining that notifications have been disabled for
-        // this app and that the user should go
-        // in the settings to enable them again
-        console.log('Push disabled', this.push);
+      if (this.notificationAnswer) {
+        this.notificationsTags.push('answer');
+      }
+      if (this.notificationMessage) {
+        this.notificationsTags.push('message');
+      }
+  
+      if (this.notificationsTags.length) {
+        console.log('some notif selected', this.notificationsTags);
+        // this should trigger a request from the app
+        
+        // TODO: here we must add a listener for 'push-registration'
+        // from there we get the registrationId and we can set the right
+        // tags to the player, linked to the userId
+        console.log('setting a subscribeOnce event');
+        if (this.regSub) {
+          this.regSub.dispose();
+          delete this.regSub;
+        }
+        this.regSub = this.global.eventAggregator.subscribeOnce('push:registration', async (data: PhonegapPluginPush.RegistrationEventResponse) => {
+          console.log('receiving push:registration event', data);
+          await editMe(undefined, undefined, undefined, data.registrationId, this.push.regType, this.notificationsTags);
+          console.log('end editMe');
+          this.router.load('topics');
+        });
+        this.push.init();
+        console.log('Call for hasPermission')
+        const enabled = await this.push.hasPermission();
+        if (enabled === true) {
+          // if enabled => we set the user/player/regid
+          console.log('Push enabled', this.push);
+        } else if (enabled === false) {
+          // here we should display a screen/info
+          // explaining that notifications have been disabled for
+          // this app and that the user should go
+          // in the settings to enable them again
+          console.log('Push disabled', this.push);
+        } else {
+          // if unknown, let's see what we can do ?
+          // probably wait for registration
+          console.log('Push unsure', this.push);
+        }
       } else {
-        // if unknown, let's see what we can do ?
-        // probably wait for registration
-        console.log('Push unsure', this.push);
+        console.log('no notif selected');
+        if (this.regSub) {
+          this.regSub.dispose();
+          delete this.regSub;
+        }
+        await editMe(undefined, undefined, undefined, '', undefined, [], false);
+        this.router.load('topics');
       }
-    } else {
-      console.log('no notif selected');
-      if (this.regSub) {
-        this.regSub.dispose();
-        delete this.regSub;
-      }
-      await editMe(undefined, undefined, undefined, '', undefined, [], false);
-      this.router.load('topics');
+    } catch (error) {
+      AppNotification.notify(error.message, 'error');
     }
+
+    this.loading = false;
+
 
     // this.router.load('topics');
     return false;

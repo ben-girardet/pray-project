@@ -90,7 +90,7 @@ export class Conversation implements IRouteableComponent, ICustomElementViewMode
     });
   }
 
-  public detached(): void {
+  public unload(): void {
     for (const event of this.events) {
       event.dispose();
     }

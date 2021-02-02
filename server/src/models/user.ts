@@ -194,7 +194,7 @@ export class User implements IUser {
     return { refreshToken, hash, expiry };
   }
 
-  public static async findByIdWithCache(id: any) {
+  public static async findByIdWithCache(id: any): Promise<User | null> {
     if (!id) {
       return null;
     }

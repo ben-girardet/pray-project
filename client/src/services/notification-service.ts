@@ -6,7 +6,7 @@ import { UnviewedTopic } from 'shared/types/unviewed-topic';
 const unviewedQuery = gql`
 query Unviewed {
   unviewed {
-    id,
+    topicId,
     isViewed,
     messages,
     prayers
@@ -56,21 +56,21 @@ export class NotificationService {
   public async fetchUnviewedStatus(): Promise<void> {
     try {
       const result = await client.query<{unviewed: UnviewedTopic[]}>({query: unviewedQuery, fetchPolicy: 'network-only'});
-      this.unviewedTopicIds = result.data.unviewed.filter(u => !u.isViewed).map(u => u.id);
+      this.unviewedTopicIds = result.data.unviewed.filter(u => !u.isViewed).map(u => u.topicId);
       const unviewedMessages: {[key: string]: string[]} = {};
       const unviewedPrayers: {[key: string]: string[]} = {};
       const unviewedNumbers: {[key: string]: number} = {};
       for (const unviewedTopic of result.data.unviewed) {
         let unviewedNumber = 0;
         if (unviewedTopic.messages && unviewedTopic.messages.length > 0) {
-          unviewedMessages[unviewedTopic.id] = unviewedTopic.messages;
+          unviewedMessages[unviewedTopic.topicId] = unviewedTopic.messages;
           unviewedNumber += unviewedTopic.messages.length;
         }
         if (unviewedTopic.prayers && unviewedTopic.prayers.length > 0) {
-          unviewedPrayers[unviewedTopic.id] = unviewedTopic.prayers;
+          unviewedPrayers[unviewedTopic.topicId] = unviewedTopic.prayers;
           unviewedNumber += unviewedTopic.prayers.length;
         }
-        unviewedNumbers[unviewedTopic.id] = unviewedNumber;
+        unviewedNumbers[unviewedTopic.topicId] = unviewedNumber;
       }
 
       this.unviewedMessages = unviewedMessages;
