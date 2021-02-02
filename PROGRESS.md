@@ -205,6 +205,7 @@ Login is now pretty well in place. Now is the time to improve the topic experien
 ## Next 
 - [ ] Solidify notification start and settings
 - [ ] Solid testing of notifications
+- [ ] Translation: external files and notification translation
 - [ ] Create SMS API account
 - [ ] Ackknoledgment (incl. illustrations)
 - [ ] Backups every night
