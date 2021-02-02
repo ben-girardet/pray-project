@@ -203,6 +203,8 @@ Login is now pretty well in place. Now is the time to improve the topic experien
 - [x] Improve Apple / Demo user account with new mobile only system
 - [x] Stack AppNotifications (so we can see several)
 ## Next 
+- [ ] Solidify notification start and settings
+- [ ] Solid testing of notifications
 - [ ] Create SMS API account
 - [ ] Ackknoledgment (incl. illustrations)
 - [ ] Backups every night

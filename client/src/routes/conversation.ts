@@ -152,7 +152,7 @@ export class Conversation implements IRouteableComponent, ICustomElementViewMode
   public async sendMessage(): Promise<void> {
     try {
       const cryptedMessage = await CryptingService.encryptNewMessage(this.topic, this.message);
-      await createMessageInTopic(this.topicId, cryptedMessage);
+      await createMessageInTopic(this.topicId, cryptedMessage, this.topic.name.substr(0, 40), this.message.substr(0, 40));
       this.message = '';
       this.messageChanged();
       // TODO: optimize this thing when a conversation has lots of messages

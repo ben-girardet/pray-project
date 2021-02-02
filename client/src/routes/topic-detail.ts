@@ -100,7 +100,8 @@ export class TopicDetail implements IRouteableComponent, ICustomElementViewModel
 
   public async markTopicAs(status: 'active' | 'answered' | 'archived'): Promise<void> {
     try {
-      await editTopic(this.topicId, {status});
+      const topicExcerpt = status === 'answered' ? this.topic.name.substr(0, 40) : undefined;
+      await editTopic(this.topicId, {status}, topicExcerpt);
       await this.tryToFetchTopic();
     } catch (error) {
       this.logger.error(error);

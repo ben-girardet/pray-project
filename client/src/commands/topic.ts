@@ -156,8 +156,8 @@ mutation CreateTopic($name: String!, $color: String!, $image: [ImageInput!], $en
 }`;
 
 const editTopicMutation = gql`
-mutation EditTopic($id: String!, $data: EditTopicInput!) {
-  editTopic(id: $id, data: $data)
+mutation EditTopic($id: String!, $data: EditTopicInput!, $topicExcerpt: String) {
+  editTopic(id: $id, data: $data, topicExcerpt: $topicExcerpt)
   {
     id,
     name,
@@ -217,8 +217,8 @@ mutation RemoveShareToTopicMutation($id: String!, $userId: String!) {
 }`
 
 const prayMutation = gql`
-mutation Pray($topicId: String!) {
-  pray(topicId: $topicId) {
+mutation Pray($topicId: String!, $topicExcerpt: String) {
+  pray(topicId: $topicId, topicExcerpt: $topicExcerpt) {
     id,
     topicId,
     createdBy {
@@ -307,7 +307,7 @@ export async function editTopic(id: string,
     color?: string;
     status?: string;
     image?: {fileId: string, width: number, height: number}[];
-  }): Promise<Topic> {
+  }, topicExcerpt?: string): Promise<Topic> {
   interface Res {
     editTopic: Topic
   }
@@ -315,7 +315,8 @@ export async function editTopic(id: string,
     mutation: editTopicMutation, 
     variables: {
       id,
-      data
+      data,
+      topicExcerpt
     }
   });
   return result.data.editTopic;
@@ -365,10 +366,10 @@ export async function removeShareToTopic(id: string, userId: string): Promise<{u
   return result.data.removeShareToTopic.shares;
 }
 
-export async function pray(topicId): Promise<Prayer> {
+export async function pray(topicId: string, topicExcerpt: string): Promise<Prayer> {
   const result = await client.mutate<{pray: Prayer}>({
     mutation: prayMutation, 
-    variables: { topicId }
+    variables: { topicId, topicExcerpt }
   });
   return result.data.pray;
 }

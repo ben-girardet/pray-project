@@ -196,7 +196,7 @@ export class Praying implements IRouteableComponent, ICustomElementViewModel {
   public async prayed(fromTerminateAction = true) {
     try {
       const index = Math.min(this.topic1Index, this.topic2Index);
-      const prayed = await pray(this.playlist[index].id);
+      const prayed = await pray(this.playlist[index].id, this.playlist[index].name.substr(0, 40));
       this.touchAction = 'prayed';
       if (!fromTerminateAction) {
         this.terminateAction(true);

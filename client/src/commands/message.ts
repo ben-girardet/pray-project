@@ -3,8 +3,8 @@ import { client } from '../apollo';
 import { Message } from 'shared/types/message';
 
 const createMessageInTopicMutation = gql`
-mutation CreateMessageInTopic($topicId: String!, $text: String!) {
-  createMessageInTopic(data: {topicId: $topicId, text: $text})
+mutation CreateMessageInTopic($topicId: String!, $text: String!, $topicExcerpt: String, $messageExcerpt: String) {
+  createMessageInTopic(data: {topicId: $topicId, text: $text}, topicExcerpt: $topicExcerpt, messageExcerpt: $messageExcerpt)
   {
     id,
     text,
@@ -32,8 +32,10 @@ query Message($id: String!) {
 }
 `
 
-export async function createMessageInTopic(topicId: string, text: string): Promise<Message> {
-  const result = await client.mutate<{createMessageInTopic: Message}>({mutation: createMessageInTopicMutation, variables: {topicId, text}, fetchPolicy: 'no-cache'});
+export async function createMessageInTopic(topicId: string, text: string, topicExcerpt: string, messageExcerpt: string): Promise<Message> {
+  const result = await client.mutate<{createMessageInTopic: Message}>({
+    mutation: createMessageInTopicMutation, 
+    variables: {topicId, text, topicExcerpt, messageExcerpt}, fetchPolicy: 'no-cache'});
   return result.data.createMessageInTopic;
 }
 
