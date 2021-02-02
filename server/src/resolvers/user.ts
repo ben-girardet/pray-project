@@ -142,6 +142,7 @@ export class UserResolver {
             await existingPlayer.save();
         } else {
             const newPlayer = new PushPlayerModel();
+            newPlayer.user = updatedUserInstance._id;
             newPlayer.regId = data.regId;
             newPlayer.tags = data.pushTags;
             newPlayer.active = data.pushActive !== undefined ? data.pushActive : true;
