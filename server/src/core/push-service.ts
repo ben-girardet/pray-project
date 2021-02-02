@@ -29,7 +29,8 @@ export class PushService {
                         key: privatePath + process.env.APN_KEY,
                         keyId: process.env.APN_KEYID,
                         teamId: process.env.APN_TEAMID
-                    }
+                    },
+                    production: false
                 }
             };
             this.push = new PushNotifications(settings);
@@ -135,7 +136,6 @@ function testPush(req: express.Request, res: express.Response, next: express.Nex
             const createdNotification = new PushNotificationModel(notificationDocument);
 
             const sentNotification = await pushService.send(createdNotification);
-
 
             res.send(new PushPlayerModel(sentNotification).toObject());
             resolve(null);
