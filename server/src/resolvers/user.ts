@@ -13,6 +13,7 @@ import { PrayerModel } from "../models/prayer";
 import { UnviewedTopic, UnviewedTopicModel } from '../models/unviewed-topic';
 import PhoneNumber from 'awesome-phonenumber';
 import { PushPlayerModel } from '../models/push-player';
+import { addExtensionMethods } from '@sentry/tracing';
 
 @Resolver()
 export class UserResolver {
@@ -133,13 +134,14 @@ export class UserResolver {
     const updatedUserInstance = new UserModel(updatedUser);
 
     if (data.regId && data.pushTags) {
-        const existingPlayer = await PushPlayerModel.findOne({user: updatedUserInstance._id});
+        const existingPlayer = await PushPlayerModel.findOne({user: new mongoose.Types.ObjectId(updatedUserInstance._id)});
         if (existingPlayer) {
-            existingPlayer.regId = data.regId ? data.regId : existingPlayer.regId;
-            existingPlayer.tags = Array.isArray(data.pushTags) ? data.pushTags : existingPlayer.tags;
-            existingPlayer.active = data.pushActive !== undefined ? data.pushActive : existingPlayer.active;
-            existingPlayer.type = data.pushType ? data.pushType : existingPlayer.type;
-            await existingPlayer.save();
+            const regId = data.regId ? data.regId : existingPlayer.regId;
+            const tags = Array.isArray(data.pushTags) ? data.pushTags : existingPlayer.tags;
+            const active = data.pushActive !== undefined ? data.pushActive : existingPlayer.active;
+            const type = data.pushType ? data.pushType : existingPlayer.type;
+            //await existingPlayer.save();
+            await PushPlayerModel.updateMany({_id: existingPlayer._id}, {$set: {regId, tags, active, type}});
         } else {
             const newPlayer = new PushPlayerModel();
             newPlayer.user = updatedUserInstance._id;
