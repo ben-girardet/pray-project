@@ -1,7 +1,7 @@
 import crypto from 'crypto';
 import { User as IUser, HelpId } from "shared/types/user";
-import { ObjectType, Field, Authorized, FieldResolver, Ctx, Root, Resolver } from "type-graphql";
-import { prop, Ref, getModelForClass } from "@typegoose/typegoose";
+import { ObjectType, Field, Authorized, Ctx, Root, Resolver } from "type-graphql";
+import { prop, getModelForClass } from "@typegoose/typegoose";
 import mongoose from 'mongoose';
 import { RoleType } from '../core/config';
 import moment from 'moment';
@@ -164,7 +164,7 @@ export class User implements IUser {
   }
 
   @Authorized(['me'])
-  @FieldResolver(() => PushPlayer, {nullable: true})
+  @Field(() => PushPlayer, {nullable: true})
     public async player(@Root() user: User) {
         const player = await PushPlayerModel.findOne({user: user._id});
         if (!player) {
