@@ -136,7 +136,7 @@ export class UserResolver {
         const existingPlayer = await PushPlayerModel.findOne({user: updatedUserInstance._id});
         if (existingPlayer) {
             existingPlayer.regId = data.regId ? data.regId : existingPlayer.regId;
-            existingPlayer.tags = data.pushTags ? data.pushTags : existingPlayer.tags;
+            existingPlayer.tags = Array.isArray(data.pushTags) ? data.pushTags : existingPlayer.tags;
             existingPlayer.active = data.pushActive !== undefined ? data.pushActive : existingPlayer.active;
             existingPlayer.type = data.pushType ? data.pushType : existingPlayer.type;
             await existingPlayer.save();
