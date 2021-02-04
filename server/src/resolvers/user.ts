@@ -133,11 +133,11 @@ export class UserResolver {
     const updatedUser = await user.save();
     const updatedUserInstance = new UserModel(updatedUser);
 
-    if (data.regId && data.pushTags) {
+    if (typeof data.regId === 'string' && Array.isArray(data.pushTags)) {
         const existingPlayer = await PushPlayerModel.findOne({user: new mongoose.Types.ObjectId(updatedUserInstance._id)});
         if (existingPlayer) {
-            const regId = data.regId ? data.regId : existingPlayer.regId;
-            const tags = Array.isArray(data.pushTags) ? data.pushTags : existingPlayer.tags;
+            const regId = data.regId;
+            const tags = data.pushTags
             const active = data.pushActive !== undefined ? data.pushActive : existingPlayer.active;
             const type = data.pushType ? data.pushType : existingPlayer.type;
             //await existingPlayer.save();
