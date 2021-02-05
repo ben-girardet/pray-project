@@ -5,6 +5,7 @@ cordova plugin add cordova-plugin-splashscreen
 cordova plugin add cordova-plugin-device
 cordova plugin add cordova-plugin-statusbar
 cordova plugin add @havesource/cordova-plugin-push
+cordova plugin add cordova-open-native-settings --save
 cordova platform add browser
 cordova platform add ios
 cp ../_cordova/build.sh build.sh
