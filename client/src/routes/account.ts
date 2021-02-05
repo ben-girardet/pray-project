@@ -80,12 +80,13 @@ user(id: $userId) {
     }
   }
 
-  public editProfile() {
-    
-  }
-
   public updateLanguage() {
     this.global.i18n.setLocale(this.language);
     this.global.eventAggregator.publish('app:locale:changed');
+  }
+
+  public openLink(link: string) {
+    location.href = link;
+    
   }
 }

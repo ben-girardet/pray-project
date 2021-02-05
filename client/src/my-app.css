@@ -158,10 +158,16 @@ fast-button.full-width::part(end) {
   font-size: var(--type-ramp-plus-2-font-size);
   line-height: var(--type-ramp-plus-2-line-height);
 }
+@media (max-height: 600px) {
+  .praying-help p.slogan {
+    font-size: var(--type-ramp-plus-2-font-size);
+    line-height: var(--type-ramp-plus-2-line-height);
+    margin: 0;
+  }
+}
 
 .praying-help__direction {
   margin: 16px;
-  padding: 16px;
   display: flex;
   flex-direction: column;
 }
@@ -228,4 +234,16 @@ pray-notification:nth-of-type(4) {
 }
 pray-notification:nth-of-type(5) {
   margin-top: 200px;
+}
+
+
+.switch-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--separator-color);
+  padding: 8px 0px;
+}
+.switch-row:last-of-type {
+  border-bottom: none;
 }

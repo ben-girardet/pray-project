@@ -8,7 +8,7 @@
   <pray-icon appearance="accent" icon="Photograph" size="lg"></pray-icon>
 </div>
 
-<p>Upload a picture of your choice <a click.delegate="toggleDialog()">or use a pre-defined image.</a></p>
+<p>${'fields.Upload a picture of your choice' | t} <a click.delegate="toggleDialog()">${'fields.or use a pre-defined image' | t}</a></p>
 
 <fast-dialog hidden ref="imagesDialog">
   <div class="avatar-selection">
@@ -43,7 +43,7 @@
     </span>
   </div>
   <p>
-    <fast-button appearance="accent" click.delegate="toggleDialog()">Close</fast-button>
+    <fast-button appearance="accent" click.delegate="toggleDialog()" t="Close">Close</fast-button>
   </p>
 </fast-dialog>
 

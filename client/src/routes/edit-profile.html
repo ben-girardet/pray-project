@@ -8,14 +8,14 @@
 </div>
 
 <div class="bottom-contentview ${avatar.imageService.cropping ? 'full-height':''}">
-  <form class="topic-form">
+  <form class="edit-profile-form">
 
-    <fast-text-field placeholder="Firstname" t="[placeholder]profile.Firstname" value.two-way="firstname">
+    <fast-text-field placeholder="Firstname" t="[placeholder]fields.Firstname" value.two-way="firstname">
     </fast-text-field>
-    <fast-text-field placeholder="Lastname" t="[placeholder]profile.Lastname" value.two-way="lastname">
+    <fast-text-field placeholder="Lastname" t="[placeholder]fields.Lastname" value.two-way="lastname">
     </fast-text-field>
   
-    <label style="text-align: center;" t="profile.Change profile picture">Change profile picture</label>
+    <label style="text-align: center;" t="fields.Your profile picture">Your profile picture</label>
     <avatar-selection value.bind="profilePic" original.bind="preview" view-model.ref="avatar"></avatar-selection>
     
   </form>

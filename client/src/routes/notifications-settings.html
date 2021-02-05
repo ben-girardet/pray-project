@@ -1,0 +1,41 @@
+<import from="./bottom.css"></import>
+<import from="../cropping.css"></import>
+
+<div class="bottom-headview">
+  <fast-button appearance="lightweight" click.trigger="cancel()" t="Cancel">Cancel</fast-button>
+  <span t="notifications.Notifications">Notifications</span>
+  <fast-button appearance="lightweight" click.trigger="save()" t="Save" if.bind="!saving">Save</fast-button>
+  <fast-progress-ring if.bind="saving"></fast-progress-ring>
+</div>
+
+<div class="bottom-contentview notifications-settings">
+  
+  <h2 t="notifications.Be encouraged"></h2>
+    <p t="notifications.Would you like to be encouraged">Would you like to be encouraged when someone prays for you or when God answered a topic for which you prayed ?</p>
+
+  <form>
+    <label t="notifications.Select notifications">Select notifications</label>
+  </form>
+  <div>
+    <div class="switch-row">
+      ${'notifications.When someone prays for me' | t}
+      <fast-switch checked.bind="notificationPrayer"></fast-switch>  
+    </div>
+    <div class="switch-row">
+      ${'notifications.When a friends topic is answered' | t}
+      <fast-switch checked.bind="notificationAnswer"></fast-switch>  
+    </div>
+    <div class="switch-row">
+      ${'notifications.When I receive a message' | t}
+      <fast-switch checked.bind="notificationMessage"></fast-switch>  
+    </div>
+  </div>
+  
+</div>
+
+<fast-dialog hidden ref="disabledNotificationDialog">
+  <h2 t="notifications.Adjust your settings">Adjust your settings</h2>
+  <p t="notifications.Push notifications">Push notifications are disabled in your device settings. If you want to be notified as requested, please adjust your settings</p>
+  <p><fast-button t="notifications.Open settings" appearance="accent" click.delegate="openNotificationsSettings()">Open settings</fast-button></p>
+  <p><fast-button t="notifications.Skip notifications" appearance="lightweight" click.delegate="skipNotifications()">Skip notifications</fast-button></p>
+</fast-dialog>

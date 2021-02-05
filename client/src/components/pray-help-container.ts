@@ -27,9 +27,9 @@ const styles = css`
     border-radius: calc(var(--corner-radius) * 1px);
     z-index: 10;
     box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
-    padding: 64px 32px;
-    padding-top: calc(64px + env(safe-area-inset-top));
-    padding-bottom: calc(64px + env(safe-area-inset-bottom));
+    padding: 32px 16px;
+    padding-top: calc(32px + env(safe-area-inset-top));
+    padding-bottom: calc(32px + env(safe-area-inset-bottom));
     text-align: center;
   }
   :host(.full-screen) {
@@ -38,6 +38,9 @@ const styles = css`
     right: 0;
     bottom: 0;
     border-radius: 0;
+    padding: 64px 32px;
+    padding-top: calc(64px + env(safe-area-inset-top));
+    padding-bottom: calc(64px + env(safe-area-inset-bottom));
   }
   ::slotted(img) {
     max-width: 70%;

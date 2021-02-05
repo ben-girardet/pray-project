@@ -162,7 +162,7 @@ export class MyApp implements ICustomElementViewModel {
       }
       return true;
     }, {
-      include: ['praying', '-', 'topic-form', 'topic-detail', 'conversation', 'sharing', 'friends', 'edit-profile']
+      include: ['praying', '-', 'topic-form', 'topic-detail', 'conversation', 'sharing', 'friends', 'edit-profile', 'notifications-settings']
     });
   }
 

@@ -13,12 +13,12 @@
 
 <div class="start start-mobile">
   <form submit.delegate="requestMobileCode($event)">
-    <h2>Start by entering your mobile number</h2>
-    <fast-select placeholder="Your country" value.bind="regionCode" change.delegate="countryChanged()">
-      <fast-option value="ch">Suisse</fast-option>
-      <fast-option value="fr">France</fast-option>
+    <h2 t="start.Start by entering your mobile number">Start by entering your mobile number</h2>
+    <fast-select t="[placeholder]fields.Your country" placeholder="" value.bind="regionCode" change.delegate="countryChanged()">
+      <fast-option value="ch" t="countries.Switzerland">Switzerland</fast-option>
+      <fast-option value="fr" t="countries.France">France</fast-option>
     </fast-select>
-    <fast-text-field placeholder="Mobile Number" value.bind="mobile" pattern="[0-9]*" autofocus change.delegate="mobileChanged()" keyup.delegate="mobileChanged()">
+    <fast-text-field t="[placeholder]fields.Mobile Number" placeholder="Mobile Number" value.bind="mobile" pattern="[0-9]*" autofocus change.delegate="mobileChanged()" keyup.delegate="mobileChanged()">
       <span class="start__region-code" slot="start">+${countryCode}</span>
     </fast-text-field>
     <fast-button disabled.bind="!isMobileValid" appearance="accent" type="submit">
@@ -30,29 +30,29 @@
 
 <div class="start start-validation">
   <form submit.delegate="validateCode($event)">
-    <h2>Enter the code received on your mobile</h2>
-    <fast-text-field placeholder="The code" value.bind="validationCode" pattern="[0-9]*" autofocus change.delegate="codeChanged()" keyup.delegate="codeChanged()" class="${validationCode ? 'has-value':''}" ref="validationField"></fast-text-field>
+    <h2 t="start.Enter the code received on your mobile">Enter the code received on your mobile</h2>
+    <fast-text-field t="[placeholder]fields.Code" placeholder="Code" value.bind="validationCode" pattern="[0-9]*" autofocus change.delegate="codeChanged()" keyup.delegate="codeChanged()" class="${validationCode ? 'has-value':''}" ref="validationField"></fast-text-field>
     <fast-button disabled.bind="validationCode.length !== 6" appearance="accent" type="submit">
       <fast-progress-ring slot="start" if.bind="loading"></fast-progress-ring>
       <span t="Continue"></span>
     </fast-button>
-    <fast-anchor if.bind="invalidCode" appearance="lightweight" style="margin-top: 32px;" click.delegate="requestMobileCode(null, true)">Send the code again ?</fast-anchor>
-    <fast-anchor appearance="lightweight" style="margin-top: 64px;" click.delegate="prev('mobile')">Wrong number ?</fast-anchor>
+    <fast-anchor if.bind="invalidCode" appearance="lightweight" style="margin-top: 32px;" click.delegate="requestMobileCode(null, true)" t="start.Send the code again">Send the code again</fast-anchor>
+    <fast-anchor appearance="lightweight" style="margin-top: 64px;" click.delegate="prev('mobile')" t="start.Wrong number">Wrong number ?</fast-anchor>
   </form>
 </div>
 
 <div class="start start-identity">
   <form submit.delegate="setIdentity($event)">
-    <h2>Welcome in Sunago !</h2>
-    <p>Setup your profile and enjoy...</p>
-    <fast-text-field placeholder="Firstname" value.bind="firstname">
+    <h2 t="start.Welcome in Sunago"></h2>
+    <p t="start.Setup your profile and enjoy"></p>
+    <fast-text-field t="[placeholder]fields.Firstname" placeholder="Firstname" value.bind="firstname">
       <!-- <pray-icon icon="User" size="sm" slot="start"></pray-icon> -->
     </fast-text-field>
-    <fast-text-field placeholder="Lastname" value.bind="lastname">
+    <fast-text-field t="[placeholder]fields.Lastname" placeholder="Lastname" value.bind="lastname">
       <!-- <pray-icon icon="Key" size="sm" slot="start"></pray-icon> -->
     </fast-text-field>
 
-    <label style="text-align: center; margin-top: 24px; margin-bottom: 16px; color: var(--accent-color);">You're profile picture</label>
+    <label style="text-align: center; margin-top: 24px; margin-bottom: 16px; color: var(--accent-color);" t="fields.Your profile picture">Your profile picture</label>
     <avatar-selection value.bind="profilePic" original.bind="preview" view-model.ref="avatar"></avatar-selection>
 
     <fast-button appearance="accent" type="submit">
@@ -64,21 +64,21 @@
 
 <div class="start start-notification">
   <form submit.delegate="setNotification($event)">
-    <h2>Be encouraged !</h2>
-    <p>Would you like to be encouraged when someone prays for you or when God answered a topic for which you prayed ?</p>
+    <h2 t="notifications.Be encouraged"></h2>
+    <p t="notifications.Would you like to be encouraged">Would you like to be encouraged when someone prays for you or when God answered a topic for which you prayed ?</p>
 
-    <label>Select notifications</label>
+    <label t="notifications.Select notifications">Select notifications</label>
     <div>
       <div class="switch-row">
-        When someone prays for me
+        ${'notifications.When someone prays for me' | t}
         <fast-switch checked.bind="notificationPrayer"></fast-switch>  
       </div>
       <div class="switch-row">
-        When a friends topic is answered
+        ${'notifications.When a friends topic is answered' | t}
         <fast-switch checked.bind="notificationAnswer"></fast-switch>  
       </div>
       <div class="switch-row">
-        When I receive a message
+        ${'notifications.When I receive a message' | t}
         <fast-switch checked.bind="notificationMessage"></fast-switch>  
       </div>
     </div>
@@ -91,3 +91,10 @@
     <fast-button appearance="lightweight" click.delegate="skipNotifications()">Skip</fast-button>
   </form>
 </div>
+
+<fast-dialog hidden ref="disabledNotificationDialog">
+  <h2 t="notifications.Adjust your settings">Adjust your settings</h2>
+  <p t="notifications.Push notifications">Push notifications are disabled in your device settings. If you want to be notified as requested, please adjust your settings</p>
+  <p><fast-button t="notifications.Open settings" appearance="accent" click.delegate="openNotificationsSettings()">Open settings</fast-button></p>
+  <p><fast-button t="notifications.Skip notifications" appearance="lightweight" click.delegate="skipNotifications()">Skip notifications</fast-button></p>
+</fast-dialog>

@@ -19,37 +19,32 @@
       <pray-icon icon="User" slot="start"></pray-icon>
       ${'account.Edit my profile' | t}
     </fast-menu-item>
-    <fast-menu-item disabled>
-      <pray-icon icon="Key" slot="start"></pray-icon>
-      Change password
-      <fast-badge slot="end" fill="primary" color="white" circular if.bind="global.notificationService.requestedFriendshipIds.length > 0">${global.notificationService.requestedFriendshipIds.length}</fast-badge>
-    </fast-menu-item>
-  </fast-menu>
-  <fast-menu>
     <fast-menu-item load="../friends">
       <pray-icon icon="Users" slot="start"></pray-icon>
       ${'account.Manage my Friends' | t}
       <fast-badge slot="end" fill="primary" color="white" circular if.bind="global.notificationService.requestedFriendshipIds.length > 0">${global.notificationService.requestedFriendshipIds.length}</fast-badge>
     </fast-menu-item>
+  </fast-menu>
+  <fast-menu>
     <fast-menu-item disabled>
       <pray-icon icon="TrendingUp" slot="start"></pray-icon>
       ${'account.View my praying stats' | t}
     </fast-menu-item>
-    <fast-menu-item disabled>
+    <fast-menu-item load="../notifications-settings">
       <pray-icon icon="Bell" slot="start"></pray-icon>
-      ${'account.Notifications settings' | t}
+      ${'notifications.Notifications settings' | t}
     </fast-menu-item>
   </fast-menu>
   <fast-menu>
-    <fast-menu-item disabled>
+    <fast-menu-item click.delegate="openLink('https://sunago.app/home(#contact)')">
       <pray-icon icon="ChatAlt" slot="start"></pray-icon>
       ${'account.Contact Us' | t}
     </fast-menu-item>
-    <fast-menu-item disabled>
+    <fast-menu-item click.delegate="openLink('https://sunago.app/privacy')">
       <pray-icon icon="ShieldCheck" slot="start"></pray-icon>
       ${'misc.Privacy Policy' | t}
     </fast-menu-item>
-    <fast-menu-item disabled>
+    <fast-menu-item click.delegate="openLink('https://sunago.app/terms')">
       <pray-icon icon="ShieldCheck" slot="start"></pray-icon>
       ${'misc.Terms of use' | t}
     </fast-menu-item>

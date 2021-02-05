@@ -1,0 +1,135 @@
+{
+  "welcome": {
+    "slogan": "Ensemble en prière. N'importe où. N'importe quand."
+  },
+  "misc": {
+    "Terms of use": "Conditions d'utilisations",
+    "Privacy Policy": "Politique de confidentialité",
+    "Please update your version of Sunago": "Vous devez mettre à jour Sunago",
+    "You have an old version of Sunago installed on your device": "Vous avez une ancienne version de Sunago installée sur votre appareil. Vous trouverez la dernière version sur l'App Store ou Google Play."
+  },
+  "fields": {
+    "Your country": "Pays",
+    "Mobile Number": "N° de mobile",
+    "Code": "******",
+    "Firstname": "Prénom",
+    "Lastname": "Nom de famille",
+    "Your profile picture": "Ton image de profile",
+    "Upload a picture of your choice": "Envoie une image de ton choix",
+    "or use a pre-defined image": "ou utilise une image pré-définie"
+  },
+  "countries": {
+    "Switzerland": "Suisse",
+    "France": "France"
+  },
+  "start": {
+    "Start by entering your mobile number": "Commence par entrer ton numéro de mobile",
+    "Enter the code received on your mobile": "Ecris le code reçu sur ton mobile",
+    "Send the code again": "Renvoyer le code",
+    "Wrong number": "Mauvais numéro ?",
+    "Welcome in Sunago": "Bienvenue dans Sunago !",
+    "Setup your profile and enjoy": "Prépare ton profile et profite..."
+  },
+  "topics": {
+    "Active": "Actifs",
+    "Answered": "Répondus",
+    "Archived": "Archivés",
+    "Loading topics": "Chargement des sujets",
+    "Use this button to add prayer topics and start enjoying Sunago": "Utilise ce bouton pour ajouter un sujet de prière et profiter de Sunago.",
+    "Click here to start praying for your active topics": "Clic ici pour commencer à prier pour tes sujets actifs."
+  },
+  "topicForm": {
+    "New Topic": "Nouveau sujet",
+    "Edit Topic": "Modifier le sujet",
+    "What do you want to say to God ?": "Qu'est-ce que tu veux dire à Dieu ?",
+    "Illustrate your topic": "Illustre ton sujet",
+    "Color": "Couleur",
+    "Picture": "Image",
+    "Select an image": "Choisis une image",
+    "Remove image": "Enlève l'image"
+  },
+  "topicDetail": {
+    "Answered {{ date }}": "Répondu {{ date }}",
+    "Messages": "Messages",
+    "Shares": "Partages",
+    "Mark as answered": "Marqué comme répondu",
+    "Mark as active": "Rendre actif",
+    "Archive": "Archiver",
+    "Make active": "Rendre actif",
+    "Remove topic": "Supprimer le sujet"
+  },
+  "conversation": {
+    "Write your message": "Ecris ton message"
+  },
+  "praying": {
+    "Write your message": "Ecris ton message"
+  },
+  "activity": {
+    "Loading activities": "Chargement des activités",
+    "Use this switch to toggle your own activity": "Utilise ce bouton pour afficher / ou pas, ton activité.",
+    "On this screen you'll find what's happening in your prayer community": "Sur cet écran tu trouvera ce qui se passe dans ta communauté de prière."
+  },
+  "account": {
+    "Edit my profile": "Editer mon profil",
+    "Manage my Friends": "Gérer mes amis",
+    "View my praying stats": "Voir mes statistique de prière",
+    "Contact Us": "Nous contacter",
+    "Logout": "Se déconnecter",
+    "Version: {{ versionNb }}": "Version: {{ versionNb }}"
+  },
+  "avatar": {
+    "Select an image": "Choisir une image",
+    "Or pick one below": "Ou choisis-en une ci-dessous"
+  },
+  "friends": {
+    "Friends": "Amis",
+    "Search friends": "Rechercher des amis",
+    "Search with mobile or email": "Rechercher avec n° de mobile ou email",
+    "Request": "Demander",
+    "requested": "Demandé",
+    "Friends Requests": "Demandes d'amis",
+    "Decline": "Refuser",
+    "Accept": "Accepter",
+    "Use the Search button to find friends": "Utilise le bouton de recherche pour trouver des amis. Ensuite tu pourra partager tes sujets de prière avec eux."
+  },
+  "sharing": {
+    "Sharing": "Sharing",
+    "Share with": "Share with"
+  },
+  "help": {
+    "prayingDirections": {
+      "Welcome in the praying screen": "Bienvenue sur la vue de prière",
+      "Tell me how it works": "Explique-moi comment ça marche",
+      "Use your finger and swipe topics": "Utiliser ton doigt et <strong>balaie&nbsp;les sujets</strong>",
+      "Swipe up to log a prayer": "Vers le haut pour indiquer que tu as prié",
+      "Swipe left to skip a topic": "Vers la gauche pour passer un sujet",
+      "Swipe down to close": "Vers le bas pour fermer",
+      "Ok, I understand": "Ok, j'ai compris"
+    }
+  },
+  "notifications": {
+    "Notifications": "Notifications",
+    "Notifications settings": "Paramètres de notifications",
+    "Be encouraged": "Sois encouragé !",
+    "Would you like to be encouraged": "Est-ce que tu souhaite recevoir un encouragement lorsqu'un ami prie pour toi ou lorsque Dieu répond à un sujet pour lequel tu as prié ?",
+    "Select notifications": "Choisis tes notifications",
+    "When someone prays for me": "Lorsque quelqu'un prie pour moi",
+    "When a friends topic is answered": "Lorsque le sujet d'un ami est répondu",
+    "When I receive a message": "Lorsque je reçois un message",
+    "Adjust your settings": "Ajuste tes paramètres",
+    "Push notifications": "Les notifications push sont désactivées sur ton appareil. Si tu souhaite être notifié comme demandé, il te faut modifier tes réglages.",
+    "Open settings": "Ouvrir les réglages",
+    "Skip notifications": "Ignore les notifications"
+  },
+  "and": "et",
+  "Save": "Enregistrer",
+  "Close": "Fermer",
+  "Cancel": "Annuler",
+  "Confirm cancel": "Confirmer annulation",
+  "Edit": "Modifier",
+  "Remove": "Retirer",
+  "Confirm remove": "Confirmer",
+  "Delete": "Supprimer",
+  "Continue": "Poursuivre",
+  "Search": "Rechercher"
+}

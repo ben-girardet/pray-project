@@ -12,6 +12,7 @@ import { editMe } from '../commands/user';
 import { Image } from '../../../server/src/models/image';
 import { Global } from '../global';
 import { Push } from '../helpers/push';
+import { CordovaSettings } from '../helpers/cordova-settings';
 
 export class Start implements IRouteableComponent, ICustomElementViewModel {
 
@@ -325,6 +326,8 @@ export class Start implements IRouteableComponent, ICustomElementViewModel {
     try {
 
       console.log('setNotification');
+
+      this.notificationsTags = [];
   
       if (this.notificationPrayer) {
         this.notificationsTags.push('prayer');
@@ -350,7 +353,8 @@ export class Start implements IRouteableComponent, ICustomElementViewModel {
         }
         this.regSub = this.global.eventAggregator.subscribeOnce('push:registration', async (data: PhonegapPluginPush.RegistrationEventResponse) => {
           console.log('receiving push:registration event', data);
-          await editMe(undefined, undefined, undefined, data.registrationId, this.push.regType, this.notificationsTags);
+          this.toggleDisabledNotificationDialog(false);
+          await editMe(undefined, undefined, undefined, data.registrationId, this.push.regType, this.notificationsTags, true);
           console.log('end editMe');
           this.router.load('topics');
         });
@@ -366,10 +370,11 @@ export class Start implements IRouteableComponent, ICustomElementViewModel {
           // this app and that the user should go
           // in the settings to enable them again
           console.log('Push disabled', this.push);
+          this.toggleDisabledNotificationDialog(true);
         } else {
           // if unknown, let's see what we can do ?
           // probably wait for registration
-          console.log('Push unsure', this.push);
+          console.log('Push unsure', this.push);;
         }
       } else {
         console.log('no notif selected');
@@ -386,16 +391,29 @@ export class Start implements IRouteableComponent, ICustomElementViewModel {
 
     this.loading = false;
 
-
     // this.router.load('topics');
     return false;
   }
 
   public skipNotifications() {
+    this.toggleDisabledNotificationDialog(false);
     if (this.regSub) {
       this.regSub.dispose();
       delete this.regSub;
     }
     this.router.load('topics');
+  }
+
+  private disabledNotificationDialog: HTMLElement;
+  public toggleDisabledNotificationDialog(force?: boolean) {
+    if (force !== undefined) {
+      force = !force;
+    }
+    this.disabledNotificationDialog.toggleAttribute('hidden', force);
+  }
+
+  public openNotificationsSettings() {
+    this.toggleDisabledNotificationDialog(false);
+    CordovaSettings.open('notification_id');
   }
 }
