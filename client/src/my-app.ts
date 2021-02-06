@@ -73,6 +73,10 @@ export class MyApp implements ICustomElementViewModel {
         this.global.adaptProviderWithTheme();
         this.global.adaptStatusBarWithThemeAndRoute([]);
       });
+      this.global.platform.setTimeout(() => {
+        this.global.adaptProviderWithTheme();
+        this.global.adaptStatusBarWithThemeAndRoute([]);
+      }, 250);
       const isAuth = await this.loginIfNotAuthenticated();
       if (isAuth) {
         this.eventAggregator.publish('page:foreground:auth')
