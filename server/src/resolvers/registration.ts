@@ -157,7 +157,7 @@ export class RegistrationResolver {
         // this.setJWTCookie(context.res, jwtString);
         const login = new Login();
         login.token = jwtString;
-        if (context.req.header('sunago-source') === 'ios-mobile-app') {
+        if (context.req.header('sunago-source') === 'ios-mobile-app' || context.req.header('sunago-client') === 'admin') {
             login.refreshToken = refreshTokenData.refreshToken;
             login.refreshTokenExpiry = moment(refreshTokenData.expiry).toISOString();
         }
