@@ -50,6 +50,8 @@ export class AuthResolver {
 
     @Mutation(() => Login)
     public async refreshToken(@Ctx() context: Context) {
+        const isAdminClient = context.req.header('sunago-client') === 'admin';
+
         const { refreshToken } = context.req.cookies?.refreshToken
             ? context.req.cookies
             : {refreshToken: context.req.header('sunago-refresh-token')};
@@ -58,11 +60,16 @@ export class AuthResolver {
         }
         const hashRefreshToken = crypto.pbkdf2Sync(refreshToken, process.env.JWT_REFRESH_TOKEN_SECRET_OR_KEY as string, 10000, 512, 'sha512').toString('hex');
 
+        const selectFields = (isAdminClient ? 'adminRefreshTokens' : 'refreshTokens') + ' salt hash roles privateKey state'
+
         const foundUser = await UserModel
             .findOne({refreshTokens: {$elemMatch: {hash: hashRefreshToken, expiry: {$gt: moment().toDate()}}}})
-            .select('refreshTokens salt hash roles privateKey state');
+            .select(selectFields);
         if (!foundUser) throw new Error('Invalid refresh token');
-        const refreshTokenData = foundUser.generateRefreshToken();
+        if (isAdminClient && !foundUser.roles.includes('admin')) {
+            throw new Error('Access denied');
+        }
+        const refreshTokenData = foundUser.generateRefreshToken(isAdminClient);
         await foundUser.save();
         const origin = context.req.get('origin') || '';
         const sameSite = (context.req.hostname.includes('api.sunago.app') && origin !== 'null')
@@ -73,7 +80,7 @@ export class AuthResolver {
         // this.setJWTCookie(context.res, jwtString);
         const login = new Login();
         login.token = jwtString;
-        if (context.req.header('sunago-source') === 'ios-mobile-app') {
+        if (context.req.header('sunago-source') === 'ios-mobile-app' || isAdminClient) {
             login.refreshToken = refreshTokenData.refreshToken;
             login.refreshTokenExpiry = moment(refreshTokenData.expiry).toISOString();
         }

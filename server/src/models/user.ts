@@ -92,6 +92,9 @@ export class User implements IUser {
   @prop({type: () => [RefreshToken], _id: false, select: false, index: true})
   public refreshTokens: RefreshToken[];
 
+  @prop({type: () => [RefreshToken], _id: false, select: false, index: true})
+  public adminRefreshTokens: RefreshToken[];
+
   // 0 = need to set identity
   // 1 = identity set and active
   // -1 inactive user
@@ -183,14 +186,21 @@ export class User implements IUser {
     return this.hash === hash;
   }
 
-  public generateRefreshToken(): RefreshTokenData {
+  public generateRefreshToken(isAdminClient = false): RefreshTokenData {
     const refreshToken = crypto.randomBytes(16).toString('hex');
     const hash = crypto.pbkdf2Sync(refreshToken, process.env.JWT_REFRESH_TOKEN_SECRET_OR_KEY as string, 10000, 512, 'sha512').toString('hex');
     const expiry = moment().add(30, 'days').toDate();
-    this.refreshTokens.push({
-      hash,
-      expiry
-    });
+    if (!isAdminClient) {
+        this.refreshTokens.push({
+          hash,
+          expiry
+        });
+    } else {
+        this.adminRefreshTokens.push({
+          hash,
+          expiry
+        });
+    }
     return { refreshToken, hash, expiry };
   }
 

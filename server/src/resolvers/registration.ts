@@ -119,6 +119,8 @@ export class RegistrationResolver {
             throw new Error('Token mobile is empty');
         }
 
+        const isAdminClient = context.req.header('sunago-client') === 'admin';
+
         let user: DocumentType<User>;
         const existingUser = await UserModel.findOne(
             {mobile: token.data.mobile, mobileValidated: true}
@@ -126,6 +128,9 @@ export class RegistrationResolver {
         if (existingUser) {
             user = existingUser;
         } else {
+            if (isAdminClient) {
+                throw new Error('Access denied');
+            }
             const newUser = new UserModel();
             newUser.firstname = token.data.firstname || '';
             newUser.lastname = token.data.lastname || '';
@@ -142,10 +147,18 @@ export class RegistrationResolver {
             user = new UserModel(createdUser);
         }
 
+        if (isAdminClient && !user.roles.includes('admin')) {
+            throw new Error('Access denied');
+        }
+
         // by reseting the refreshTokens here, we ensure
         // that only one device can be logged in at a time
-        user.refreshTokens = [];
-        const refreshTokenData = user.generateRefreshToken();
+        if (!isAdminClient) {
+            user.refreshTokens = [];
+        } else {
+            user.adminRefreshTokens = [];
+        }
+        const refreshTokenData = user.generateRefreshToken(isAdminClient);
         await user.save();
         const origin = context.req.get('origin') || '';
         const sameSite = (context.req.hostname.includes('api.sunago.app') && origin !== 'null')
@@ -157,7 +170,7 @@ export class RegistrationResolver {
         // this.setJWTCookie(context.res, jwtString);
         const login = new Login();
         login.token = jwtString;
-        if (context.req.header('sunago-source') === 'ios-mobile-app' || context.req.header('sunago-client') === 'admin') {
+        if (context.req.header('sunago-source') === 'ios-mobile-app' || isAdminClient) {
             login.refreshToken = refreshTokenData.refreshToken;
             login.refreshTokenExpiry = moment(refreshTokenData.expiry).toISOString();
         }
