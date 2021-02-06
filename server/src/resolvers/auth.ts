@@ -63,7 +63,10 @@ export class AuthResolver {
         const selectFields = (isAdminClient ? 'adminRefreshTokens' : 'refreshTokens') + ' salt hash roles privateKey state'
 
         const foundUser = await UserModel
-            .findOne({refreshTokens: {$elemMatch: {hash: hashRefreshToken, expiry: {$gt: moment().toDate()}}}})
+            .findOne({$or: [
+                {refreshTokens: {$elemMatch: {hash: hashRefreshToken, expiry: {$gt: moment().toDate()}}}},
+                {adminRefreshTokens: {$elemMatch: {hash: hashRefreshToken, expiry: {$gt: moment().toDate()}}}}
+            ]})
             .select(selectFields);
         if (!foundUser) throw new Error('Invalid refresh token');
         if (isAdminClient && !foundUser.roles.includes('admin')) {
@@ -106,12 +109,16 @@ export class AuthResolver {
     @Mutation(() => Boolean)
     public async logout(@Ctx() context: Context) {
         const { refreshToken } = context.req.cookies;
+
+        const isAdminClient = context.req.header('sunago-client') === 'admin';
+        const selectFields = (isAdminClient ? 'adminRefreshTokens' : 'refreshTokens');
+
         // delete the refreshToken from db
         if (refreshToken) {
             const hashRefreshToken = crypto.pbkdf2Sync(refreshToken, process.env.JWT_REFRESH_TOKEN_SECRET_OR_KEY as string, 10000, 512, 'sha512').toString('hex');
             const foundUser = await UserModel
                 .findOne({refreshTokens: {$elemMatch: {hash: hashRefreshToken, expiry: {$gt: moment().toDate()}}}})
-                .select('refreshTokens');
+                .select(selectFields);
             if (foundUser) {
                 const rt = foundUser.refreshTokens.find((rf => rf.hash === hashRefreshToken));
                 if (rt) {
