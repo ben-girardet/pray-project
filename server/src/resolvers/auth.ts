@@ -117,15 +117,18 @@ export class AuthResolver {
         if (refreshToken) {
             const hashRefreshToken = crypto.pbkdf2Sync(refreshToken, process.env.JWT_REFRESH_TOKEN_SECRET_OR_KEY as string, 10000, 512, 'sha512').toString('hex');
             const foundUser = await UserModel
-                .findOne({refreshTokens: {$elemMatch: {hash: hashRefreshToken, expiry: {$gt: moment().toDate()}}}})
+                .findOne({$or: [
+                    {refreshTokens: {$elemMatch: {hash: hashRefreshToken, expiry: {$gt: moment().toDate()}}}},
+                    {adminRefreshTokens: {$elemMatch: {hash: hashRefreshToken, expiry: {$gt: moment().toDate()}}}}
+                ]})
                 .select(selectFields);
             if (foundUser) {
-                const rt = foundUser.refreshTokens.find((rf => rf.hash === hashRefreshToken));
-                if (rt) {
-                    const index = foundUser.refreshTokens.indexOf(rt);
-                    foundUser.refreshTokens.splice(index, 1);
-                    await foundUser.save();
+                if (isAdminClient) {
+                    foundUser.adminRefreshTokens = [];
+                } else {
+                    foundUser.refreshTokens = [];
                 }
+                await foundUser.save();
             }
         }
         // clear the refreshToken coookie
