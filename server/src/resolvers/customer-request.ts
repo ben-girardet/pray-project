@@ -1,8 +1,6 @@
-import { TopicModel } from "../models/topic";
 import { CustomerRequest, CustomerRequestModel } from "../models/customer-request";
 import { Resolver, Arg, Authorized, Ctx, Mutation, Query, InputType, Field } from "type-graphql";
 import { Context } from "./context-interface";
-import { mongoose } from "@typegoose/typegoose";
 import moment from 'moment';
 import { SortBy, SortOrder } from './inputs/sorting';
 import { FilterQuery } from 'mongoose';
@@ -55,6 +53,7 @@ export class CustomerRequestResolver {
     newCustomerRequest.message = data.message;
     newCustomerRequest.type = data.type;
     newCustomerRequest.status = 'opened';
+    newCustomerRequest.replied = false;
 
     const createdCustomerRequest = await newCustomerRequest.save();
     return true;
@@ -68,8 +67,6 @@ export class CustomerRequestResolver {
       @Arg('status', {nullable: true}) status: String,
       @Arg('since', {nullable: true}) since: String) {
     // Add a test of what is happening when login fails
-    const userId = new mongoose.Types.ObjectId(context.user.userId);
-    const userIdString = userId.toString();
     if (!context.user.roles.includes('admin')) {
         throw new Error('Access denied');
     }

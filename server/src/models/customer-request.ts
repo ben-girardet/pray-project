@@ -39,7 +39,7 @@ export class CustomerRequest implements ICustomerRequest {
 
     @Field(() => String)
     @prop()
-    replied: boolean;
+    replied: boolean = false;
 
     @Field(() => String)
     @prop({type: String})
