@@ -54,6 +54,7 @@ export class CustomerRequestResolver {
     newCustomerRequest.mobile = data.mobile;
     newCustomerRequest.message = data.message;
     newCustomerRequest.type = data.type;
+    newCustomerRequest.status = 'opened';
 
     const createdCustomerRequest = await newCustomerRequest.save();
     return true;
@@ -76,7 +77,7 @@ export class CustomerRequestResolver {
     if (sort) {
         sortBy[sort.field] = sort.order === SortOrder.ASC ? 1 : -1
     }
-    const query: FilterQuery<typeof TopicModel> = {shares: {$elemMatch: {userId}}};
+    const query: FilterQuery<typeof CustomerRequestModel> = {};
     if (status) {
         query.status = status;
     }
