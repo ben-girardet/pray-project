@@ -17,15 +17,15 @@ export class CustomerRequest implements ICustomerRequest {
 
     public _id: mongoose.Types.ObjectId;
 
-    @Field(() => String)
+    @Field(() => String, {nullable: true})
     @prop()
     name: string;
 
-    @Field(() => String)
+    @Field(() => String, {nullable: true})
     @prop()
     email: string;
 
-    @Field(() => String)
+    @Field(() => String, {nullable: true})
     @prop()
     mobile: string;
 
@@ -33,7 +33,7 @@ export class CustomerRequest implements ICustomerRequest {
     @prop()
     type: string;
 
-    @Field(() => String)
+    @Field(() => String, {nullable: true})
     @prop()
     message: string;
 
