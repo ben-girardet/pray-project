@@ -20,20 +20,7 @@
   .conversation-bottomview {
     background: #222;
   }
-  /* body {
-    background-color: #000;
+  .bottom-bar-button.disabled .praying-button {
+    background: #444;
   }
-  body.bottom au-viewport[name=main] {
-    background: #1A1A1A!important;
-  }
-  .topics .fast-tab-panel__title {
-    background: rgb(0,0,0)!important;
-    background: linear-gradient(180deg, rgba(0,0,0,1) 0%, rgba(0,0,0,1) 80%, rgba(0,0,0,0) 100%)!important;
-  }
-  .topics pray-item {
-    background: #1A1A1A!important;
-  }
-  .bottom-bar {
-    border-top: #0A0A0A 1px solid;
-  } */
 }

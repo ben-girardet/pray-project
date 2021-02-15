@@ -13,6 +13,7 @@ export class Global {
   private firstRouteIgnored:  -1 | 0 | 1 = -1;
   private logger: ILogger;
   public isCordova = false;
+  public cordovaReady = false;
   public isDarkModeEnabled = false;
   public apollo = apolloAuth;
   public includeMyActivity = false;
@@ -40,6 +41,9 @@ export class Global {
     this.eventAggregator.subscribe('app:started', () => {
       this.setMomentLocale();
     });
+    document.addEventListener('deviceready', () => {
+      this.cordovaReady = true;
+    }, {capture: false, once: true});
   }
 
   public setMomentLocale() {
@@ -78,6 +82,17 @@ export class Global {
 
   public adaptStatusBarWithThemeAndRoute(instructions: ViewportInstruction[]) {
     if (!this.isCordova) {
+      return;
+    }
+    if (!this.cordovaReady) {
+      document.addEventListener('deviceready', () => {
+        this.cordovaReady = true;
+        this.adaptStatusBarWithThemeAndRoute(instructions);
+      }, {capture: false, once: true});
+      return;
+    }
+    if (!w.StatusBar) {
+      console.warn('StatusBar not found in window object');
       return;
     }
     if (instructions.length === 0) {

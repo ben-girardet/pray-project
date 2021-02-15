@@ -36,6 +36,8 @@ export class Start implements IRouteableComponent, ICustomElementViewModel {
   
   private logger: ILogger;
 
+  private mainComponent: 'topics' | 'admin-requests' = 'topics';
+
   public constructor(
     @IRouter private router: IRouter, 
     @ILogger iLogger: ILogger,
@@ -46,14 +48,18 @@ export class Start implements IRouteableComponent, ICustomElementViewModel {
   }
 
   public async binding(): Promise<void> {
+    if (apolloAuth.client === 'admin') {
+      this.mainComponent = 'admin-requests';
+    }
     if (apolloAuth.authenticated && apolloAuth.getState() === 1) {
-      this.router.load('topics');
+      this.router.load(this.mainComponent);
     } else {
       client.clearStore();
     }
   }
 
   public load(parameters: any): void {
+    console.log('start', this.mainComponent);
     if (parameters[0] === 'identity') {
       this.step = 'identity';
     }
@@ -300,7 +306,7 @@ export class Start implements IRouteableComponent, ICustomElementViewModel {
       if (w.device?.platform === 'iOS') {
         this.next('notification');
       } else {
-        this.router.load('topics');
+        this.router.load(this.mainComponent);
       }
     } catch (error) {
       AppNotification.notify(error.message, 'info');
@@ -325,7 +331,6 @@ export class Start implements IRouteableComponent, ICustomElementViewModel {
     this.loading = true;
     try {
 
-      console.log('setNotification');
 
       this.notificationsTags = [];
   
@@ -340,58 +345,47 @@ export class Start implements IRouteableComponent, ICustomElementViewModel {
       }
   
       if (this.notificationsTags.length) {
-        console.log('some notif selected', this.notificationsTags);
         // this should trigger a request from the app
         
         // TODO: here we must add a listener for 'push-registration'
         // from there we get the registrationId and we can set the right
         // tags to the player, linked to the userId
-        console.log('setting a subscribeOnce event');
         if (this.regSub) {
           this.regSub.dispose();
           delete this.regSub;
         }
         this.regSub = this.global.eventAggregator.subscribeOnce('push:registration', async (data: PhonegapPluginPush.RegistrationEventResponse) => {
-          console.log('receiving push:registration event', data);
           this.toggleDisabledNotificationDialog(false);
           await editMe(undefined, undefined, undefined, data.registrationId, this.push.regType, this.notificationsTags, true);
-          console.log('end editMe');
-          this.router.load('topics');
+          this.router.load(this.mainComponent);
         });
         this.push.init();
-        console.log('Call for hasPermission')
         const enabled = await this.push.hasPermission();
         if (enabled === true) {
           // if enabled => we set the user/player/regid
-          console.log('Push enabled', this.push);
         } else if (enabled === false) {
           // here we should display a screen/info
           // explaining that notifications have been disabled for
           // this app and that the user should go
           // in the settings to enable them again
-          console.log('Push disabled', this.push);
           this.toggleDisabledNotificationDialog(true);
         } else {
           // if unknown, let's see what we can do ?
           // probably wait for registration
-          console.log('Push unsure', this.push);;
         }
       } else {
-        console.log('no notif selected');
         if (this.regSub) {
           this.regSub.dispose();
           delete this.regSub;
         }
         await editMe(undefined, undefined, undefined, '', undefined, [], false);
-        this.router.load('topics');
+        this.router.load(this.mainComponent);
       }
     } catch (error) {
       AppNotification.notify(error.message, 'error');
     }
 
     this.loading = false;
-
-    // this.router.load('topics');
     return false;
   }
 
@@ -401,7 +395,7 @@ export class Start implements IRouteableComponent, ICustomElementViewModel {
       this.regSub.dispose();
       delete this.regSub;
     }
-    this.router.load('topics');
+    this.router.load(this.mainComponent);
   }
 
   private disabledNotificationDialog: HTMLElement;

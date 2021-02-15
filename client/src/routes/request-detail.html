@@ -1,0 +1,39 @@
+<div class="request-detail">
+  <div class="head on-image">
+    <span class="head__left" load="../-@detail">
+      <pray-icon icon="ArrowLeft" weight="2"></pray-icon>
+      ${'Back' | t}
+    </span>
+  </div>
+
+  <div class="content">
+
+    <div class="request-detail__meta button-row__two button-row__two--centered">
+      <span>${request.name}</span>
+      <span>${request.updatedAt | date:'fromnow+'}</span>
+    </div>
+
+    <h2>${request.message}</h2>
+
+    <fast-button class="full-width" appearance="neutral" style="margin-bottom: 4px;">
+      <pray-icon slot="start" icon="ChatAlt"></pray-icon>
+      Reply by email
+    </fast-button>
+
+    <fast-button class="full-width" appearance="neutral" style="margin-bottom: 4px;">
+      <pray-icon slot="start" icon="ChatAlt"></pray-icon>
+      Reply by SMS
+    </fast-button>
+
+    <fast-button class="full-width" appearance="neutral" style="margin-bottom: 4px;" click.delegate="markRequestAs('closed')">
+      <pray-icon slot="start" icon="CheckCircle"></pray-icon>
+      Mark as closed
+    </fast-button>
+
+    <div class="button-row__two" style="margin-top: 48px;">
+      <fast-button click.trigger="removeRequest()" appearance="lightweight" style="color: red">Remove request</fast-button>
+    </div>
+  </div>
+
+
+</div>

@@ -84,6 +84,7 @@ export class Topics implements IRouteableComponent, ICustomElementViewModel {
       this.answeredTopics = await this.decryptTopics(answeredTopics);
       const archivedTopics = await getTopics({field: 'updatedAt', order: -1}, 'archived', 'network-only');
       this.archivedTopics = await this.decryptTopics(archivedTopics);
+      this.global.eventAggregator.publish('topics:fetched');
     } catch (error) {
       // if error, do nothing
     }

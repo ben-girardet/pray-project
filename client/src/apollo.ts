@@ -32,6 +32,7 @@ class ApolloAuth {
     private refreshTokenExpiry?: moment.Moment;
 
     public isOutOfDate = false;
+    public client: 'app' | 'admin';
     
     public setLogin(login: {token: string, userId: string, expires: string, privateKey: string, state: number}) {
       if (typeof login.expires === 'string') {
@@ -171,6 +172,12 @@ const client = new ApolloClient({
   credentials: 'include',
   request: async (operation: Operation) => {
     // the window.device object is populated by: `cordova-plugin-device`
+    operation.setContext(context => ({
+      headers: {
+          ...context.headers,
+          "sunago-client": apolloAuth.client
+      }
+    }));
     if (typeof w.device?.platform === 'string') {
       operation.setContext(context => ({
         headers: {

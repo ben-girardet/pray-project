@@ -1,0 +1,34 @@
+.request-detail .head {
+  height: calc(100vw * 1.2);
+  border-bottom-left-radius: calc(var(--corner-radius) * 2px);
+  border-bottom-right-radius: calc(var(--corner-radius) * 2px);
+  box-shadow: var(--elevation2)
+}
+
+.request-detail .head > img,
+.request-detail .head .placeholder {
+  width: 100%;
+  height: calc(100vw * 1.2);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.request-detail .content {
+  padding: 16px;
+  /* min-height: 2000px; */
+}
+
+.request-detail__meta {
+  color: var(--content-meta-color);
+  font-size: 14px;
+}
+
+.request-detail .content h2,
+.request-detail .content p {
+  text-align: center;
+}
+.request-detail fast-badge {
+  transform: scale(0.8);
+}

@@ -1,0 +1,38 @@
+<div class="request-preview">
+  <div class="request_preview__content">
+    <div class="request_preview__author">
+      <span>${request.name}</span>
+      <span class="request_preview__date">${request.updatedAt | date:'fromnow'}</span>
+    </div>
+    <div class="request_preview__main-content">
+      <div class="request_preview__title">${request.message}</div>
+    </div>
+    <div class="request_preview__footer-actions">
+      <div class="request_preview__footer-actions__item">
+        <template if.bind="request.type === 'request-beta'">
+          <pray-icon icon="LightningBolt" size="sm"></pray-icon>
+          Beta request
+        </template>
+        <template if.bind="request.type === 'beta-request'">
+          <pray-icon icon="Annotation" size="sm"></pray-icon>
+          Question
+        </template>
+        <template if.bind="request.type === 'beta-request'">
+          <pray-icon icon="CursorClick" size="sm"></pray-icon>
+          Feedback
+        </template>
+      </div>
+      <!-- <span class="request_preview__separator">·</span> -->
+      <div class="request_preview__footer-actions__item">
+        <template if.bind="request.status === 'opened'">
+          <pray-icon icon="LightBulb" size="sm"></pray-icon>
+          Opened
+        </template>
+        <template if.bind="request.status === 'closed'">
+          <pray-icon icon="CheckCircle" size="sm"></pray-icon>
+          Closed
+        </template>
+      </div>
+    </div>
+  </div>
+</div>

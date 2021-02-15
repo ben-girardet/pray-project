@@ -32,7 +32,7 @@ export class FileValueConverter {
       //return `http://localhost:3000/api/images/get/${filename.substr(4)}`
       return `${conf.apiHost}/image/${filename.substr(4)}`
     } else if (typeof filename === 'string' && filename.substr(0, 7) === 'static:') {
-      return `/images/avatars/${filename.substr(7)}`;
+      return `images/avatars/${filename.substr(7)}`;
     }
     return filename;
   }

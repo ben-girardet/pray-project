@@ -36,7 +36,7 @@
       <fast-badge fill="primary" color="black" circular if.bind="global.notificationService.requestedFriendshipIds.length > 0">${global.notificationService.requestedFriendshipIds.length}</fast-badge>
       <mini-user class="${accountActive(router.activeComponents, router.activeComponents.length) ? 'active' : ''}" user-id.bind="apolloAuth.userId" if.bind="apolloAuth.userId" only-avatar.bind="true"></mini-user>
     </div>
-    <div class="bottom-bar-button" load="praying">
+    <div class="bottom-bar-button" click.delegate="startPraying()" disabled.class="activeTopics.length === 0">
       <pray-icon icon="Sparkles" class="praying-button"></pray-icon>
     </div>
   </div>

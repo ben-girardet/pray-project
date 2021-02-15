@@ -1,4 +1,3 @@
-import { AppNotification } from './components/app-notification';
 import { IRouter, ICustomElementViewModel, ViewportInstruction, inject, ILogger, EventAggregator, IDisposable } from 'aurelia';
 import { HookTypes } from '@aurelia/router';
 import { parseColorWebRGB } from "@microsoft/fast-colors";
@@ -8,8 +7,6 @@ import { PageVisibility } from './helpers/page-visibility';
 import { Global } from './global';
 import { HelpId } from 'shared/types/user';
 import { gql } from 'apollo-boost';
-import { getTopics } from './commands/topic';
-import { Topic as ITopic } from 'shared/types/topic';
 
 const neutral = 'rgb(200, 200, 200)'; // 'rgb(70,51,175)';
 // const accent = 'rgb(0,201,219)';
@@ -19,7 +16,7 @@ const accentPalette = createColorPalette(parseColorString(accent));
 
 const w: any = window;
 @inject()
-export class MyApp implements ICustomElementViewModel {
+export class AdminApp implements ICustomElementViewModel {
 
   private logger: ILogger;
   public apolloAuth = apolloAuth;
@@ -29,14 +26,13 @@ export class MyApp implements ICustomElementViewModel {
 
   public prayingHelp: 'welcome' | 'direction' | '' = '';
 
-  public activeTopics: ITopic[] = [];
-
   constructor(
     @IRouter private router: IRouter, 
     @ILogger private iLogger: ILogger,
     private eventAggregator: EventAggregator,
     private pageVisibility: PageVisibility,
     private global: Global) {
+    apolloAuth.client = 'admin';
     this.logger = iLogger.scopeTo('app');
     this.pageVisibility.listen();
     const roots = ['https://sunago.app', 'https://sunago.app/', 'https://sunago.app/#', 'https://sunago.app/#/']
@@ -87,43 +83,13 @@ export class MyApp implements ICustomElementViewModel {
         this.eventAggregator.publish('page:foreground:auth')
       }
     }));
-    this.subscriptions.push(this.global.eventAggregator.subscribe('topic-detail-out', async () => {
-      await this.tryToFetchTopics();
-    }));
-    this.subscriptions.push(this.global.eventAggregator.subscribe('page:foreground:auth', async () => {
-      await this.tryToFetchTopics();
-    }));
-    this.subscriptions.push(this.global.eventAggregator.subscribe('topics:fetched', async () => {
-      await this.tryToFetchTopics();
-    }));
-    this.global.platform.macroTaskQueue.queueTask(async () => {
-      await this.tryToFetchTopics();
-    });
-  }
-
-  public async tryToFetchTopics(): Promise<void> {
-    try {
-      // here the topics are not decrypted, but its ok, we only fetch them 
-      // to see if there are active topics
-      this.activeTopics = await getTopics({field: 'updatedAt', order: -1}, 'active', 'cache-only');
-    } catch (error) {
-      // if error, do nothing
-    }
-  }
-
-  public startPraying() {
-    if (this.activeTopics.length) {
-      this.router.load('praying');
-    } else {
-      AppNotification.notify('You have no active topics', 'info');
-    }
   }
 
   public async loginIfNotAuthenticated(): Promise<boolean> {
     if (!(await apolloAuth.isAuthenticated())) {
       const vp = this.router.getViewport('main');
       const componentName = vp.content.content.componentName;
-      if (!['login', 'start', 'register'].includes(componentName)) {
+      if (!['start'].includes(componentName)) {
         this.router.load('start');
       }
       return false;
@@ -132,18 +98,18 @@ export class MyApp implements ICustomElementViewModel {
   }
 
   public async bound(): Promise<void> {    
-    // Authentication HOOK
     this.router.addHook(async (title: string | ViewportInstruction[]) => {
-      return 'Sunago';
+      return 'Sunago Admin';
     }, {
-        type: HookTypes.SetTitle
+      type: HookTypes.SetTitle
     });
+    // Authentication HOOK
     this.router.addHook(async (instructions: ViewportInstruction[]) => {
       this.global.bumpRoute();
       // User is not logged in, so redirect them back to login page
       const mainInstruction = instructions.find(i => i.viewportName === 'main');
       if (mainInstruction && !(await apolloAuth.isAuthenticated())) {
-        if (!['login', 'start', 'register'].includes(mainInstruction.componentName)) {
+        if (!['start'].includes(mainInstruction.componentName)) {
           return [this.router.createViewportInstruction('start', mainInstruction.viewport)];
         }
       }
@@ -166,21 +132,10 @@ export class MyApp implements ICustomElementViewModel {
 
     // View type HOOK
     this.router.addHook(async (instructions: ViewportInstruction[]) => {
-      const prayingInstruction = instructions.find(i => i.viewportName === 'praying');
       const bottomInstruction = instructions.find(i => i.viewportName === 'bottom');
       const detailInstruction = instructions.find(i => i.viewportName === 'detail');
       const bottomViewport = this.router.getViewport('bottom');
       const detailViewport = this.router.getViewport('detail');
-      if (prayingInstruction) {
-        if (prayingInstruction.componentName === 'praying') {
-          document.documentElement.classList.add('praying');
-          this.eventAggregator.publish(`praying-in`);
-          this.shouldDisplayPrayingHelp();
-        } else if (prayingInstruction.componentName === '-') {
-          document.documentElement.classList.remove('praying');
-          this.eventAggregator.publish(`praying-out`);
-        }
-      }
       if (bottomInstruction) {
         if (bottomInstruction.componentName === '-') {
           document.documentElement.classList.remove('bottom');
@@ -201,7 +156,7 @@ export class MyApp implements ICustomElementViewModel {
       }
       return true;
     }, {
-      include: ['praying', '-', 'topic-form', 'topic-detail', 'conversation', 'sharing', 'friends', 'edit-profile', 'notifications-settings']
+      include: ['-', 'request-detail']
     });
   }
 
@@ -212,44 +167,16 @@ export class MyApp implements ICustomElementViewModel {
     this.subscriptions = [];
   }
 
-  public topicsActive(activeComponents: ViewportInstruction[]): boolean {
-    return activeComponents.find(c => c.componentName === 'topics') !== undefined;
-  }
-
-  public accountActive(activeComponents: ViewportInstruction[]): boolean {
-    return activeComponents.find(c => c.componentName === 'account') !== undefined;
-  }
-
-  public activityActive(activeComponents: ViewportInstruction[]): boolean {
-    return activeComponents.find(c => c.componentName === 'activity') !== undefined;
+  public requestsActive(activeComponents: ViewportInstruction[]): boolean {
+    return activeComponents.find(c => c.componentName === 'admin-requests') !== undefined;
   }
 
   public settingsActive(activeComponents: ViewportInstruction[]): boolean {
-    this.logger.debug('settingsActive', activeComponents);
-    this.logger.debug('activeComponents.find(c => c.componentName === settings)', activeComponents.find(c => c.componentName === 'settings'));
-    return activeComponents.find(c => c.componentName === 'settings') !== undefined;
+    return activeComponents.find(c => c.componentName === 'admin-settings') !== undefined;
   }
 
-  public async shouldDisplayPrayingHelp(): Promise<any> {
-    if (!apolloAuth.getUserId()) {
-      return null
-    }
-    const result = await client.query<{user: {
-      id: string,
-      helpSeen: HelpId[]}}>({query: gql`query User($userId: String!) {
-        user(id: $userId) {
-          id,
-          helpSeen
-        }
-      }`, variables: {userId: apolloAuth.getUserId()}, fetchPolicy: 'cache-first'});
-    if (!result.data.user.helpSeen.includes('praying-directions')) {
-      this.prayingHelp = 'welcome';
-    }
-  }
-
-  public prayingHelpViewed(helpId: HelpId) {
-    this.prayingHelp = '';
-    this.global.helpViewed(helpId);
+  public statsActive(activeComponents: ViewportInstruction[]): boolean {
+    return activeComponents.find(c => c.componentName === 'admin-stats') !== undefined;
   }
 
 }

@@ -1,0 +1,32 @@
+<import from="./my-app.css"></import>
+<import from="./variables.css"></import>
+<import from="./views.css"></import>
+<import from="./typography.css"></import>
+<import from="./fast-trick.css"></import>
+<import from="./routes/request-detail"></import>
+<import from="./routes/admin-requests"></import>
+<import from="./routes/admin-settings"></import>
+<import from="./routes/admin-stats"></import>
+<import from="./routes/missing"></import>
+<import from="./routes/out-of-date"></import>
+<import from="./routes/start"></import>
+<!-- TODO: enable dark mode later -->
+<import from="./dark.css"></import>
+<fast-design-system-provider use-defaults background-color="#FFFFFF" type-ramp-base-font-size="16px" class="dw">
+  <au-viewport default="admin-requests" fallback="missing" name="main"></au-viewport>
+  <div class="bottom-bar" if.bind="apolloAuth.authenticated && apolloAuth.state === 1">
+    <div class="bottom-bar-button" load="admin-requests">
+      <pray-icon icon="Chat" type="${requestsActive(router.activeComponents, router.activeComponents.length) ? 'solid' : 'outline'}"></pray-icon>
+    </div>
+    <div class="bottom-bar-button" load="admin-stats">
+      <pray-icon icon="TrendingUp" type="${statsActive(router.activeComponents, router.activeComponents.length) ? 'solid' : 'outline'}"></pray-icon>
+    </div>
+    <div class="bottom-bar-button" load="admin-settings">
+      <pray-icon icon="Adjustments" type="${settingsActive(router.activeComponents, router.activeComponents.length) ? 'solid' : 'outline'}"></pray-icon>
+    </div>
+  </div>
+  <au-viewport name="detail" used-by="request-detail" no-history></au-viewport>
+  <au-viewport name="bottom" used-by="settings-config" no-history></au-viewport>
+
+  <out-of-date if.bind="apolloAuth.isOutOfDate"></out-of-date>
+</fast-design-system-provider>

@@ -1,0 +1,46 @@
+<div class="admin-requests">
+  <div class="list-head" style="padding-left: 16px;">
+    <pray-logo size="medium"></pray-logo>
+  </div>
+  <div class="list-content-head">
+    <div style="display: flex; align-items: center; justify-content: space-between;">
+      <fast-tabs change.trigger="tabChanged($event)" activeid.bind="activeTab">
+        <fast-tab id="active" ref="openRequestsTabElement">Opened</fast-tab>
+        <fast-tab class="${answeredTopics.length > 0 ? '':'disabled'}" id="closed">Closed</fast-tab>
+        <fast-tab-panel id="openedPanel">
+        </fast-tab-panel>
+        <fast-tab-panel id="closedPanel">
+        </fast-tab-panel>
+      </fast-tabs>
+    </div>
+  </div>
+
+  <div class="list-content">
+
+    <div class="requests--loading" if.bind="openedRequests.length === 0 && closedRequests.length === 0 && loadingRequests">
+      <fast-progress-ring></fast-progress-ring>
+      Loading requests
+    </div>
+
+    <div class="list-content-list" if.bind="activeTab === 'opened'">
+      <request-preview
+        class="content"
+        repeat.for="request of openedRequests"
+        request.bind="request"
+        load="../request-detail(${request.id})"
+        >
+      </request-preview>
+    </div>
+    <div class="list-content-list" if.bind="activeTab === 'closed'">
+      <openRequestsTabElement
+        class="content"
+        repeat.for="request of closedRequests"
+        request.bind="request"
+        load="../request-detail(${topic.id})"
+        >
+      </openRequestsTabElement>
+    </div>
+  </div>
+
+</div>  
+

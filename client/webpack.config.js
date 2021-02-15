@@ -18,12 +18,14 @@ const postcssLoader = {
 
 module.exports = function(env, { analyze }) {
   const production = env.production || process.env.NODE_ENV === 'production';
+  const app = env.APP || 'client';
+
   return {
     // currently setting mode to production makes the bundle fails
     // mode: production ? 'production' : 'development',
     mode: 'development',
     devtool: production ? 'source-map' : 'inline-source-map',
-    entry: './src/main.ts',
+    entry: app === 'admin' ? './src/main-admin.ts' : './src/main.ts',
     output: {
       path: path.resolve(__dirname, 'dist'),
       filename: '[name].[contenthash].js'
@@ -57,7 +59,7 @@ module.exports = function(env, { analyze }) {
       ]
     },
     plugins: [
-      new HtmlWebpackPlugin({ template: 'index.ejs' }),
+      new HtmlWebpackPlugin({ template: app === 'admin' ? 'admin.ejs' : 'index.ejs' }),
       new CopyWebpackPlugin({patterns: [
         { from: 'static', to: path.resolve(__dirname, 'dist') },
         // { from: 'locales', to: path.resolve(__dirname, 'dist/locales') }

@@ -121,6 +121,9 @@ html.detail au-viewport[name=detail] {
   width: 70px;
   height: 35px;
 }
+.bottom-bar-button.disabled .praying-button {
+  background: #ddd;
+}
 .bottom-bar-button fast-badge {
   transform: translateX(90%) scale(0.6);
   position: absolute;

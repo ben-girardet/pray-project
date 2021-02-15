@@ -1,13 +1,13 @@
-.topics fast-tab { 
+.admin-requests fast-tab { 
   --type-ramp-base-font-size: 12px;
   --design-unit: 3;
 }
-.topics fast-tab-panel {
+.admin-requests fast-tab-panel {
   flex-direction: column;
   padding-left: 16px;
   padding-right: 16px;
 }
-.topics .fast-tab-panel__title {
+.admin-requests .fast-tab-panel__title {
   background: rgb(255,255,255);
   background: linear-gradient(180deg, rgba(255,255,255,1) 0%, rgba(255,255,255,1) 70%, rgba(255,255,255,0) 100%);
   position: sticky;
@@ -16,24 +16,21 @@
   padding: 24px 8px;
   height: 75px;
 }
-.topics pray-search-input {
-  margin-bottom: 16px;
-}
-.topics topic-preview {
+.admin-requests request-preview {
   border-top: 1px solid var(--separator-color);
   padding-top: 16px;
   margin-bottom: 16px;
   cursor: pointer;
   display: block;
 }
-.topics topic-preview:first-of-type {
+.admin-requests request-preview:first-of-type {
   border-top: none;
 }
 fast-tab.disabled {
   pointer-events: none;
   opacity: 0.5;
 }
-.topics--loading {
+.requests--loading {
   display: flex;
   min-height: 500px;
   align-items: center;
@@ -41,11 +38,4 @@ fast-tab.disabled {
   flex-direction: column;
   color: var(--meta-content-color);
   font-family: var(--interface-font);
-}
-.topics .list-content-head pray-icon::part(svg) {
-  background: var(--accent-color);
-  border-radius: 5px;
-  color: white;
-  width: 24px;
-  height: 24px;
 }
