@@ -22,6 +22,11 @@ export class UserResolver {
   @Query(() => [User])
   public async users(@Ctx() context: Context, @Arg("search", {nullable: false}) search: string, @Arg("alreadyFriends", {nullable: true}) alreadyFriends: boolean) {
     const query: FilterQuery<typeof UserModel> = {};
+
+    if (typeof search !== 'string') {
+        throw new Error('Invalid search query');
+    }
+    search = search.trim();
     if (search.length < 3) {
         throw new Error('users query is only allowed for 3+ search word');
     }
