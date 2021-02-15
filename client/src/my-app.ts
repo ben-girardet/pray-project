@@ -159,7 +159,7 @@ export class MyApp implements ICustomElementViewModel {
       this.global.adaptProviderWithTheme();
       this.global.adaptStatusBarWithThemeAndRoute(instructions);
       this.global.platform.domReadQueue.queueTask(() => {
-        this.global.adaptStatusBarWithThemeAndRoute([]);
+        this.global.adaptStatusBarWithThemeAndRoute(instructions);
       });
       return true;
     });
