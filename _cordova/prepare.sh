@@ -13,7 +13,7 @@ cp -R ../_cordova/resources resources
 cordova-res ios
 sed -i'.orig' -e 's+<widget+<widget ios-CFBundleVersion="1.0.0" android-versionCode="1000000"+g' config.xml
 rm config.xml.orig
-sed -i'.orig' -e 's+</platform>+</platform>\n  <preference name="Orientation" value="portrait" />\n  <preference name="target-device" value="handset" />+g' config.xml
+sed -i'.orig' -e 's+</platform>+</platform>\n  <preference name="Orientation" value="portrait" />\n  <preference name="target-device" value="handset" />\n  <config-file parent="NSCameraUsageDescription" platform="ios" target="*-Info.plist">\n  <string>We access your camera to take pictures.</string>\n  </config-file>+g' config.xml
 rm config.xml.orig
 cp -R www _www
 # The replace below fixes the margin at the bottom of the screen on IOS
