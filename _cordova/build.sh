@@ -70,11 +70,9 @@ else
 fi
 
 MAINFILENAME=$(find "www" -name "main.*.js")
-echo "$MAINFILENAME"
-searchAPP='<div class=\"welcome__version\">v([0-9.]*)</div>'
-replaceAPP="\1${FULLVERSIONSTRING}\3"
-if [[ "$OSTYPE" == "darwin"* ]]; then
-  sed -i "" -E "s/${searchAND}/${replaceAND}/g" "$MAINFILENAME"
-else
-  sed -i -E "s/${searchAND}/${replaceAND}/g" "$MAINFILENAME"
-fi
+echo "$MAINFILENAME $FULLVERSIONSTRING"
+#searchAPP='<div class=\\"welcome__version\\">v([0-9.]*)</div>'
+searchAPP='VERSIONNB'
+replaceAPP="${FULLVERSIONSTRING}"
+sed -i'.orig' -e "s+${searchAPP}+${replaceAPP}+g" "$MAINFILENAME"
+rm "$MAINFILENAME.orig"
