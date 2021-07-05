@@ -202,10 +202,16 @@ Login is now pretty well in place. Now is the time to improve the topic experien
 - [x] Add a version from GIT in API ? Or use the build version ?
 - [x] Improve Apple / Demo user account with new mobile only system
 - [x] Stack AppNotifications (so we can see several)
+
+
+# 5.2.2021 - Many things
+- [x] Solidify notification start and settings
+- [x] Solid testing of notifications
+- [x] Translation: external files and notification translation
+
 ## Next 
-- [ ] Solidify notification start and settings
-- [ ] Solid testing of notifications
-- [ ] Translation: external files and notification translation
+- [ ] Create more realistic tests scenario including user registration and increased users friendships, refresh token and admin accounts
+- [ ] Create a way to have a realistic staging
 - [ ] Create SMS API account
 - [ ] Ackknoledgment (incl. illustrations)
 - [ ] Backups every night
@@ -213,7 +219,7 @@ Login is now pretty well in place. Now is the time to improve the topic experien
 - [ ] Work on the TODO's
 - [ ] Optimize bundles with code splitting (https://webpack.js.org/guides/code-splitting/)
 - [ ] Create tests with image upload (if not yet)
-- [ ] Create more realistic tests scenario including user registration and increased users friendships
+
 - [ ] Allow owner to give "owner" role on their topics
 - [ ] Cache images
 - [ ] Fix class-validator warning, check if I need it for the project
