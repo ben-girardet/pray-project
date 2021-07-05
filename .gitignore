@@ -107,3 +107,4 @@ server/private/
 server/tests/artillery/_data/tokens.txt
 server/src/seeds/images/
 sunago.cordova
+.DS_Store
